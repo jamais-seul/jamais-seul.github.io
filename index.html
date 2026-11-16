@@ -543,4 +543,139 @@ if(ld("sf_dark",window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").ma
 initMap();renderRes();renderChecks();renderAll();
 </script>
 </body>
+  <style>
+.wrap{display:flex;flex-direction:column}.wrap>.kpis{order:-1}
+.hero{background:linear-gradient(135deg,var(--h1,#0f4c81),var(--h2,#093154))!important}
+.tb{position:relative;display:flex;gap:.3rem;align-items:center}
+.tb select,.tb>button{border:1px solid var(--bd);background:var(--bg);color:var(--text);border-radius:8px;padding:.45rem .55rem;font-size:.9rem;cursor:pointer;font-family:inherit}
+.pal{position:absolute;right:0;top:110%;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:.7rem;box-shadow:0 10px 25px rgba(0,0,0,.3);display:grid;grid-template-columns:repeat(4,44px);gap:8px;z-index:2000}
+.pal[hidden]{display:none}
+.sw{width:44px;height:44px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px var(--bd);cursor:pointer}
+.sw.on{box-shadow:0 0 0 3px var(--text)}
+#lockBtn{position:fixed;left:12px;bottom:12px;z-index:5000;width:44px;height:44px;border-radius:50%;border:0;background:var(--navy);color:#fff;font-size:1.2rem;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.35)}
+#maint{position:fixed;inset:0;z-index:4000;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;gap:1rem}
+#maint[hidden],#adm[hidden]{display:none}
+#maint h1{color:var(--navy)}
+#adm{position:fixed;inset:0;z-index:6000;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:1rem}
+#adm .mbox{max-width:560px}
+#adm h3{margin:1rem 0 .4rem;color:var(--navy)}
+#adm .ln{display:flex;align-items:center;gap:.5rem;padding:.35rem 0;border-bottom:1px solid var(--bd);font-size:.9rem}
+#adm .ln span{flex:1}
+#adm .ln button{padding:.2rem .6rem}
+#adm .two2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.mbanner{background:#fbbf24;color:#000;text-align:center;padding:.4rem;font-weight:700;font-size:.85rem}
+</style>
+
+<button id="lockBtn" aria-label="Espace créateur" title="Espace créateur">🔒</button>
+<div id="maint" hidden><h1>🛠️ Maintenance</h1><p id="maintMsg"></p></div>
+<div id="adm" hidden><div class="mbox" id="admBox"></div></div>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getFirestore,doc,setDoc,onSnapshot} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ① COLLE ICI TA CONFIG FIREBASE */
+const FIREBASE_CONFIG={apiKey: "AIzaSyAuSi-FAgMH-nRACrLvJy5_m8TYDKIIJzo",
+  authDomain: "jamais-seul-1559b.firebaseapp.com",
+  projectId: "jamais-seul-1559b",
+  storageBucket: "jamais-seul-1559b.firebasestorage.app",
+  messagingSenderId: "152897763801",
+  appId: "1:152897763801:web:924fd688b73117d91d81c8"};
+const READY=FIREBASE_CONFIG.apiKey!=="COLLE_ICI";
+let auth,db;if(READY){const app=initializeApp(FIREBASE_CONFIG);auth=getAuth(app);db=getFirestore(app)}
+
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const e=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const SECS={carte:"🗺️ Carte",pres:"🔎 Près de chez vous",ressources:"📞 Numéros & sites",simulateur:"🧭 Simulateur",benevolat:"🙋 Bénévolat"};
+const DEF={primary:"#0f4c81",accent:"#2563eb",font:"system-ui",size:16,title:"",maintenance:false,mmsg:"Le site est en maintenance. Retour très bientôt !",urgBar:true,order:Object.keys(SECS),hidden:[]};
+const FONTS={"system-ui":"Système","Georgia,serif":"Georgia (serif)","'Trebuchet MS',sans-serif":"Trebuchet","Verdana,sans-serif":"Verdana (lisible)","'Courier New',monospace":"Machine à écrire","'Comic Sans MS',cursive":"Arrondie"};
+let cfg={...DEF},user=null,theme=localStorage.getItem("sf_theme")||"0",lang=localStorage.getItem("sf_lang")||"fr";
+
+/* ② 10 couleurs au choix pour les visiteurs (0 = couleur du créateur) */
+const TH=[["Créateur"],["Océan","#0f4c81","#2563eb","#0f4c81","#093154"],["Forêt","#166534","#16a34a","#166534","#0b3d1e"],["Lavande","#6d28d9","#7c3aed","#6d28d9","#3b1580"],["Corail","#be123c","#e11d48","#be123c","#7f0d28"],["Soleil","#b45309","#d97706","#b45309","#78350f"],["Turquoise","#0e7490","#0891b2","#0e7490","#064e63"],["Rose","#be185d","#db2777","#be185d","#831843"],["Ardoise","#334155","#475569","#334155","#0f172a"],["Menthe","#047857","#10b981","#047857","#064e3b"],["Indigo","#3730a3","#4f46e5","#3730a3","#1e1b4b"]];
+function th(i){return i==="0"?[ "",cfg.primary,cfg.accent,cfg.primary,cfg.primary]:TH[i]}
+function applyTheme(){
+  const t=th(theme),b=document.body,dark=b.classList.contains("dark");
+  const set=(k,v)=>v?b.style.setProperty(k,v):b.style.removeProperty(k);
+  if(dark)b.style.removeProperty("--navy");else set("--navy",t[1]);
+  set("--blue",t[2]);set("--h1",t[3]);set("--h2",t[4]);
+  $$(".sw").forEach(s=>s.classList.toggle("on",s.dataset.i===theme))}
+new MutationObserver(applyTheme).observe(document.body,{attributes:true,attributeFilter:["class"]});
+
+/* ③ Langues (textes fixes du site) */
+const T={"Carte":["Map","Mapa","الخريطة"],"Près de chez vous":["Near you","Cerca de ti","بالقرب منك"],"Numéros & sites":["Numbers & sites","Números y webs","أرقام ومواقع"],"Simulateur":["Simulator","Simulador","المحاكي"],"Bénévolat":["Volunteering","Voluntariado","التطوع"],
+"Trouvez de l'aide dans n'importe quelle ville de France":["Find help in any city in France","Encuentra ayuda en cualquier ciudad de Francia","ابحث عن المساعدة في أي مدينة في فرنسا"],
+"Chercher":["Search","Buscar","بحث"],"📍 Autour de moi":["📍 Near me","📍 Cerca de mí","📍 بالقرب مني"],"🥫 Manger":["🥫 Food","🥫 Comer","🥫 طعام"],"🚿 Douche":["🚿 Shower","🚿 Ducha","🚿 استحمام"],"💼 Emploi":["💼 Jobs","💼 Empleo","💼 عمل"],"🎓 Étudiant":["🎓 Student","🎓 Estudiante","🎓 طالب"],"👕 Vêtements":["👕 Clothes","👕 Ropa","👕 ملابس"],
+"Lieux référencés":["Places listed","Lugares","أماكن"],"Vos favoris":["Your favourites","Tus favoritos","مفضلتك"],"Gratuit & sans compte":["Free, no account","Gratis, sin cuenta","مجاني بدون حساب"],
+"🗺️ Carte des centres d'aide":["🗺️ Map of help centres","🗺️ Mapa de centros de ayuda","🗺️ خريطة مراكز المساعدة"],"🔄 Chercher dans cette zone":["🔄 Search this area","🔄 Buscar en esta zona","🔄 ابحث في هذه المنطقة"],"🇫🇷 Vue France":["🇫🇷 France view","🇫🇷 Vista Francia","🇫🇷 عرض فرنسا"],
+"Voir plus de résultats":["More results","Más resultados","المزيد"],"+ Lieu":["+ Place","+ Lugar","+ مكان"],"🚨 Gratuit, 24h/24 :":["🚨 Free, 24/7:","🚨 Gratis, 24h:","🚨 مجاني 24/24:"],
+"📞 Numéros utiles & sites officiels":["📞 Useful numbers & official sites","📞 Números útiles y webs oficiales","📞 أرقام مفيدة ومواقع رسمية"],"🧭 Simulateur & démarches":["🧭 Simulator & procedures","🧭 Simulador y trámites","🧭 المحاكي والإجراءات"],
+"🙋 Bénévolat, dons & partage":["🙋 Volunteering, donations & sharing","🙋 Voluntariado y donaciones","🙋 التطوع والتبرعات"],"Que puis-je faire ?":["What can I do?","¿Qué puedo hacer?","ماذا يمكنني أن أفعل؟"],"Afficher mes pistes":["Show my options","Ver mis opciones","اعرض الخيارات"],"✅ Checklist des démarches":["✅ Checklist","✅ Lista de trámites","✅ قائمة المهام"],"Réinitialiser":["Reset","Restablecer","إعادة ضبط"]};
+const LI={fr:-1,en:0,es:1,ar:2},orig=new WeakMap();
+function applyLang(){
+  const i=LI[lang];document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+  const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;
+  while(n=w.nextNode()){if(n.parentNode.closest("#adm,script,style"))continue;
+    if(!orig.has(n)){const k=n.nodeValue.trim();if(!T[k])continue;orig.set(n,[n.nodeValue,k])}
+    const[o,k]=orig.get(n);n.nodeValue=i<0?o:o.replace(k,T[k][i])}
+  const c=$("#city");c.placeholder=i<0?"Ville ou code postal (ex : Bordeaux, 33000)":["City or postcode (e.g. Bordeaux, 33000)","Ciudad o código postal (ej. Burdeos, 33000)","المدينة أو الرمز البريدي"][i]}
+
+/* Barre d'outils visiteurs (langue + couleurs) */
+const tb=document.createElement("div");tb.className="tb";
+tb.innerHTML='<select id="sfLang" aria-label="Langue"><option value="fr">🌐 FR</option><option value="en">🌐 EN</option><option value="es">🌐 ES</option><option value="ar">🌐 AR</option></select><button id="palBtn" aria-label="Couleurs du site" title="Couleurs">🎨</button><div class="pal" id="pal" hidden>'+TH.map((t,i)=>'<div class="sw" data-i="'+i+'" title="'+t[0]+'" style="background:'+(i?t[2]:"conic-gradient(#f43f5e,#f59e0b,#10b981,#3b82f6,#a855f7,#f43f5e)")+'"></div>').join("")+"</div>";
+$("nav").insertBefore(tb,$('nav [data-a="theme"]'));
+$("#sfLang").value=lang;
+$("#sfLang").onchange=function(){lang=this.value;localStorage.setItem("sf_lang",lang);applyLang()};
+$("#palBtn").onclick=ev=>{ev.stopPropagation();$("#pal").hidden=!$("#pal").hidden};
+$("#pal").onclick=ev=>{const s=ev.target.closest(".sw");if(!s)return;theme=s.dataset.i;localStorage.setItem("sf_theme",theme);applyTheme()};
+document.addEventListener("click",()=>{$("#pal").hidden=true});
+
+/* Sections réordonnables */
+const main=$("main.wrap");
+$$("main.wrap>h2.t").forEach(h=>{const d=document.createElement("section");d.dataset.sec=h.id;main.insertBefore(d,h);let n=h;while(n&&(n===h||!n.matches("h2.t"))){const nx=n.nextElementSibling;d.append(n);n=nx}});
+
+/* Application de la configuration */
+function applyCfg(){
+  const c={...DEF,...cfg};
+  document.body.style.fontFamily=c.font;document.documentElement.style.fontSize=c.size+"px";
+  const h1=$(".hero h1");if(!h1.dataset.o)h1.dataset.o=h1.textContent;h1.textContent=c.title||h1.dataset.o;
+  $(".urg").style.display=c.urgBar?"":"none";
+  c.order.forEach((id,i)=>{const s=$('[data-sec="'+id+'"]');if(s){s.style.order=i;s.hidden=c.hidden.includes(id)}});
+  $$(".links a").forEach(a=>{const id=a.getAttribute("href").slice(1);a.style.display=c.hidden.includes(id)?"none":""});
+  $("#maintMsg").textContent=c.mmsg;$("#maint").hidden=!(c.maintenance&&!user);
+  let mb=$(".mbanner");if(c.maintenance&&user){if(!mb){mb=document.createElement("div");mb.className="mbanner";mb.textContent="⚠️ Mode maintenance ACTIF : seuls vous le voyez normalement";document.body.prepend(mb)}}else if(mb)mb.remove();
+  applyTheme();window.dispatchEvent(new Event("resize"))}
+if(READY)onSnapshot(doc(db,"config","site"),s=>{if(s.exists()){cfg={...DEF,...s.data()};applyCfg();if(!$("#adm").hidden)panel()}},()=>{});
+applyCfg();applyLang();
+
+/* Cadenas + panneau créateur */
+$("#lockBtn").onclick=()=>{$("#adm").hidden=false;panel()};
+$("#adm").onclick=ev=>{if(ev.target.id==="adm")$("#adm").hidden=true};
+if(READY)onAuthStateChanged(auth,u=>{user=u;$("#lockBtn").textContent=u?"🔓":"🔒";applyCfg();if(!$("#adm").hidden)panel()});
+
+function panel(){
+  const B=$("#admBox"),x='<button class="x" id="admX" aria-label="Fermer">&times;</button>';
+  if(!READY){B.innerHTML=x+"<h2>🔒 Espace créateur</h2><p>Colle d'abord ta configuration Firebase dans <code>FIREBASE_CONFIG</code>.</p>";$("#admX").onclick=()=>$("#adm").hidden=true;return}
+  if(!user){
+    B.innerHTML=x+'<h2>🔒 Espace créateur</h2><input id="aE" class="field" type="email" placeholder="Email" autocomplete="username"><input id="aP" class="field" type="password" placeholder="Mot de passe" autocomplete="current-password"><button class="btn g" style="width:100%" id="aGo">Se connecter</button><p id="aErr" class="sub" style="color:#b91c1c"></p>';
+    const go=async()=>{try{await signInWithEmailAndPassword(auth,$("#aE").value.trim(),$("#aP").value)}catch(er){$("#aErr").textContent="Identifiants incorrects."}};
+    $("#aGo").onclick=go;$("#aP").onkeydown=ev=>{if(ev.key==="Enter")go()};$("#admX").onclick=()=>$("#adm").hidden=true;return}
+  const c={...DEF,...cfg};
+  B.innerHTML=x+'<h2>⚙️ Espace créateur</h2><p class="sub">'+e(user.email)+'</p>'
+  +'<h3>🎨 Apparence</h3><div class="two2"><label>Couleur principale<input id="cP" type="color" class="field" value="'+c.primary+'"></label><label>Couleur d\'accent<input id="cA" type="color" class="field" value="'+c.accent+'"></label></div>'
+  +'<label>Police<select id="cF" class="field">'+Object.entries(FONTS).map(([k,v])=>'<option value="'+e(k)+'"'+(k===c.font?" selected":"")+">"+v+"</option>").join("")+'</select></label>'
+  +'<label>Taille du texte : <b id="cSv">'+c.size+'</b> px<input id="cS" type="range" min="13" max="22" value="'+c.size+'" style="width:100%"></label>'
+  +'<label>Titre de la page d\'accueil (vide = titre d\'origine)<input id="cT" class="field" value="'+e(c.title)+'" maxlength="120"></label>'
+  +'<h3>📐 Position des sections</h3>'+c.order.map((id,i)=>'<div class="ln"><span>'+SECS[id]+'</span><button class="btn l" data-mv="'+i+'" data-d="-1">↑</button><button class="btn l" data-mv="'+i+'" data-d="1">↓</button><label><input type="checkbox" data-hd="'+id+'"'+(c.hidden.includes(id)?"":" checked")+"> visible</label></div>").join("")
+  +'<h3>🛠️ Maintenance & divers</h3><label class="ck"><input type="checkbox" id="cM"'+(c.maintenance?" checked":"")+'><span>Activer le mode maintenance (les visiteurs ne voient que le message)</span></label><input id="cMm" class="field" value="'+e(c.mmsg)+'" maxlength="200" placeholder="Message de maintenance"><label class="ck"><input type="checkbox" id="cU"'+(c.urgBar?" checked":"")+'><span>Afficher la barre des numéros d\'urgence</span></label>'
+  +'<div class="row" style="margin-top:1rem"><button class="btn g" id="aSave">💾 Publier</button><button class="btn l" id="aRst">↩︎ Par défaut</button><button class="btn rd" id="aOut">Déconnexion</button></div><p class="sub" id="aMsg"></p>';
+  const rd=()=>{c.primary=$("#cP").value;c.accent=$("#cA").value;c.font=$("#cF").value;c.size=+$("#cS").value;c.title=$("#cT").value;c.maintenance=$("#cM").checked;c.mmsg=$("#cMm").value;c.urgBar=$("#cU").checked;$("#cSv").textContent=c.size;cfg=c;applyCfg()};
+  ["cP","cA","cF","cS","cT","cM","cMm","cU"].forEach(i=>$("#"+i).oninput=rd);
+  $$("[data-hd]").forEach(k=>k.onchange=()=>{c.hidden=k.checked?c.hidden.filter(h=>h!==k.dataset.hd):c.hidden.concat(k.dataset.hd);cfg=c;applyCfg()});
+  $$("[data-mv]").forEach(b=>b.onclick=()=>{const i=+b.dataset.mv,j=i+ +b.dataset.d;if(j<0||j>=c.order.length)return;[c.order[i],c.order[j]]=[c.order[j],c.order[i]];cfg=c;applyCfg();panel()});
+  $("#aSave").onclick=async()=>{try{await setDoc(doc(db,"config","site"),c);$("#aMsg").textContent="✅ Publié pour tous les visiteurs."}catch(er){$("#aMsg").textContent="❌ Refusé : vérifie les règles Firestore."}};
+  $("#aRst").onclick=()=>{cfg={...DEF};applyCfg();panel()};
+  $("#aOut").onclick=()=>signOut(auth);$("#admX").onclick=()=>$("#adm").hidden=true}
+</script>
 </html>
