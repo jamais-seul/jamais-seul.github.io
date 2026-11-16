@@ -1,333 +1,354 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Solidarité France — Portail National d'Entraide & Carte</title>
-  <link rel="stylesheet" href="https://unpkg.com" />
-  <style>
-    :root { --navy:#0f4c81; --navy-dark:#093154; --blue:#2563eb; --green:#059669; --amber:#d97706; --bg:#f1f5f9; --card:#ffffff; --text:#0f172a; --muted:#475569; --border:#cbd5e1; --shadow:0 4px 12px rgba(15,23,42,0.06); }
-    body.dark { --bg:#090d16; --card:#111827; --text:#f8fafc; --muted:#94a3b8; --border:#1e293b; --shadow:0 4px 12px rgba(0,0,0,0.4); }
-    * { box-sizing:border-box; margin:0; padding:0; }
-    html { scroll-behavior:smooth; }
-    body { font-family:system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; transition:0.2s; }
-    .urg-bar { background:#991b1b; color:#fff; font-size:0.85rem; padding:0.5rem 1rem; display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:0.8rem; font-weight:500; }
-    .urg-pill { background:#fff; color:#991b1b; padding:2px 10px; border-radius:20px; text-decoration:none; font-weight:800; font-size:0.8rem; }
-    nav { background:var(--card); border-bottom:1px solid var(--border); padding:0.9rem 1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; position:sticky; top:0; z-index:500; }
-    .logo { font-size:1.3rem; font-weight:800; color:var(--navy); text-decoration:none; }
-    body.dark .logo { color:#60a5fa; }
-    .nav-menu { display:flex; gap:0.8rem; align-items:center; flex-wrap:wrap; }
-    .nav-link { color:var(--text); text-decoration:none; font-weight:600; font-size:0.9rem; padding:4px 8px; border-radius:6px; }
-    .nav-cta { background:var(--green); color:#fff; border:none; padding:8px 14px; border-radius:8px; font-weight:700; cursor:pointer; font-size:0.9rem; }
-    .nav-theme { background:var(--bg); color:var(--text); border:1px solid var(--border); padding:6px 10px; border-radius:8px; cursor:pointer; }
-    .hero { background:linear-gradient(135deg,var(--navy),var(--navy-dark)); color:#fff; padding:2.8rem 1.2rem; text-align:center; }
-    .hero h1 { font-size:2rem; max-width:800px; margin:0 auto 0.6rem; }
-    .hero p { max-width:680px; margin:0 auto 1.4rem; opacity:0.92; }
-    .search-bar { max-width:620px; margin:0 auto; display:flex; background:#fff; border-radius:50px; padding:5px; box-shadow:0 8px 20px rgba(0,0,0,0.2); }
-    .search-bar input { flex:1; border:none; padding:0.75rem 1.2rem; border-radius:50px; font-size:1rem; outline:none; color:#0f172a; }
-    .search-bar button { background:var(--amber); color:#fff; border:none; padding:0.75rem 1.4rem; border-radius:50px; font-weight:700; cursor:pointer; }
-    .container { max-width:1140px; margin:1.8rem auto; padding:0 1.2rem; }
-    .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:1rem; margin-bottom:1.6rem; }
-    .kpi-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1rem; text-align:center; box-shadow:var(--shadow); }
-    .kpi-card strong { display:block; font-size:1.5rem; color:var(--blue); }
-    .kpi-card span { font-size:0.85rem; color:var(--muted); font-weight:600; }
-    .filter-bar { display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center; margin-bottom:1.5rem; }
-    .f-chip { background:var(--card); color:var(--text); border:1px solid var(--border); padding:0.55rem 1.1rem; border-radius:30px; font-weight:600; font-size:0.9rem; cursor:pointer; }
-    .f-chip.active, .f-chip:hover { background:var(--navy); color:#fff; border-color:var(--navy); }
-    .map-section { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:1.2rem; margin-bottom:2rem; box-shadow:var(--shadow); }
-    .map-top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:0.8rem; }
-    #map { height:420px; width:100%; border-radius:10px; z-index:1; border:1px solid var(--border); }
-    .legend { display:flex; flex-wrap:wrap; gap:12px; margin-top:0.8rem; font-size:0.82rem; color:var(--muted); }
-    .dot { width:12px; height:12px; border-radius:50%; display:inline-block; margin-right:4px; }
-    .cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1.2rem; margin-bottom:2.5rem; }
-    .place-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1.3rem; display:flex; flex-direction:column; justify-content:space-between; box-shadow:var(--shadow); }
-    .badge { display:inline-block; padding:3px 9px; border-radius:6px; font-size:0.78rem; font-weight:700; background:#dbeafe; color:#1e40af; }
-    .dist-badge { font-size:0.78rem; font-weight:700; color:var(--green); }
-    .place-card h3 { font-size:1.15rem; margin:0.6rem 0 0.4rem; }
-    .place-card p { font-size:0.92rem; color:var(--muted); margin-bottom:1rem; }
-    .card-btns { display:flex; gap:6px; }
-    .btn { background:var(--navy); color:#fff; border:none; padding:0.6rem 0.9rem; border-radius:8px; font-weight:600; cursor:pointer; font-size:0.88rem; text-decoration:none; text-align:center; display:inline-block; }
-    .btn-green { background:var(--green); }
-    .btn-light { background:var(--bg); color:var(--text); border:1px solid var(--border); }
-    .btn-fav { background:#fef3c7; color:#b45309; border:1px solid #fcd34d; }
-    .tools-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(310px,1fr)); gap:1.5rem; margin-bottom:2.5rem; }
-    .panel { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:1.5rem; box-shadow:var(--shadow); }
-    .panel h2 { font-size:1.25rem; margin-bottom:0.6rem; color:var(--navy); }
-    body.dark .panel h2 { color:#60a5fa; }
-    .field { width:100%; padding:0.7rem; margin:0.4rem 0 0.9rem; border:1px solid var(--border); border-radius:8px; background:var(--bg); color:var(--text); font-size:0.95rem; }
-    .check-item { display:flex; align-items:flex-start; gap:10px; padding:0.6rem; border-bottom:1px solid var(--border); cursor:pointer; font-size:0.92rem; }
-    .check-item.done span { text-decoration:line-through; opacity:0.6; }
-    .modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); align-items:center; justify-content:center; padding:1rem; z-index:2000; }
-    .modal-bg.open { display:flex; }
-    .modal-box { background:var(--card); color:var(--text); max-width:500px; width:100%; padding:1.6rem; border-radius:14px; border:1px solid var(--border); max-height:90vh; overflow-y:auto; }
-    footer { background:var(--card); border-top:1px solid var(--border); text-align:center; padding:2rem 1rem; font-size:0.88rem; color:var(--muted); }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solidarité France — Aides, magasins solidaires, numéros utiles & carte</title>
+<meta name="description" content="Portail gratuit : magasins solidaires, aides alimentaires, numéros d'urgence, aides étudiants, chômage, réinsertion, carte interactive.">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{--navy:#0f4c81;--blue:#2563eb;--green:#059669;--amber:#d97706;--red:#991b1b;--bg:#f1f5f9;--card:#fff;--text:#0f172a;--muted:#475569;--bd:#cbd5e1;--sh:0 4px 12px rgba(15,23,42,.07)}
+body.dark{--bg:#0b1020;--card:#131b2e;--text:#f1f5f9;--muted:#9fb0c8;--bd:#25314a;--navy:#60a5fa;--sh:0 4px 12px rgba(0,0,0,.4)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
+a{color:var(--blue)}
+.urg{background:var(--red);color:#fff;font-size:.85rem;padding:.5rem 1rem;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.6rem}
+.urg a{background:#fff;color:var(--red);padding:2px 10px;border-radius:20px;text-decoration:none;font-weight:800}
+nav{background:var(--card);border-bottom:1px solid var(--bd);padding:.7rem 1rem;display:flex;align-items:center;gap:.8rem;position:sticky;top:0;z-index:500}
+.logo{font-weight:800;font-size:1.15rem;color:var(--navy);text-decoration:none;white-space:nowrap}
+.links{display:flex;gap:.2rem;overflow-x:auto;flex:1;scrollbar-width:thin}
+.links a{color:var(--text);text-decoration:none;font-weight:600;font-size:.88rem;padding:5px 9px;border-radius:6px;white-space:nowrap}
+.links a:hover{background:var(--bg)}
+.btn{background:var(--navy);color:#fff;border:0;padding:.6rem .95rem;border-radius:8px;font-weight:600;cursor:pointer;font-size:.88rem;text-decoration:none;text-align:center;display:inline-block;font-family:inherit}
+body.dark .btn{color:#0b1020}
+.btn:hover{opacity:.88}.g{background:var(--green);color:#fff!important}.l{background:var(--bg);color:var(--text)!important;border:1px solid var(--bd)}.fav{background:#fef3c7;color:#b45309!important;border:1px solid #fcd34d}
+.hero{background:linear-gradient(135deg,#0f4c81,#093154);color:#fff;padding:2.6rem 1.2rem;text-align:center}
+.hero h1{font-size:clamp(1.5rem,4vw,2.1rem);max-width:800px;margin:0 auto .6rem}
+.hero p{max-width:680px;margin:0 auto 1.3rem;opacity:.93}
+.search{max-width:620px;margin:0 auto;display:flex;background:#fff;border-radius:50px;padding:5px;box-shadow:0 8px 20px rgba(0,0,0,.25)}
+.search input{flex:1;min-width:0;border:0;padding:.75rem 1.2rem;border-radius:50px;font-size:1rem;outline:0;color:#0f172a;background:transparent}
+.search button{background:var(--amber);color:#fff;border:0;padding:.7rem 1.3rem;border-radius:50px;font-weight:700;cursor:pointer}
+.quick{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-top:1rem}
+.quick button{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.35);padding:.35rem .8rem;border-radius:20px;cursor:pointer;font-size:.85rem}
+.wrap{max-width:1160px;margin:1.6rem auto;padding:0 1rem}
+h2.t{font-size:1.4rem;margin:2.2rem 0 .3rem;color:var(--navy)}
+.sub{color:var(--muted);font-size:.92rem;margin-bottom:1rem}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.9rem}
+.kpi{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:.9rem;text-align:center;box-shadow:var(--sh)}
+.kpi b{display:block;font-size:1.5rem;color:var(--blue)}.kpi span{font-size:.82rem;color:var(--muted);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:.45rem;margin:1rem 0}
+.chip{background:var(--card);color:var(--text);border:1px solid var(--bd);padding:.5rem 1rem;border-radius:30px;font-weight:600;font-size:.88rem;cursor:pointer;font-family:inherit}
+.chip.on,.chip:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
+body.dark .chip.on,body.dark .chip:hover{color:#0b1020}
+.panel{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:1.2rem;box-shadow:var(--sh)}
+.mtop{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:.8rem}
+#map{height:460px;border-radius:10px;border:1px solid var(--bd);z-index:1;background:#dbe4ee}
+.nomap{display:flex;height:100%;align-items:center;justify-content:center;text-align:center;padding:1rem;color:#334155}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:.7rem;font-size:.8rem;color:var(--muted)}
+.dot{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:-1px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1rem}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:1.1rem;display:flex;flex-direction:column;justify-content:space-between;gap:.8rem;box-shadow:var(--sh)}
+.card h3{font-size:1.05rem;margin:.5rem 0 .3rem}.card p{font-size:.9rem;color:var(--muted)}
+.badge{display:inline-block;padding:2px 9px;border-radius:6px;font-size:.75rem;font-weight:700;color:#fff}
+.meta{font-size:.82rem;font-weight:700;color:var(--muted);margin-bottom:.3rem}
+.row{display:flex;gap:6px;flex-wrap:wrap}.row .btn{flex:1}
+.res{display:flex;flex-direction:column;gap:.3rem;text-decoration:none;color:var(--text);background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:1rem;box-shadow:var(--sh)}
+.res:hover{border-color:var(--blue)}.res b{color:var(--navy)}.res span{font-size:.88rem;color:var(--muted)}
+.res.tel b{font-size:1.25rem;color:var(--red)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:1.2rem}
+.field{width:100%;padding:.7rem;margin:.35rem 0 .8rem;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--text);font-size:.95rem;font-family:inherit}
+label.ck{display:flex;gap:10px;padding:.55rem;border-bottom:1px solid var(--bd);cursor:pointer;font-size:.92rem}
+label.ck.done span{text-decoration:line-through;opacity:.6}
+.bar{height:8px;background:var(--bg);border-radius:8px;overflow:hidden;margin:.5rem 0}.bar i{display:block;height:100%;background:var(--green);width:0;transition:.3s}
+.result{margin-top:1rem;background:var(--bg);border-left:4px solid var(--green);padding:.9rem;border-radius:8px;font-size:.92rem}
+.result li{margin:.4rem 0 .4rem 1.1rem}
+.mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);align-items:center;justify-content:center;padding:1rem;z-index:3000}
+.mbg.open{display:flex}
+.mbox{background:var(--card);color:var(--text);max-width:520px;width:100%;padding:1.5rem;border-radius:14px;max-height:90vh;overflow-y:auto}
+.x{float:right;border:0;background:none;font-size:1.7rem;cursor:pointer;color:var(--muted)}
+.empty{grid-column:1/-1;text-align:center;padding:2rem;color:var(--muted)}
+footer{background:var(--card);border-top:1px solid var(--bd);text-align:center;padding:2rem 1rem;font-size:.85rem;color:var(--muted);margin-top:2rem}
+.warn{background:#fffbeb;border:1px solid #fcd34d;color:#78350f;border-radius:10px;padding:.7rem 1rem;font-size:.85rem;margin-top:.8rem}
+@media(max-width:600px){#map{height:360px}.logo{font-size:1rem}}
+</style>
 </head>
 <body>
-  <div class="urg-bar">
-    <span>🚨 Urgences gratuites 24h/24 :</span>
-    <a href="tel:115" class="urg-pill">📞 115 Hébergement</a>
-    <a href="tel:15" class="urg-pill">🚑 15 SAMU</a>
-    <a href="tel:114" class="urg-pill">💬 114 SMS Sourds</a>
-    <a href="tel:3919" class="urg-pill">🛡️ 3919 Violences</a>
-    <a href="tel:3114" class="urg-pill">💛 3114 Écoute</a>
-  </div>
-  <nav>
-    <a href="#" class="logo">🤝 Solidarité France</a>
-    <div class="nav-menu">
-      <a class="nav-link" href="#sec-map">🗺️ Carte</a>
-      <a class="nav-link" href="#sec-annuaire">📋 Annuaire</a>
-      <a class="nav-link" href="#sec-outils">🧭 Simulateur</a>
-      <a class="nav-link" href="#sec-benevolat">🙋 Bénévolat</a>
-      <button class="nav-cta" onclick="openAddModal()">+ Ajouter un lieu</button>
-      <button class="nav-theme" onclick="toggleTheme()" title="Mode sombre / clair">🌓</button>
-    </div>
-  </nav>
-  <header class="hero">
-    <h1>Toutes les Aides, Magasins & Actions Solidaires</h1>
-    <p>Annuaire citoyen et carte interactive pour trouver gratuitement un repas, un hébergement d'urgence, des soins, des vêtements ou un accompagnement social près de chez vous.</p>
-    <div class="search-bar" id="hero-search"></div>
-  </header>
-  <div class="container">
-    <div class="kpi-grid">
-      <div class="kpi-card"><strong id="kpi-total">0</strong><span>Lieux référencés</span></div>
-      <div class="kpi-card"><strong id="kpi-cities">0</strong><span>Villes couvertes</span></div>
-      <div class="kpi-card"><strong id="kpi-favs">0</strong><span>Vos favoris</span></div>
-      <div class="kpi-card"><strong>100%</strong><span>Gratuit & Citoyen</span></div>
-    </div>
-    <div class="filter-bar" id="filter-bar"></div>
-    <section class="map-section" id="sec-map">
-      <div class="map-top">
-        <div>
-          <strong style="font-size:1.15rem;">🗺️ Carte Interactive des Lieux Solidaires</strong>
-          <p style="font-size:0.85rem;color:var(--muted);">Cliquez sur un marqueur pour obtenir les horaires et l'itinéraire GPS.</p>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="btn btn-green" onclick="locateUser()">📍 Autour de moi</button>
-          <button class="btn btn-light" onclick="resetMapView()">🇫🇷 Vue France</button>
-        </div>
-      </div>
-      <div id="map"></div>
-      <div class="legend">
-        <span><i class="dot" style="background:#ef4444;"></i>Alimentaire</span>
-        <span><i class="dot" style="background:#f59e0b;"></i>Magasins Solidaires</span>
-        <span><i class="dot" style="background:#10b981;"></i>Aides Financières</span>
-        <span><i class="dot" style="background:#3b82f6;"></i>Logement & Santé</span>
-        <span><i class="dot" style="background:#8b5cf6;"></i>Hygiène & Numérique</span>
-      </div>
-    </section>
-    <section id="sec-annuaire"><div class="cards-grid" id="cards-grid"></div></section>
-    <section class="tools-grid" id="sec-outils">
-      <div class="panel"><h2>🧭 Simulateur de Droits & Aides</h2><div id="sim-container"></div></div>
-      <div class="panel"><h2>✅ Checklist des Démarches</h2><div id="checklist-container"></div></div>
-    </section>
-    <section class="tools-grid" id="sec-benevolat">
-      <div class="panel">
-        <h2>🙋 Devenir Bénévole ou Donner</h2>
-        <p style="font-size:0.9rem;color:var(--muted);margin-bottom:0.8rem;">Besoins prioritaires des associations :</p>
-        <ul style="margin-left:1.2rem;font-size:0.92rem;line-height:1.8;margin-bottom:1rem;">
-          <li><strong>Alimentaire :</strong> Conserves, huile, café, lait infantile, couches.</li>
-          <li><strong>Hygiène :</strong> Savons, brosses à dents, protections périodiques.</li>
-          <li><strong>Bénévolat :</strong> Maraudes, distribution alimentaire, aide aux devoirs.</li>
-        </ul>
-        <button class="btn btn-green" style="width:100%;" onclick="openVolModal()">Proposer mon aide ou un don</button>
-      </div>
-      <div class="panel">
-        <h2>💾 Sauvegarde & Partage Citoyen</h2>
-        <p style="font-size:0.9rem;color:var(--muted);margin-bottom:1rem;">Exportez votre liste personnalisée de lieux solidaires ou partagez ce portail.</p>
-        <button class="btn" style="width:100%;margin-bottom:0.6rem;" onclick="exportData()">📥 Télécharger l'annuaire (.json)</button>
-        <button class="btn btn-light" style="width:100%;" onclick="copySiteLink()">🔗 Copier le lien du portail</button>
-      </div>
-    </section>
-  </div>
-  <div class="modal-bg" id="modal-bg"><div class="modal-box" id="modal-box"></div></div>
-  <footer><strong>Solidarité France</strong> — Portail citoyen libre hébergé sur GitHub Pages • Urgences : 15 | 17 | 18 | 112 | 115.</footer>
-  <script src="https://unpkg.com"></script>
-  <script>
-    const CATEGORIES = { "Tout voir":"#0f4c81", "Alimentaire":"#ef4444", "Magasins Solidaires":"#f59e0b", "Aides Financières":"#10b981", "Logement & Santé":"#3b82f6", "Hygiène & Numérique":"#8b5cf6" };
-    const DEFAULT_PLACES = [
-      { id:1, name:"Restos du Cœur — Talence / Bordeaux", city:"Talence", lat:44.808, lng:-0.588, cat:"Alimentaire", hours:"Mar-Ven 9h-16h", desc:"Distribution de repas chauds, paniers alimentaires et espace bébé sur inscription.", url:"https://restosducoeur.org" },
-      { id:2, name:"Épicerie Solidaire Étudiante (AGORAé)", city:"Talence (Campus)", lat:44.801, lng:-0.598, cat:"Alimentaire", hours:"Mar & Jeu 12h-19h", desc:"Produits frais et hygiène à 10-20% du prix normal pour les étudiants.", url:"https://fage.org" },
-      { id:3, name:"CCAS — Centre Communal d'Action Sociale", city:"Talence", lat:44.809, lng:-0.584, cat:"Aides Financières", hours:"Lun-Ven 8h30-17h", desc:"Aides financières d'urgence, domiciliation postale gratuite, chèques énergie et RSA.", url:"https://service-public.fr" },
-      { id:4, name:"Permanence Accès aux Soins (PASS)", city:"Bordeaux (St-André)", lat:44.834, lng:-0.578, cat:"Logement & Santé", hours:"Lun-Ven 9h-17h", desc:"Consultations médicales et délivrance gratuite de médicaments sans avance de frais.", url:"https://sante.gouv.fr" },
-      { id:5, name:"Secours Populaire Français", city:"Paris", lat:48.876, lng:2.359, cat:"Alimentaire", hours:"Lun-Ven 9h-17h30", desc:"Libre-service alimentaire, vestiaire solidaire, accès aux vacances et aide juridique.", url:"https://secourspopulaire.fr" },
-      { id:6, name:"Communauté & Boutique Emmaüs", city:"Lyon", lat:45.758, lng:4.835, cat:"Magasins Solidaires", hours:"Mer-Sam 10h-18h", desc:"Vêtements, meubles, livres et électroménager reconditionnés à prix solidaires.", url:"https://emmaus-france.org" },
-      { id:7, name:"Croix-Rouge Française — Halte Santé", city:"Marseille", lat:43.296, lng:5.369, cat:"Logement & Santé", hours:"7j/7 • 18h-23h", desc:"Maraudes nocturnes, orientation vers le 115 et soins infirmiers gratuits.", url:"https://croix-rouge.fr" },
-      { id:8, name:"Bains-Douches & Bagagerie Solidaire", city:"Toulouse", lat:43.604, lng:1.444, cat:"Hygiène & Numérique", hours:"Tous les jours 7h30-12h30", desc:"Accès gratuit aux douches, kits d'hygiène, consigne à bagages et point Wi-Fi.", url:"https://service-public.fr" },
-      { id:9, name:"Banque Alimentaire & Épicerie Sociale", city:"Lille", lat:50.629, lng:3.057, cat:"Alimentaire", hours:"Lun-Ven 9h-16h30", desc:"Distribution de colis alimentaires et ateliers cuisine ouverts à tous.", url:"https://banquealimentaire.org" },
-      { id:10, name:"Ressourcerie & Atelier Vélo Solidaire", city:"Nantes", lat:47.218, lng:-1.553, cat:"Magasins Solidaires", hours:"Mar-Sam 10h-18h30", desc:"Objets de seconde main à prix libre et atelier d'auto-réparation de vélos.", url:"https://emmaus-france.org" },
-      { id:11, name:"Point Conseil Budget (PCB)", city:"Rennes", lat:48.117, lng:-1.677, cat:"Aides Financières", hours:"Lun-Ven 9h-17h", desc:"Accompagnement gratuit contre les impayés et dossiers de surendettement.", url:"https://service-public.fr" },
-      { id:12, name:"Accueil de Jour & Laverie Solidaire", city:"Nice", lat:43.710, lng:7.262, cat:"Hygiène & Numérique", hours:"Lun-Sam 8h30-16h", desc:"Petit-déjeuner gratuit, machines à laver, ordinateurs et domiciliation.", url:"https://croix-rouge.fr" }
-    ];
-    const CHECKLIST_ITEMS = [
-      "Ouvrir ou mettre à jour mon dossier CAF (APL, RSA, Prime d'activité)",
-      "Demander la Complémentaire Santé Solidaire (CSS) sur ameli.fr",
-      "Vérifier mon éligibilité au Chèque Énergie (chequeenergie.gouv.fr)",
-      "Prendre RDV avec une assistante sociale au CCAS",
-      "Demander une domiciliation postale (si pas d'adresse fixe)",
-      "M'inscrire auprès d'une épicerie solidaire ou association alimentaire"
-    ];
-    let places = JSON.parse(localStorage.getItem("sf_places_v5")) || DEFAULT_PLACES;
-    let favs = JSON.parse(localStorage.getItem("sf_favs_v5")) || [];
-    let checked = JSON.parse(localStorage.getItem("sf_checks_v5")) || [];
-    let currentCat = "Tout voir", currentQuery = "", userCoords = null;
+<div class="urg"><span>🚨 Gratuit, 24h/24 :</span>
+<a href="tel:115">115 Hébergement</a><a href="tel:15">15 SAMU</a><a href="tel:17">17 Police</a><a href="tel:112">112 Europe</a><a href="tel:3919">3919 Violences</a><a href="tel:3114">3114 Détresse</a><a href="tel:119">119 Enfance</a></div>
 
-    document.getElementById("hero-search").innerHTML = '<input id="q-input" placeholder="Rechercher une ville, une aide (ex: Talence, repas, douche)..."><button onclick="handleSearch()">Chercher</button>';
-    document.getElementById("sim-container").innerHTML = '<select id="sim-need" class="field"><option value="food">🥫 Besoin de manger / courses à petit prix</option><option value="money">💶 Difficulté à payer mon loyer ou mes factures</option><option value="sleep">🏠 Sans hébergement pour ce soir</option><option value="health">🩺 Besoin de soins médicaux sans mutuelle</option><option value="admin">📄 Aide pour mes papiers / numérique</option></select><select id="sim-profil" class="field"><option value="single">Personne seule</option><option value="family">Famille avec enfant(s)</option><option value="student">Étudiant(e) ou jeune de moins de 25 ans</option></select><button class="btn" style="width:100%;" onclick="runSimulator()">Afficher mes droits & contacts</button><div id="sim-result" style="margin-top:1rem;"></div>';
+<nav>
+<a class="logo" href="#top">🤝 Solidarité France</a>
+<div class="links">
+<a href="#carte">Carte</a><a href="#annuaire">Annuaire</a><a href="#ressources">Numéros & sites</a><a href="#simulateur">Simulateur</a><a href="#demarches">Démarches</a><a href="#benevolat">Bénévolat</a>
+</div>
+<button class="btn l" data-a="theme" title="Mode sombre / clair" aria-label="Changer de thème">🌓</button>
+<button class="btn g" data-a="add">+ Lieu</button>
+</nav>
 
-    const map = L.map("map").setView([46.5, 2.2], 6);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: "&copy; OpenStreetMap" }).addTo(map);
-    const markersLayer = L.layerGroup().addTo(map);
+<header class="hero" id="top">
+<h1>Toutes les aides, magasins solidaires & contacts utiles</h1>
+<p>Trouvez gratuitement un repas, un hébergement, des soins, un accompagnement vers l'emploi ou un magasin solidaire près de chez vous.</p>
+<form class="search" id="sform" role="search"><input id="q" type="search" placeholder="Ville, aide… (ex : Lyon, repas, douche, CAF)" aria-label="Rechercher"><button type="submit">Chercher</button></form>
+<div class="quick">
+<button data-a="quick" data-v="repas">🥫 Manger</button><button data-a="quick" data-v="douche">🚿 Douche</button><button data-a="quick" data-v="emploi">💼 Emploi</button><button data-a="quick" data-v="étudiant">🎓 Étudiant</button><button data-a="quick" data-v="vêtements">👕 Vêtements</button>
+</div>
+</header>
 
-    function toggleTheme() { document.body.classList.toggle("dark"); localStorage.setItem("sf_dark", document.body.classList.contains("dark")); }
-    if (localStorage.getItem("sf_dark") === "true") document.body.classList.add("dark");
+<main class="wrap">
+<div class="kpis">
+<div class="kpi"><b id="k1">0</b><span>Lieux référencés</span></div>
+<div class="kpi"><b id="k2">0</b><span>Villes</span></div>
+<div class="kpi"><b id="k3">0</b><span>Vos favoris</span></div>
+<div class="kpi"><b>100 %</b><span>Gratuit & sans compte</span></div>
+</div>
 
-    function getDistance(lat1, lon1, lat2, lon2) {
-      const R = 6371, dLat = (lat2 - lat1) * Math.PI / 180, dLon = (lon2 - lon1) * Math.PI / 180;
-      const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
-      return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
-    }
+<h2 class="t" id="carte">🗺️ Carte interactive</h2>
+<p class="sub">Cliquez sur un point pour voir horaires, détails et itinéraire.</p>
+<div class="chips" id="chips"></div>
+<div class="panel">
+<div class="mtop"><strong id="count"></strong>
+<div class="row"><button class="btn g" data-a="locate">📍 Autour de moi</button><button class="btn l" data-a="reset">🇫🇷 Vue France</button><button class="btn l" data-a="fit">🔎 Tout afficher</button></div></div>
+<div id="map"></div>
+<div class="legend" id="legend"></div>
+<div class="warn">⚠️ Les positions sont approximatives (centre-ville) et les horaires peuvent changer : vérifiez toujours par téléphone ou sur le site avant de vous déplacer.</div>
+</div>
 
-    function handleSearch() { currentQuery = document.getElementById("q-input").value.trim().toLowerCase(); renderAll(); }
-    document.getElementById("q-input").addEventListener("input", handleSearch);
-    function selectCategory(cat) { currentCat = cat; renderAll(); }
+<h2 class="t" id="annuaire">📋 Annuaire des lieux solidaires</h2>
+<p class="sub">Magasins solidaires, épiceries sociales, distributions, centres d'aide…</p>
+<div class="grid" id="cards"></div>
 
-    function renderFilters() {
-      const allTabs = [...Object.keys(CATEGORIES), "Favoris"];
-      document.getElementById("filter-bar").innerHTML = allTabs.map(cat => {
-        const text = cat === "Favoris" ? "⭐ Favoris (" + favs.length + ")" : cat;
-        return '<button class="f-chip ' + (currentCat === cat ? "active" : "") + '" onclick="selectCategory(\'' + cat + '\')">' + text + '</button>';
-      }).join("");
-    }
+<h2 class="t">🔎 Trouver l'adresse la plus proche de chez vous</h2>
+<p class="sub">Annuaires officiels avec recherche par code postal.</p>
+<div class="grid" id="locators"></div>
 
-    function renderChecklist() {
-      document.getElementById("checklist-container").innerHTML = CHECKLIST_ITEMS.map((item, idx) => {
-        const isDone = checked.includes(idx);
-        return '<label class="check-item ' + (isDone ? "done" : "") + '"><input type="checkbox" ' + (isDone ? "checked" : "") + ' onchange="toggleCheck(' + idx + ')"><span>' + item + '</span></label>';
-      }).join("");
-    }
+<h2 class="t" id="ressources">📞 Numéros utiles & sites officiels</h2>
+<div class="chips" id="rtabs"></div>
+<div class="grid" id="rgrid"></div>
 
-    function toggleCheck(idx) {
-      checked = checked.includes(idx) ? checked.filter(i => i !== idx) : [...checked, idx];
-      localStorage.setItem("sf_checks_v5", JSON.stringify(checked));
-      renderChecklist();
-    }
+<h2 class="t" id="simulateur">🧭 Simulateur & démarches</h2>
+<div class="two">
+<div class="panel"><h3>Que puis-je faire ?</h3>
+<label for="sn">Mon besoin</label>
+<select id="sn" class="field">
+<option value="food">🥫 Manger / courses à petit prix</option><option value="money">💶 Payer loyer, factures</option><option value="sleep">🏠 Pas d'hébergement ce soir</option><option value="health">🩺 Soins sans mutuelle</option><option value="job">💼 Trouver un emploi / me réinsérer</option><option value="admin">📄 Papiers, numérique, droits</option><option value="violence">🛡️ Violences / danger</option>
+</select>
+<label for="sp">Ma situation</label>
+<select id="sp" class="field"><option value="single">Personne seule</option><option value="family">Famille avec enfant(s)</option><option value="student">Étudiant(e) / moins de 25 ans</option><option value="jobseeker">Demandeur d'emploi</option><option value="exit">Sortie de détention / de rue</option></select>
+<button class="btn" style="width:100%" data-a="sim">Afficher mes pistes</button>
+<div id="sres"></div></div>
+<div class="panel" id="demarches"><h3>✅ Checklist des démarches</h3>
+<div class="bar"><i id="pbar"></i></div><div class="sub" id="ptxt"></div>
+<div id="checks"></div>
+<button class="btn l" style="margin-top:.8rem" data-a="resetchecks">Réinitialiser</button></div>
+</div>
 
-    function renderAll() {
-      renderFilters();
-      const grid = document.getElementById("cards-grid");
-      grid.innerHTML = "";
-      markersLayer.clearLayers();
+<h2 class="t" id="benevolat">🙋 Bénévolat, dons & partage</h2>
+<div class="two">
+<div class="panel"><h3>Aider à son tour</h3>
+<ul style="margin:.6rem 0 1rem 1.2rem;font-size:.92rem;line-height:1.8">
+<li><b>Alimentaire :</b> conserves, huile, café, lait infantile, couches.</li>
+<li><b>Hygiène :</b> savons, brosses à dents, protections périodiques.</li>
+<li><b>Temps :</b> maraudes, distributions, aide aux devoirs, accueil.</li></ul>
+<a class="btn g" href="https://www.jeveuxaider.gouv.fr" target="_blank" rel="noopener">Trouver une mission bénévole</a></div>
+<div class="panel"><h3>Sauvegarde & partage</h3>
+<p class="sub">Exportez la liste ou partagez le portail autour de vous.</p>
+<div class="row"><button class="btn" data-a="export">📥 Exporter (.json)</button><button class="btn l" data-a="copy">🔗 Copier le lien</button><button class="btn l" data-a="print">🖨️ Imprimer</button></div>
+<p class="sub" style="margin-top:1rem">Les favoris et lieux ajoutés restent uniquement sur votre appareil.</p></div>
+</div>
+</main>
 
-      let filtered = places.filter(p => {
-        const matchCat = currentCat === "Tout voir" || (currentCat === "Favoris" ? favs.includes(p.id) : p.cat === currentCat);
-        const matchQ = (p.name + " " + p.city + " " + p.desc + " " + p.cat).toLowerCase().includes(currentQuery);
-        return matchCat && matchQ;
-      });
+<footer><strong>Solidarité France</strong> — portail citoyen libre et gratuit. Informations indicatives : seuls les organismes officiels font foi.<br>Urgences : 15 • 17 • 18 • 112 • 115</footer>
 
-      if (userCoords) {
-        filtered = filtered.map(p => ({ ...p, dist: getDistance(userCoords.lat, userCoords.lng, p.lat, p.lng) })).sort((a, b) => a.dist - b.dist);
-      }
+<div class="mbg" id="mbg" aria-modal="true" role="dialog"><div class="mbox" id="mbox"></div></div>
 
-      if (!filtered.length) {
-        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2.5rem;color:var(--muted);">Aucun lieu trouvé pour cette recherche.</div>';
-      }
-
-      filtered.forEach(p => {
-        const isFav = favs.includes(p.id);
-        const gpsUrl = "https://google.com" + encodeURIComponent(p.name + " " + p.city);
-        const distHtml = p.dist !== undefined ? '<span class="dist-badge">📏 à ' + p.dist + ' km</span>' : '';
-
-        grid.innerHTML += '<article class="place-card"><div><div style="display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;"><span class="badge">' + p.cat + '</span>' + distHtml + '</div><h3>' + p.name + '</h3><div style="font-size:0.85rem;font-weight:700;color:var(--muted);margin-bottom:6px;">📍 ' + p.city + ' • 🕒 ' + p.hours + '</div><p>' + p.desc + '</p></div><div class="card-btns"><button class="btn" style="flex:1;" onclick="openDetails(' + p.id + ')">Voir les détails</button><button class="btn btn-light" onclick="focusPlace(' + p.lat + ',' + p.lng + ')">🗺️</button><button class="btn btn-fav" onclick="toggleFav(' + p.id + ')">' + (isFav ? "★" : "☆") + '</button></div></article>';
-
-        const color = CATEGORIES[p.cat] || "#0f4c81";
-        const pin = L.divIcon({ className: "", html: '<div style="background:' + color + ';width:20px;height:20px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,0.4);"></div>' });
-        L.marker([p.lat, p.lng], { icon: pin }).addTo(markersLayer).bindPopup('<strong>' + p.name + '</strong><br><small>' + p.cat + ' • 📍 ' + p.city + '</small><br><small>🕒 ' + p.hours + '</small><br><a href="' + gpsUrl + '" target="_blank" rel="noopener" style="color:#0f4c81;font-weight:700;display:inline-block;margin-top:5px;">🗺️ Itinéraire GPS</a>');
-      });
-
-      document.getElementById("kpi-total").textContent = places.length;
-      document.getElementById("kpi-cities").textContent = new Set(places.map(x => x.city.split("(").trim().toLowerCase())).size;
-      document.getElementById("kpi-favs").textContent = favs.length;
-    }
-
-    function focusPlace(lat, lng) { document.getElementById("sec-map").scrollIntoView({ behavior: "smooth" }); map.setView([lat, lng], 14); }
-    function resetMapView() { map.setView([46.5, 2.2], 6); }
-
-    function locateUser() {
-      if (!navigator.geolocation) return alert("Géolocalisation non supportée.");
-      navigator.geolocation.getCurrentPosition(pos => {
-        userCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-        map.setView([userCoords.lat, userCoords.lng], 12);
-        L.circleMarker([userCoords.lat, userCoords.lng], { radius: 9, color: "#059669", fillOpacity: 0.9 }).addTo(map).bindPopup("📍 Vous êtes ici").openPopup();
-        renderAll();
-      }, () => alert("Veuillez autoriser la localisation GPS."));
-    }
-
-    function toggleFav(id) {
-      favs = favs.includes(id) ? favs.filter(i => i !== id) : [...favs, id];
-      localStorage.setItem("sf_favs_v5", JSON.stringify(favs));
-      renderAll();
-    }
-
-    function openDetails(id) {
-      const p = places.find(x => x.id === id);
-      const gpsUrl = "https://google.com" + encodeURIComponent(p.name + " " + p.city);
-      document.getElementById("modal-box").innerHTML = '<button onclick="closeModal()" style="float:right;border:none;background:none;font-size:1.6rem;cursor:pointer;color:var(--muted);">&times;</button><span class="badge">' + p.cat + '</span><h2 style="margin:8px 0;color:var(--navy);">' + p.name + '</h2><div style="background:var(--bg);padding:10px;border-radius:8px;margin-bottom:12px;font-size:0.92rem;">📍 <strong>Ville :</strong> ' + p.city + '<br>🕒 <strong>Horaires :</strong> ' + p.hours + '</div><p style="margin-bottom:18px;">' + p.desc + '</p><div style="display:flex;gap:8px;flex-wrap:wrap;"><a href="' + p.url + '" target="_blank" rel="noopener" class="btn btn-green" style="flex:1;">🌐 Site officiel</a><a href="' + gpsUrl + '" target="_blank" rel="noopener" class="btn" style="flex:1;">🗺️ Itinéraire GPS</a></div>';
-      document.getElementById("modal-bg").classList.add("open");
-    }
-
-    function openAddModal() {
-      document.getElementById("modal-box").innerHTML = '<button onclick="closeModal()" style="float:right;border:none;background:none;font-size:1.6rem;cursor:pointer;color:var(--muted);">&times;</button><h2 style="margin-bottom:10px;">➕ Ajouter un lieu solidaire</h2><input id="in-name" class="field" placeholder="Nom de l\'association *"><input id="in-city" class="field" placeholder="Ville (ex: Talence, Bordeaux) *"><select id="in-cat" class="field"><option>Alimentaire</option><option>Magasins Solidaires</option><option>Aides Financières</option><option>Logement & Santé</option><option>Hygiène & Numérique</option></select><input id="in-hours" class="field" placeholder="Horaires (ex: Lun-Ven 9h-17h)"><input id="in-desc" class="field" placeholder="Description et conditions *"><input id="in-url" class="field" placeholder="Lien web (https://...)"><button class="btn btn-green" style="width:100%;" onclick="saveNewPlace()">Publier sur la carte</button>';
-      document.getElementById("modal-bg").classList.add("open");
-    }
-
-    function openVolModal() {
-      document.getElementById("modal-box").innerHTML = '×🙋 Engagement CitoyenContactez directement une association :🇫🇷 Plateforme JeVeuxAider.gouv.fr🥫 Devenir bénévole aux Restos du Cœur🤝 Rejoindre le Secours Populaire';
-document.getElementById("modal-bg").classList.add("open");
-}
-function closeModal() { document.getElementById("modal-bg").classList.remove("open"); }
-async function saveNewPlace() {
-const name = document.getElementById("in-name").value.trim();
-const city = document.getElementById("in-city").value.trim();
-const cat = document.getElementById("in-cat").value;
-const hours = document.getElementById("in-hours").value.trim() || "Voir sur place";
-const desc = document.getElementById("in-desc").value.trim() || "Structure ajoutée par un citoyen.";
-const url = document.getElementById("in-url").value.trim() || "service-public.fr";
-if (!name || !city) return alert("Veuillez indiquer le nom et la ville.");
-let lat = 46.5 + (Math.random() - 0.5) * 3, lng = 2.0 + (Math.random() - 0.5) * 3;
-try {
-const res = await (await fetch("openstreetmap.org" + encodeURIComponent(city + ", France"))).json();
-if (res && res) { lat = parseFloat(res.lat); lng = parseFloat(res.lon); }
-} catch (e) {}
-places.unshift({ id: Date.now(), name, city, lat, lng, cat, hours, desc, url });
-localStorage.setItem("sf_places_v5", JSON.stringify(places));
-closeModal(); renderAll(); focusPlace(lat, lng);
-}
-function runSimulator() {
-const need = document.getElementById("sim-need").value, profil = document.getElementById("sim-profil").value;
-const mapAdvice = {
-food: "👉 Demandez des bons alimentaires au CCAS et inscrivez-vous aux Restos du Cœur ou au Secours Populaire.",
-money: "👉 Sollicitez le Fonds de Solidarité Logement (FSL) et vérifiez vos droits sur mesdroitssociaux.gouv.fr.",
-sleep: "👉 Appelez gratuitement le 115 (24h/24) pour une mise à l'abri d'urgence par le SAMU Social.",
-health: "👉 Allez à la PASS de l'hôpital public (soins gratuits sans avance de frais) et demandez la CSS.",
-admin: "👉 Rendez-vous dans un espace France Services pour un accompagnement gratuit."
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+"use strict";
+var CATS={"Alimentaire":"#ef4444","Magasins solidaires":"#f59e0b","Aides financières":"#10b981","Santé & logement":"#3b82f6","Hygiène & numérique":"#8b5cf6","Emploi & insertion":"#0891b2","Étudiants":"#db2777"};
+var P=[
+["Restos du Cœur","Talence",44.808,-0.588,"Alimentaire","Selon antenne (voir site)","Repas, colis alimentaires, espace bébé, ateliers. Inscription selon revenus.","https://www.restosducoeur.org"],
+["Épicerie solidaire étudiante AGORAé","Talence",44.801,-0.598,"Étudiants","Selon ouverture","Produits frais et hygiène à très bas prix pour étudiants (réseau FAGE).","https://www.fage.org"],
+["CCAS (Centre communal d'action sociale)","Bordeaux",44.838,-0.579,"Aides financières","Lun-Ven en journée","Aides d'urgence, domiciliation postale, aide alimentaire, dossiers APA/RSA.","https://www.service-public.fr"],
+["PASS — Permanence d'accès aux soins","Bordeaux",44.834,-0.578,"Santé & logement","Lun-Ven en journée","Consultations et médicaments sans avance de frais à l'hôpital public.","https://sante.gouv.fr"],
+["Secours Populaire Français","Paris",48.876,2.359,"Alimentaire","Selon fédération","Aide alimentaire, vestiaire, accès aux vacances, aide juridique.","https://www.secourspopulaire.fr"],
+["Mission Locale (16-25 ans)","Paris",48.857,2.352,"Emploi & insertion","Sur rendez-vous","Accompagnement emploi, formation, logement, santé, Contrat d'engagement jeune.","https://www.mission-locale.fr"],
+["Emmaüs — boutique solidaire","Lyon",45.758,4.835,"Magasins solidaires","Mer-Sam (variable)","Vêtements, meubles, livres et électroménager à prix solidaires.","https://emmaus-france.org"],
+["Croix-Rouge — vestiboutique","Lyon",45.764,4.836,"Magasins solidaires","Selon antenne","Vêtements et articles de seconde main à petits prix.","https://www.croix-rouge.fr"],
+["Croix-Rouge — Halte santé / maraude","Marseille",43.296,5.369,"Santé & logement","Soir (variable)","Maraudes, orientation vers le 115, soins infirmiers gratuits.","https://www.croix-rouge.fr"],
+["Bains-douches & bagagerie solidaire","Toulouse",43.604,1.444,"Hygiène & numérique","Selon accueil","Douches, kits d'hygiène, consigne à bagages, Wi-Fi.","https://soliguide.fr"],
+["Banque alimentaire & épicerie sociale","Lille",50.629,3.057,"Alimentaire","Lun-Ven","Colis alimentaires via associations partenaires, ateliers cuisine.","https://www.banquealimentaire.org"],
+["Ressourcerie & atelier vélo solidaire","Nantes",47.218,-1.553,"Magasins solidaires","Mar-Sam","Seconde main à prix libre, auto-réparation de vélos.","https://www.ressourceries.info"],
+["Point Conseil Budget (PCB)","Rennes",48.117,-1.677,"Aides financières","Sur rendez-vous","Accompagnement gratuit : impayés, budget, surendettement.","https://www.service-public.fr"],
+["Accueil de jour & laverie solidaire","Nice",43.710,7.262,"Hygiène & numérique","Lun-Sam","Petit-déjeuner, machines à laver, ordinateurs, domiciliation.","https://www.croix-rouge.fr"],
+["Épicerie sociale & solidaire","Strasbourg",48.573,7.752,"Alimentaire","Selon structure","Courses à 10-30 % du prix après orientation d'une assistante sociale.","https://www.andes-france.fr"],
+["Chantier d'insertion (SIAE)","Montpellier",43.611,3.877,"Emploi & insertion","Sur rendez-vous","Contrat de travail + accompagnement. Accès via France Travail ou Mission Locale.","https://emplois.inclusion.beta.gouv.fr"],
+["CROUS — aide sociale étudiante","Grenoble",45.188,5.724,"Étudiants","Lun-Ven","Bourses, aides d'urgence, logement, repas à 1 € pour étudiants éligibles.","https://www.etudiant.gouv.fr"],
+["France Services","Rouen",49.443,1.099,"Aides financières","Lun-Ven","Aide gratuite pour CAF, impôts, retraite, France Travail, démarches en ligne.","https://france-services.gouv.fr"],
+["Secours Catholique — accueil","Dijon",47.322,5.041,"Alimentaire","Selon antenne","Accueil, aide alimentaire, accompagnement, aide aux démarches.","https://www.secours-catholique.org"],
+["Réseau Cocagne — jardins solidaires","Angers",47.478,-0.563,"Emploi & insertion","Selon jardin","Paniers de légumes bio et emploi d'insertion.","https://www.reseaucocagne.asso.fr"],
+["Maison d'accueil de jour","Clermont-Ferrand",45.777,3.087,"Hygiène & numérique","Journée","Accueil, douches, courrier, repos, orientation sociale.","https://soliguide.fr"],
+["Espace Santé Jeunes","Strasbourg",48.585,7.745,"Santé & logement","Variable","Écoute, santé, contraception, prévention pour les jeunes.","https://www.filsantejeunes.com"],
+["Banque alimentaire","Bordeaux",44.865,-0.563,"Alimentaire","Lun-Ven","Distribution de colis aux associations et épiceries partenaires.","https://www.banquealimentaire.org"],
+["Vestiaire solidaire","Orléans",47.903,1.909,"Magasins solidaires","Selon jours","Vêtements à très bas prix ou gratuits sur orientation.","https://www.secourspopulaire.fr"]
+];
+var LOC=[
+["Soliguide — tous services sociaux","Alimentation, douches, hébergement, santé près de chez vous.","https://soliguide.fr"],
+["Restos du Cœur — centres","Trouver un centre par code postal.","https://www.restosducoeur.org/pres-de-chez-vous/"],
+["Banques alimentaires","Associations partenaires par département.","https://www.banquealimentaire.org"],
+["Secours Populaire — fédérations","Coordonnées de votre fédération.","https://www.secourspopulaire.fr"],
+["Emmaüs — structures","Communautés, boutiques et ressourceries.","https://emmaus-france.org"],
+["Épiceries solidaires (ANDES)","Réseau d'épiceries solidaires.","https://www.andes-france.fr"],
+["Ressourceries","Magasins de seconde main solidaires.","https://www.ressourceries.info"],
+["France Services","Guichet de proximité (CAF, impôts, emploi).","https://france-services.gouv.fr"]
+];
+var R={
+"Numéros":[
+["115","Hébergement d'urgence (SAMU social), 24h/24","tel:115"],["15","SAMU — urgence médicale","tel:15"],["17","Police / Gendarmerie","tel:17"],["18","Pompiers","tel:18"],["112","Urgence européenne","tel:112"],["114","Urgence par SMS / visio (sourds, malentendants)","tel:114"],
+["3919","Violences faites aux femmes, 24h/24","tel:3919"],["119","Enfance en danger (Allô 119)","tel:119"],["3114","Prévention du suicide, 24h/24","tel:3114"],["3977","Maltraitance des aînés et personnes handicapées","tel:3977"],["116 006","Aide aux victimes","tel:116006"],["3020","Harcèlement scolaire","tel:3020"],["3018","Cyberharcèlement / violences numériques","tel:3018"],["0 800 235 236","Fil Santé Jeunes (anonyme, gratuit)","tel:0800235236"],["09 72 39 40 50","SOS Amitié (écoute)","tel:0972394050"],["0 800 23 13 13","Drogues Info Service","tel:0800231313"],["0 980 980 930","Alcool Info Service","tel:0980980930"],["3989","Tabac Info Service","tel:3989"],["3949","France Travail (emploi)","tel:3949"],["3939","Allô Service Public","tel:3939"],["3646","Assurance maladie (Ameli)","tel:3646"],["09 69 39 00 00","Défenseur des droits","tel:0969390000"]],
+"Sites utiles":[
+["Service-Public.fr","Toutes vos démarches administratives","https://www.service-public.fr"],["Mes Droits Sociaux","Simulateur officiel de toutes vos aides","https://www.mesdroitssociaux.gouv.fr"],["Soliguide","Annuaire des services sociaux","https://soliguide.fr"],["CAF","APL, RSA, prime d'activité, allocations","https://www.caf.fr"],["Ameli","Santé, Complémentaire santé solidaire (C2S)","https://www.ameli.fr"],["Chèque énergie","Aide pour vos factures d'énergie","https://chequeenergie.gouv.fr"],["Action Logement","Aides logement, Visale, mobilité","https://www.actionlogement.fr"],["ADIL / ANIL","Conseil juridique logement gratuit","https://www.anil.org"],["France Services","Aide aux démarches, gratuite","https://france-services.gouv.fr"],["Défenseur des droits","Discrimination, droits des usagers","https://www.defenseurdesdroits.fr"],["JeVeuxAider","Bénévolat partout en France","https://www.jeveuxaider.gouv.fr"],["Don en confiance","Donner en sécurité","https://www.donenconfiance.org"]],
+"Étudiants":[
+["Dossier Social Étudiant","Bourses sur critères sociaux et logement CROUS","https://www.messervices.etudiant.gouv.fr"],["Aide d'urgence CROUS","Aide ponctuelle ou annuelle en cas de difficulté (assistante sociale du CROUS)","https://www.etudiant.gouv.fr"],["Repas à 1 €","Pour les étudiants boursiers et en situation de précarité, dans les restaurants universitaires","https://www.etudiant.gouv.fr"],["Garantie Visale","Caution gratuite pour louer, jeunes de 18-30 ans","https://www.visale.fr"],["APL étudiant","Aide au logement via la CAF","https://www.caf.fr"],["Santé Psy Étudiant","Séances gratuites avec un psychologue","https://santepsy.etudiant.gouv.fr"],["Épiceries solidaires étudiantes","Réseau AGORAé","https://www.fage.org"],["1jeune1solution","Aides, jobs, stages, formation pour les jeunes","https://www.1jeune1solution.gouv.fr"],["Service social du CROUS","Rendez-vous avec une assistante sociale","https://www.etudiant.gouv.fr"],["Info Jeunes (CIDJ)","Orientation, droits, logement, jobs","https://www.cidj.com"]],
+"Emploi & chômage":[
+["France Travail","Inscription, indemnisation (ARE), offres d'emploi","https://www.francetravail.fr"],["Allocation chômage (ARE)","Demande à faire sur votre espace France Travail","https://www.francetravail.fr"],["RSA","Revenu de solidarité active via la CAF ou la MSA","https://www.mesdroitssociaux.gouv.fr"],["Prime d'activité","Complément de revenu pour travailleurs modestes","https://www.caf.fr"],["Mon Compte Formation (CPF)","Financer une formation","https://www.moncompteformation.gouv.fr"],["Aides à la mobilité","Permis, transport, déménagement pour reprendre un emploi","https://www.francetravail.fr"],["Cap Emploi","Emploi pour personnes en situation de handicap","https://www.capemploi.info"],["La Bonne Boîte","Entreprises qui recrutent sans annonce","https://labonneboite.francetravail.fr"],["Mission Locale","Pour les 16-25 ans : Contrat d'engagement jeune","https://www.mission-locale.fr"],["Wimoov","Solutions de mobilité vers l'emploi","https://www.wimoov.org"]],
+"Réinsertion":[
+["Plateforme de l'inclusion","Postuler à l'insertion par l'activité économique (SIAE)","https://emplois.inclusion.beta.gouv.fr"],["Chantiers d'insertion","Emploi accompagné via France Travail ou Mission Locale","https://www.service-public.fr"],["Emmaüs — communautés","Accueil, travail et logement solidaire","https://emmaus-france.org"],["Réseau Cocagne","Jardins d'insertion","https://www.reseaucocagne.asso.fr"],["SPIP","Accompagnement à la sortie de détention (conseiller d'insertion)","https://www.justice.gouv.fr"],["Fondation Abbé Pierre","Logement, droits, accompagnement","https://www.fondation-abbe-pierre.fr"],["Domiciliation","Adresse postale gratuite via CCAS ou association agréée","https://www.service-public.fr"],["Droit au logement (DALO)","Recours pour mal-logés","https://www.service-public.fr"],["Secours Catholique","Accueil et accompagnement","https://www.secours-catholique.org"],["Croix-Rouge","Accueil, aide alimentaire, accompagnement social","https://www.croix-rouge.fr"]]
 };
-let extra = profil === "student" ? "
+var CHECK=["Ouvrir ou mettre à jour mon dossier CAF (APL, RSA, prime d'activité)","Demander la Complémentaire santé solidaire (C2S) sur ameli.fr","Vérifier mon éligibilité au chèque énergie","Prendre rendez-vous avec une assistante sociale (CCAS / CROUS)","Demander une domiciliation postale si besoin","M'inscrire à une épicerie solidaire ou aide alimentaire","M'inscrire à France Travail / Mission Locale","Faire une simulation sur mesdroitssociaux.gouv.fr"];
+var ADV={food:["Demandez une orientation au CCAS vers une épicerie solidaire ou une distribution.","Inscrivez-vous aux Restos du Cœur, Secours Populaire ou banque alimentaire (voir « Annuaire »)."],money:["Contactez le CCAS pour une aide d'urgence et le Fonds de solidarité pour le logement (FSL).","Prenez rendez-vous avec un Point Conseil Budget (gratuit).","Prévenez rapidement votre bailleur ou fournisseur."],sleep:["Appelez le 115 (gratuit, 24h/24).","Si danger immédiat : 17 ou 112.","Soliguide indique accueils de jour et centres ouverts."],health:["Rendez-vous à la PASS d'un hôpital public.","Demandez la C2S sur ameli.fr (3646).","Pour du soutien psychologique : 3114."],job:["Inscrivez-vous à France Travail (3949).","Voyez une structure d'insertion (SIAE) via la plateforme de l'inclusion.","Moins de 26 ans : Mission Locale."],admin:["Rendez-vous dans un espace France Services (gratuit).","Besoin d'une adresse postale : domiciliation via le CCAS."],violence:["En danger immédiat : 17 ou 112 (114 par SMS).","Violences conjugales : 3919 (24h/24, gratuit).","Enfant concerné : 119."]};
+var BON={single:"",family:"👨‍👩‍👧 Famille : aides exceptionnelles CAF, PMI, cantine à tarif social.",student:"🎓 Étudiant : service social du CROUS, repas à 1 € si éligible, Santé Psy Étudiant.",jobseeker:"💼 Demandeur d'emploi : droits ARE / ASS / RSA, aide à la mobilité, CPF.",exit:"🔑 Réinsertion : SPIP, domiciliation, SIAE, Fondation Abbé Pierre."};
+var KEY={p:"sf_places_v6",f:"sf_favs_v6",c:"sf_checks_v6",d:"sf_dark"};
+function ld(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function safeUrl(u){u=String(u||"").trim();if(!u)return"https://www.service-public.fr";if(!/^https?:\/\//i.test(u))u="https://"+u;return /^https?:\/\/[^\s"'<>]+$/i.test(u)?u:"https://www.service-public.fr"}
+function $(s){return document.querySelector(s)}
+var base=P.map(function(p,i){return{id:i+1,n:p[0],c:p[1],la:p[2],ln:p[3],k:p[4],h:p[5],d:p[6],u:p[7]}});
+var custom=ld(KEY.p,[]),favs=ld(KEY.f,[]),checks=ld(KEY.c,[]);
+var cat="Tout",query="",rtab="Numéros",user=null,map=null,layer=null,userMark=null,markers={};
+function all(){return base.concat(custom)}
 
-🎓 Bonus Étudiant : Repas CROUS à 1€ et aide d'urgence CROUS." : (profil === "family" ? "
+function dist(a,b,c,d){var r=Math.PI/180,x=Math.sin((c-a)*r/2),y=Math.sin((d-b)*r/2),h=x*x+Math.cos(a*r)*Math.cos(c*r)*y*y;return Math.round(12742*Math.atan2(Math.sqrt(h),Math.sqrt(1-h)))}
+function norm(s){return String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")}
+var SYN={repas:"aliment manger epicerie colis resto",douche:"hygiene bain laverie",emploi:"insertion travail chantier",etudiant:"crous fage etudiants",vetements:"vestiaire boutique emmaus seconde main"};
+function match(text){if(!query)return true;var t=norm(text);return norm(query).split(/\s+/).every(function(w){return t.indexOf(w)>-1||(SYN[w]&&SYN[w].split(" ").some(function(s){return t.indexOf(s)>-1}))})}
+function filtered(){
+  var l=all().filter(function(p){
+    var okc=cat==="Tout"||(cat==="Favoris"?favs.indexOf(p.id)>-1:p.k===cat);
+    return okc&&match(p.n+" "+p.c+" "+p.d+" "+p.k+" "+p.h)});
+  if(user)l.forEach(function(p){p.dist=p.la!=null?dist(user.lat,user.lng,p.la,p.ln):null});
+  if(user)l.sort(function(a,b){return(a.dist==null?1e9:a.dist)-(b.dist==null?1e9:b.dist)});
+  return l}
+function gps(p){return p.la!=null?"https://www.google.com/maps/dir/?api=1&destination="+p.la+","+p.ln:"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(p.n+" "+p.c)}
 
-👨‍👩‍👧 Bonus Famille : Aide exceptionnelle CAF et suivi PMI." : "");
-document.getElementById("sim-result").innerHTML = '' + mapAdvice[need] + extra + '';
-}
-function exportData() {
-const a = document.createElement("a");
-a.href = URL.createObjectURL(new Blob([JSON.stringify(places, null, 2)], { type: "application/json" }));
-a.download = "solidarite-france-lieux.json";
-a.click();
-}
-function copySiteLink() { navigator.clipboard?.writeText(window.location.href); alert("Lien copié !"); }
-renderChecklist();
-renderAll();
-    <FollowUp>
-Cette version n'utilise plus aucune apostrophe ni balise imbriquée susceptible d'être altérée lors du copier-coller sur mobile. Une fois les **3 parties** collées à la suite sur GitHub et actualisées avec **`Ctrl` + `Shift` + `R`**, dites-moi si la carte et les boutons fonctionnent parfaitement !
-</FollowUp>
+function renderChips(){
+  var tabs=["Tout"].concat(Object.keys(CATS),["Favoris"]);
+  $("#chips").innerHTML=tabs.map(function(t){return'<button class="chip'+(t===cat?" on":"")+'" data-a="cat" data-v="'+esc(t)+'">'+(t==="Favoris"?"⭐ Favoris ("+favs.length+")":esc(t))+"</button>"}).join("");
+  $("#legend").innerHTML=Object.keys(CATS).map(function(k){return'<span><i class="dot" style="background:'+CATS[k]+'"></i>'+esc(k)+"</span>"}).join("")}
+function renderCards(){
+  var l=filtered();
+  $("#count").textContent=l.length+" lieu"+(l.length>1?"x":"")+" affiché"+(l.length>1?"s":"");
+  $("#cards").innerHTML=l.length?l.map(function(p){
+    var f=favs.indexOf(p.id)>-1;
+    return'<article class="card"><div><span class="badge" style="background:'+CATS[p.k]+'">'+esc(p.k)+"</span>"+(p.dist!=null?' <span class="meta" style="color:var(--green)">📏 '+p.dist+" km</span>":"")+"<h3>"+esc(p.n)+'</h3><div class="meta">📍 '+esc(p.c)+" • 🕒 "+esc(p.h)+"</div><p>"+esc(p.d)+'</p></div><div class="row"><button class="btn" data-a="detail" data-id="'+p.id+'">Détails</button>'+(p.la!=null?'<button class="btn l" data-a="focus" data-id="'+p.id+'" title="Voir sur la carte">🗺️</button>':"")+'<button class="btn fav" data-a="fav" data-id="'+p.id+'" aria-label="Favori">'+(f?"★":"☆")+"</button></div></article>"}).join(""):'<div class="empty">Aucun lieu trouvé. Essayez un autre mot, ou consultez « Trouver l\'adresse la plus proche » plus bas.</div>';
+  $("#k1").textContent=all().length;
+  $("#k2").textContent=new Set(all().map(function(p){return norm(p.c)})).size;
+  $("#k3").textContent=favs.length;
+  renderMarkers(l)}
+function renderMarkers(l){
+  if(!layer)return;
+  layer.clearLayers();markers={};
+  l.forEach(function(p){
+    if(p.la==null)return;
+    var ic=L.divIcon({className:"",iconSize:[22,22],iconAnchor:[11,11],popupAnchor:[0,-11],html:'<div style="background:'+CATS[p.k]+';width:22px;height:22px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.45)"></div>'});
+    var m=L.marker([p.la,p.ln],{icon:ic}).addTo(layer).bindPopup('<strong>'+esc(p.n)+"</strong><br><small>"+esc(p.k)+" • "+esc(p.c)+"</small><br><small>🕒 "+esc(p.h)+'</small><br><a href="'+gps(p)+'" target="_blank" rel="noopener">🧭 Itinéraire</a> · <a href="#" data-a="detail" data-id="'+p.id+'">Détails</a>');
+    markers[p.id]=m})}
+function renderLoc(){$("#locators").innerHTML=LOC.map(function(r){return'<a class="res" href="'+r[2]+'" target="_blank" rel="noopener"><b>'+esc(r[0])+"</b><span>"+esc(r[1])+"</span></a>"}).join("")}
+function renderRes(){
+  $("#rtabs").innerHTML=Object.keys(R).map(function(t){return'<button class="chip'+(t===rtab?" on":"")+'" data-a="rtab" data-v="'+esc(t)+'">'+esc(t)+"</button>"}).join("");
+  var items=R[rtab].filter(function(r){return match(r[0]+" "+r[1])});
+  $("#rgrid").innerHTML=items.length?items.map(function(r){
+    var tel=r[2].indexOf("tel:")===0;
+    return'<a class="res'+(tel?" tel":"")+'" href="'+r[2]+'"'+(tel?"":' target="_blank" rel="noopener"')+"><b>"+(tel?"📞 ":"🌐 ")+esc(r[0])+"</b><span>"+esc(r[1])+"</span></a>"}).join(""):'<div class="empty">Aucun résultat dans cet onglet pour cette recherche.</div>'}
+function renderChecks(){
+  $("#checks").innerHTML=CHECK.map(function(t,i){var d=checks.indexOf(i)>-1;return'<label class="ck'+(d?" done":"")+'"><input type="checkbox" data-a="check" data-id="'+i+'"'+(d?" checked":"")+"><span>"+esc(t)+"</span></label>"}).join("");
+  $("#pbar").style.width=Math.round(checks.length/CHECK.length*100)+"%";
+  $("#ptxt").textContent=checks.length+" / "+CHECK.length+" démarches faites"}
+function renderAll(){renderChips();renderCards();renderRes()}
+
+function initMap(){
+  var el=$("#map");
+  if(typeof L==="undefined"){el.innerHTML='<div class="nomap"><div>La carte n\'a pas pu se charger (connexion ?).<br><a href="https://www.openstreetmap.org/#map=6/46.5/2.2" target="_blank" rel="noopener">Ouvrir OpenStreetMap</a> — l\'annuaire ci-dessous reste utilisable.</div></div>';return}
+  try{
+    map=L.map("map",{scrollWheelZoom:true}).setView([46.6,2.4],6);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; contributeurs OpenStreetMap"}).addTo(map);
+    layer=L.layerGroup().addTo(map);
+    setTimeout(function(){map.invalidateSize()},300);
+    window.addEventListener("resize",function(){map.invalidateSize()})
+  }catch(e){map=null;el.innerHTML='<div class="nomap">Erreur de carte. Rechargez la page.</div>'}}
+function focusPlace(id){
+  var p=all().find(function(x){return x.id===id});if(!p||p.la==null||!map)return;
+  $("#carte").scrollIntoView({behavior:"smooth"});
+  setTimeout(function(){map.invalidateSize();map.setView([p.la,p.ln],14);if(markers[id])markers[id].openPopup()},350)}
+function fitAll(){if(!map)return;var pts=Object.keys(markers).map(function(k){return markers[k].getLatLng()});if(pts.length)map.fitBounds(L.latLngBounds(pts),{padding:[40,40],maxZoom:12});else map.setView([46.6,2.4],6)}
+function locate(){
+  if(!navigator.geolocation)return alert("Géolocalisation non disponible sur cet appareil.");
+  navigator.geolocation.getCurrentPosition(function(pos){
+    user={lat:pos.coords.latitude,lng:pos.coords.longitude};
+    if(map){if(userMark)map.removeLayer(userMark);userMark=L.circleMarker([user.lat,user.lng],{radius:9,color:"#059669",fillOpacity:.9}).addTo(map).bindPopup("📍 Vous êtes ici");map.setView([user.lat,user.lng],11);userMark.openPopup()}
+    cat="Tout";renderAll()},function(){alert("Autorisez la localisation dans votre navigateur, ou cherchez par ville.")},{enableHighAccuracy:false,timeout:10000})}
+
+function openModal(h){$("#mbox").innerHTML='<button class="x" data-a="close" aria-label="Fermer">&times;</button>'+h;$("#mbg").classList.add("open")}
+function closeModal(){$("#mbg").classList.remove("open")}
+function detail(id){
+  var p=all().find(function(x){return x.id===id});if(!p)return;
+  openModal('<span class="badge" style="background:'+CATS[p.k]+'">'+esc(p.k)+'</span><h2 style="margin:.5rem 0">'+esc(p.n)+'</h2><div class="result" style="margin:0 0 1rem">📍 <b>Ville :</b> '+esc(p.c)+"<br>🕒 <b>Horaires :</b> "+esc(p.h)+"</div><p style=\"margin-bottom:1rem\">"+esc(p.d)+'</p><p class="sub">Vérifiez horaires et conditions par téléphone ou sur le site avant de venir.</p><div class="row"><a class="btn g" href="'+esc(safeUrl(p.u))+'" target="_blank" rel="noopener">🌐 Site officiel</a><a class="btn" href="'+gps(p)+'" target="_blank" rel="noopener">🧭 Itinéraire</a></div>')}
+function addForm(){
+  openModal('<h2 style="margin-bottom:.8rem">➕ Ajouter un lieu</h2><input id="f-n" class="field" placeholder="Nom *" maxlength="100"><input id="f-c" class="field" placeholder="Ville *" maxlength="60"><select id="f-k" class="field">'+Object.keys(CATS).map(function(k){return"<option>"+esc(k)+"</option>"}).join("")+'</select><input id="f-h" class="field" placeholder="Horaires" maxlength="80"><input id="f-d" class="field" placeholder="Description / conditions" maxlength="250"><input id="f-u" class="field" placeholder="Site web (https://…)"><button class="btn g" style="width:100%" data-a="save" id="f-b">Publier sur la carte</button><p class="sub" style="margin-top:.6rem">Ajout visible uniquement sur votre appareil.</p>')}
+async function savePlace(){
+  var n=$("#f-n").value.trim(),c=$("#f-c").value.trim();
+  if(!n||!c)return alert("Indiquez au moins le nom et la ville.");
+  var b=$("#f-b");b.disabled=true;b.textContent="Recherche de la ville…";
+  var la=null,ln=null;
+  try{var r=await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=fr&q="+encodeURIComponent(c));var j=await r.json();if(j&&j[0]){la=parseFloat(j[0].lat);ln=parseFloat(j[0].lon)}}catch(e){}
+  var p={id:Date.now(),n:n,c:c,la:la,ln:ln,k:$("#f-k").value,h:$("#f-h").value.trim()||"Voir sur place",d:$("#f-d").value.trim()||"Structure ajoutée par un citoyen.",u:safeUrl($("#f-u").value)};
+  custom.unshift(p);sv(KEY.p,custom);closeModal();cat="Tout";query="";$("#q").value="";renderAll();
+  if(la!=null)focusPlace(p.id);else alert("Lieu ajouté à l'annuaire (ville introuvable : il n'apparaît pas sur la carte).")}
+function simulate(){
+  var n=$("#sn").value,s=$("#sp").value;
+  $("#sres").innerHTML='<div class="result"><b>Pistes pour vous :</b><ul>'+ADV[n].map(function(a){return"<li>"+esc(a)+"</li>"}).join("")+"</ul>"+(BON[s]?"<p>"+esc(BON[s])+"</p>":"")+'<p style="margin-top:.6rem"><a href="https://www.mesdroitssociaux.gouv.fr" target="_blank" rel="noopener">Simulateur officiel de droits →</a> · <a href="#ressources" data-a="close">Numéros utiles</a></p></div>'}
+function setTheme(d){document.body.classList.toggle("dark",d);sv(KEY.d,d)}
+
+document.addEventListener("click",function(e){
+  var t=e.target.closest("[data-a]");
+  if(!t){if(e.target.id==="mbg")closeModal();return}
+  var a=t.dataset.a,id=t.dataset.id!=null?Number(t.dataset.id):null,v=t.dataset.v;
+  if(a==="detail"){e.preventDefault();detail(id)}
+  else if(a==="close"){closeModal()}
+  else if(a==="theme")setTheme(!document.body.classList.contains("dark"));
+  else if(a==="add")addForm();
+  else if(a==="save")savePlace();
+  else if(a==="cat"){cat=v;renderAll()}
+  else if(a==="rtab"){rtab=v;renderRes()}
+  else if(a==="focus")focusPlace(id);
+  else if(a==="fav"){favs=favs.indexOf(id)>-1?favs.filter(function(i){return i!==id}):favs.concat(id);sv(KEY.f,favs);renderAll()}
+  else if(a==="locate")locate();
+  else if(a==="reset"){if(map)map.setView([46.6,2.4],6)}
+  else if(a==="fit")fitAll();
+  else if(a==="sim")simulate();
+  else if(a==="check"){checks=checks.indexOf(id)>-1?checks.filter(function(i){return i!==id}):checks.concat(id);sv(KEY.c,checks);renderChecks()}
+  else if(a==="resetchecks"){checks=[];sv(KEY.c,checks);renderChecks()}
+  else if(a==="quick"){query=v;$("#q").value=v;renderAll();$("#carte").scrollIntoView({behavior:"smooth"})}
+  else if(a==="export"){var l=document.createElement("a");l.href=URL.createObjectURL(new Blob([JSON.stringify(all(),null,2)],{type:"application/json"}));l.download="solidarite-france-lieux.json";l.click()}
+  else if(a==="copy"){(navigator.clipboard?navigator.clipboard.writeText(location.href):Promise.reject()).then(function(){alert("Lien copié !")},function(){prompt("Copiez ce lien :",location.href)})}
+  else if(a==="print")window.print()});
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closeModal()});
+$("#sform").addEventListener("submit",function(e){e.preventDefault();query=$("#q").value.trim();renderAll();$("#carte").scrollIntoView({behavior:"smooth"})});
+$("#q").addEventListener("input",function(){query=this.value.trim();renderAll()});
+
+if(ld(KEY.d,window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches))document.body.classList.add("dark");
+initMap();renderLoc();renderChecks();renderAll();
+</script>
+</body>
+</html>
