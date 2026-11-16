@@ -208,6 +208,7 @@ function norm(s){return String(s==null?"":s).toLowerCase().normalize("NFD").repl
 function dist(a,b,c,d){var r=Math.PI/180,x=Math.sin((c-a)*r/2),y=Math.sin((d-b)*r/2),h=x*x+Math.cos(a*r)*Math.cos(c*r)*y*y;return Math.round(12742*Math.atan2(Math.sqrt(h),Math.sqrt(1-h))*10)/10}
 function r4(x){return Math.round(x*10000)/10000}
 function status(t){$("#status").textContent=t}
+function sleep(ms){return new Promise(function(r){setTimeout(r,ms)})}
 var SYN={repas:"aliment manger epicerie colis resto",douche:"hygiene bain laverie",emploi:"insertion travail chantier",etudiant:"crous fage etudiants",vetements:"vestiaire boutique emmaus seconde main",numerique:"cyberbase epn informatique internet"};
 
 var S={c:null,cat:"Tout",show:60,live:{},sug:[],kw:""};
@@ -239,11 +240,13 @@ function mk(e){
   var t=e.tags||{};
   if(/assisted_living|nursing_home|day_care|nursery/.test(t.social_facility||""))return null;
   if(/senior/.test(t["social_facility:for"]||""))return null;
+  if(t["addr:country"]&&!/^(FR|GP|MQ|GF|RE|YT|PM|BL|MF|NC|PF)$/i.test(t["addr:country"]))return null;
   var la=e.lat!=null?e.lat:(e.center&&e.center.lat),ln=e.lon!=null?e.lon:(e.center&&e.center.lon);
   if(la==null||ln==null)return null;
   var a=[((t["addr:housenumber"]||"")+" "+(t["addr:street"]||"")).trim(),((t["addr:postcode"]||"")+" "+(t["addr:city"]||"")).trim()].filter(Boolean).join(", ");
   return{id:e.type[0]+e.id,src:"osm",n:t.name||SFL[t.social_facility]||(t.shop?"Magasin solidaire":"Structure sociale"),k:cls(t),la:r4(la),ln:r4(ln),a:a,c:t["addr:city"]||"",tel:t.phone||t["contact:phone"]||"",web:t.website||t["contact:website"]||"",h:hrs(t.opening_hours),o:t.operator||"",d:""}}
 var NM="Restos|Secours Populaire|Secours Catholique|Croix.Rouge|Emma.s|Banque alimentaire|CCAS|action sociale|Mission locale|France Travail|France Services|picerie sociale|picerie solidaire|Entraide|Accueil de jour|num.rique|cyberbase|EPN|bagagerie|laverie solidaire|douche";
+/* Requête complète (par nom + catégories) : utilisée pour une zone visible */
 function Q(h,f){return h+"("+[
   'nwr["amenity"~"^(social_facility|social_centre|food_sharing|public_bath|shower)$"]',
   'nwr["shop"="charity"]',
@@ -251,6 +254,8 @@ function Q(h,f){return h+"("+[
   'nwr["amenity"~"^(community_centre|townhall|library)$"]["name"~"CCAS|action sociale|France Services|num.rique|EPN",i]',
   'nwr["shop"="second_hand"]["name"~"Emma|Croix|Secours|Resso|solidair|Entraide|Humanit",i]'
  ].map(function(s){return s+f+";"}).join("")+");out center;"}
+/* Requête légère (étiquettes principales seulement) : utilisée pour les carrés de la France entière */
+function Qt(b){var f="("+b[0]+","+b[1]+","+b[2]+","+b[3]+")";return"[out:json][timeout:80];("+['nwr["amenity"~"^(social_facility|social_centre|food_sharing|public_bath|shower)$"]','nwr["shop"="charity"]'].map(function(s){return s+f+";"}).join("")+");out center;"}
 async function post(url,body,ms){
   var c=new AbortController(),t=setTimeout(function(){c.abort()},ms);
   try{var r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:body,signal:c.signal});
@@ -261,25 +266,31 @@ async function ask(q,ms){var b="data="+encodeURIComponent(q);for(var i=0;i<EP.le
 function add(j){var n=0;(j.elements||[]).forEach(function(e){var p=mk(e);if(p&&!S.live[p.id]){S.live[p.id]=p;n++}});return n}
 function nbLive(){return Object.keys(S.live).length}
 
-/* ---------- Chargement de toute la France, département par département ---------- */
-var DEPS=[];for(var i=1;i<=95;i++){if(i!==20)DEPS.push(i<10?"0"+i:""+i)}DEPS.push("2A","2B","971","972","973","974","976");
+/* ---------- Chargement de toute la France, par carrés de 1° ---------- */
+var TILES=[];
+(function(){
+  for(var la=41;la<=51;la++)for(var ln=-5;ln<=9;ln++)TILES.push([la,ln,la+1,ln+1]);
+  [[15.8,-61.9,16.6,-60.9],[14.3,-61.3,14.95,-60.7],[2.1,-54.7,5.8,-51.5],[-21.5,55.1,-20.8,55.95],[-13.1,44.9,-12.5,45.4]].forEach(function(b){TILES.push(b)});
+})();
 async function loadFrance(){
   if(loading)return;loading=true;$("#allfr").disabled=true;
-  var todo=DEPS.slice(),n=0,fails=[],tot=DEPS.length;
+  var todo=TILES.slice(),done=0,tot=TILES.length,fails=0,tries={};
+  status("⏳ Démarrage du chargement de la France…");
   async function worker(){
     while(todo.length){
-      var d=todo.shift(),c=await idbGet("d"+d);
+      var t=todo.shift(),key="t"+t.join("_"),c=await idbGet(key),ok=true;
       if(c&&Date.now()-c.t<12096e5){c.p.forEach(function(p){S.live[p.id]=p})}
       else{
-        var j=await ask(Q('[out:json][timeout:150];area["ISO3166-2"="FR-'+d+'"]->.a;',"(area.a)"),170000);
-        if(j){var arr=[];(j.elements||[]).forEach(function(e){var p=mk(e);if(p){arr.push(p);S.live[p.id]=p}});idbSet("d"+d,{t:Date.now(),p:arr})}
-        else fails.push(d)}
-      n++;$("#pgi").style.width=Math.round(n/tot*100)+"%";
-      status("⏳ Chargement de la France : "+n+"/"+tot+" départements · "+nbLive()+" lieux réels trouvés…");
-      if(n%5===0)renderAll()}}
+        var j=await ask(Qt(t),60000);
+        if(j){var arr=[];(j.elements||[]).forEach(function(e){var p=mk(e);if(p){arr.push(p);S.live[p.id]=p}});idbSet(key,{t:Date.now(),p:arr})}
+        else{tries[key]=(tries[key]||0)+1;if(tries[key]<3){todo.push(t);ok=false}else fails++}
+        await sleep(400)}
+      if(ok){done++;$("#pgi").style.width=Math.round(done/tot*100)+"%";
+        status("⏳ Chargement de la France : "+done+"/"+tot+" zones · "+nbLive().toLocaleString("fr-FR")+" lieux réels trouvés…");
+        if(done%3===0)renderChips();if(done%12===0)renderAll()}}}
   await Promise.all([worker(),worker()]);
   loading=false;$("#allfr").disabled=false;renderAll();
-  status(fails.length?"⚠️ "+nbLive()+" lieux réels chargés. Départements non chargés (serveur occupé) : "+fails.join(", ")+". Cliquez sur « Charger toute la France » pour réessayer.":"✅ Toute la France est chargée : "+nbLive()+" lieux réels. Zoomez pour les voir.")}
+  status(fails?"⚠️ "+nbLive().toLocaleString("fr-FR")+" lieux réels chargés. "+fails+" zone(s) n'ont pas répondu (serveur occupé) : cliquez sur « Charger toute la France » pour réessayer.":"✅ Toute la France est chargée : "+nbLive().toLocaleString("fr-FR")+" lieux réels. Zoomez pour les voir.")}
 function loadView(force){
   if(!map)return;
   if(map.getZoom()<11){if(force)status("🔍 Zoomez sur une ville pour chercher dans la zone.");return}
@@ -444,7 +455,7 @@ $("#norefs").addEventListener("change",function(){hideRefs=this.checked;S.show=6
 
 if(ld("sf_dark",window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches))document.body.classList.add("dark");
 initMap();renderRes();renderChecks();renderAll();
-idb().then(loadFrance);
+Promise.race([idb(),new Promise(function(r){setTimeout(r,2000)})]).then(loadFrance);
 </script>
 </body>
 </html>
