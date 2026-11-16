@@ -127,7 +127,7 @@ footer{background:var(--card);border-top:1px solid var(--bd);text-align:center;p
 <div class="row"><button class="btn g" data-a="here">🔄 Chercher dans cette zone</button><button class="btn l" data-a="reset">🇫🇷 Vue France</button></div></div>
 <div id="map"></div>
 <div class="legend" id="legend"></div>
-<div class="warn">⚠️ Les lieux « Repère » ont une position approximative. Les autres viennent d'OpenStreetMap (données collaboratives, parfois incomplètes ou dépassées). Appelez ou vérifiez avant de vous déplacer.</div>
+<div class="warn">⚠️ Les lieux « Repère » ont une position approximative (centre-ville) : ils signalent le type de structure présent dans la ville et renvoient vers le site officiel. Les autres viennent d'OpenStreetMap (données collaboratives, parfois incomplètes ou dépassées). Appelez ou vérifiez avant de vous déplacer.</div>
 </div>
 <div class="grid" id="cards" style="margin-top:1.2rem"></div>
 <div style="text-align:center;margin-top:1rem"><button class="btn l" id="more" data-a="more" hidden>Voir plus de résultats</button></div>
@@ -201,6 +201,45 @@ var REFS=[
 ["Banque alimentaire","Bordeaux",44.865,-0.563,"Alimentaire","Distribution de colis aux associations et épiceries partenaires.","https://www.banquealimentaire.org"],
 ["Vestiaire solidaire","Orléans",47.903,1.909,"Magasins solidaires","Vêtements à très bas prix ou gratuits sur orientation.","https://www.secourspopulaire.fr"]
 ];
+
+/* ---------- Villes couvertes : préfectures + grandes villes (nom|lat|lng|u = ville universitaire) ---------- */
+var VILLES=("Bourg-en-Bresse|46.21|5.23;Laon|49.56|3.62;Moulins|46.57|3.33;Digne-les-Bains|44.09|6.24;Gap|44.56|6.08;Nice|43.70|7.27|u;Privas|44.74|4.60;Charleville-Mézières|49.77|4.72;Foix|42.97|1.61;Troyes|48.30|4.07|u;Carcassonne|43.21|2.35;Rodez|44.35|2.57;Marseille|43.30|5.37|u;Caen|49.18|-0.37|u;Aurillac|44.93|2.44;Angoulême|45.65|0.16;La Rochelle|46.16|-1.15|u;Bourges|47.08|2.40;Tulle|45.27|1.77;Ajaccio|41.92|8.74|u;Bastia|42.70|9.45;Dijon|47.32|5.04|u;Saint-Brieuc|48.51|-2.76;Guéret|46.17|1.87;Périgueux|45.18|0.72;Besançon|47.24|6.02|u;Valence|44.93|4.89|u;Évreux|49.02|1.15;Chartres|48.45|1.49;Quimper|48.00|-4.10;Nîmes|43.84|4.36|u;Toulouse|43.60|1.44|u;Auch|43.65|0.59;Bordeaux|44.84|-0.58|u;Montpellier|43.61|3.88|u;Rennes|48.12|-1.68|u;Châteauroux|46.81|1.69;Tours|47.39|0.69|u;Grenoble|45.19|5.72|u;Lons-le-Saunier|46.67|5.55;Mont-de-Marsan|43.89|-0.50;Blois|47.59|1.33;Saint-Étienne|45.44|4.39|u;Le Puy-en-Velay|45.04|3.88;Nantes|47.22|-1.55|u;Orléans|47.90|1.91|u;Cahors|44.45|1.44;Agen|44.20|0.62;Mende|44.52|3.50;Angers|47.47|-0.55|u;Saint-Lô|49.12|-1.09;Châlons-en-Champagne|48.96|4.36;Chaumont|48.11|5.14;Laval|48.07|-0.77;Nancy|48.69|6.18|u;Bar-le-Duc|48.77|5.16;Vannes|47.66|-2.76|u;Metz|49.12|6.18|u;Nevers|46.99|3.16;Lille|50.63|3.06|u;Beauvais|49.43|2.08;Alençon|48.43|0.09;Arras|50.29|2.78|u;Clermont-Ferrand|45.78|3.08|u;Pau|43.30|-0.37|u;Tarbes|43.23|0.07;Perpignan|42.70|2.90|u;Strasbourg|48.58|7.75|u;Colmar|48.08|7.36;Lyon|45.76|4.84|u;Vesoul|47.62|6.15;Mâcon|46.31|4.83;Le Mans|48.00|0.20|u;Chambéry|45.57|5.92|u;Annecy|45.90|6.13;Paris|48.86|2.35|u;Rouen|49.44|1.10|u;Melun|48.54|2.66;Versailles|48.80|2.13|u;Niort|46.32|-0.46;Amiens|49.89|2.30|u;Albi|43.93|2.15|u;Montauban|44.02|1.35;Toulon|43.12|5.93|u;Avignon|43.95|4.81|u;La Roche-sur-Yon|46.67|-1.43;Poitiers|46.58|0.34|u;Limoges|45.83|1.26|u;Épinal|48.17|6.45;Auxerre|47.80|3.57;Belfort|47.64|6.86|u;Évry|48.63|2.43|u;Nanterre|48.89|2.21|u;Bobigny|48.91|2.44|u;Créteil|48.79|2.46|u;Cergy|49.04|2.08|u;"
++"Basse-Terre|16.00|-61.73;Pointe-à-Pitre|16.24|-61.53|u;Fort-de-France|14.61|-61.07|u;Cayenne|4.94|-52.33|u;Saint-Denis (La Réunion)|-20.88|55.45|u;Mamoudzou|-12.78|45.23;"
++"Le Havre|49.49|0.11|u;Reims|49.26|4.03|u;Saint-Nazaire|47.27|-2.21;Brest|48.39|-4.49|u;Lorient|47.75|-3.37|u;Mulhouse|47.75|7.34|u;Dunkerque|51.03|2.38|u;Roubaix|50.69|3.17;Tourcoing|50.72|3.16;Villeurbanne|45.77|4.88;Cannes|43.55|7.01;Antibes|43.58|7.12;Saint-Denis|48.94|2.36;Montreuil|48.86|2.44;Argenteuil|48.95|2.25;Calais|50.95|1.86;Béziers|43.34|3.22;Bayonne|43.49|-1.47|u;Mérignac|44.84|-0.65;Pessac|44.81|-0.63;Villeneuve-d'Ascq|50.62|3.14|u;Aix-en-Provence|43.53|5.45|u;Saint-Pierre (La Réunion)|-21.34|55.48|u;Saint-Malo|48.65|-2.01;Cholet|47.06|-0.88;Valenciennes|50.36|3.52|u;Compiègne|49.42|2.83|u;Colombes|48.92|2.25;Boulogne-sur-Mer|50.73|1.61;Roanne|46.04|4.07;Vénissieux|45.70|4.89;Saint-Quentin|49.85|3.29;Narbonne|43.18|3.00;Montluçon|46.34|2.60;Vitry-sur-Seine|48.79|2.40;Sète|43.40|3.70;Douai|50.37|3.08;Châteauroux|46.81|1.69").split(";");
+/* Structures présentes dans (presque) toutes les villes : [libellé, catégorie, description, site, recherche Maps, universitaire seulement] */
+var TYPES=[
+["CCAS / mairie — action sociale","Aides & accueil social","Aides d'urgence, domiciliation postale, aide alimentaire, orientation vers les dispositifs locaux.","https://www.service-public.fr","CCAS action sociale"],
+["Restos du Cœur — association locale","Alimentaire","Repas, colis alimentaires, espace bébé, ateliers. Inscription selon revenus.","https://www.restosducoeur.org/pres-de-chez-vous/","Restos du Cœur"],
+["Banque alimentaire","Alimentaire","Distribution de denrées aux associations et épiceries solidaires partenaires du département.","https://www.banquealimentaire.org","Banque alimentaire"],
+["Secours Populaire — fédération / comité","Alimentaire","Aide alimentaire, vestiaire, accès aux vacances et à la culture, aide juridique.","https://www.secourspopulaire.fr","Secours Populaire"],
+["Secours Catholique — délégation","Alimentaire","Accueil, aide alimentaire, accompagnement, aide aux démarches.","https://www.secours-catholique.org","Secours Catholique"],
+["Épicerie sociale ou solidaire","Alimentaire","Courses à prix réduit après orientation d'un travailleur social (CCAS, assistante sociale).","https://www.andes-france.fr","épicerie solidaire"],
+["Croix-Rouge française — unité locale","Santé & logement","Maraudes, aide alimentaire, accompagnement social, premiers secours.","https://www.croix-rouge.fr","Croix-Rouge"],
+["PASS — permanence d'accès aux soins (hôpital)","Santé & logement","Consultations et médicaments sans avance de frais à l'hôpital public.","https://sante.gouv.fr","hôpital PASS permanence accès aux soins"],
+["CPAM — Assurance maladie","Santé & logement","Droits santé, complémentaire santé solidaire (C2S), carte Vitale. Tél. 3646.","https://www.ameli.fr","CPAM Assurance Maladie"],
+["Accueil de jour / bains-douches","Hygiène & numérique","Douches, petit-déjeuner, consigne, courrier, orientation sociale. Voir aussi Soliguide.","https://soliguide.fr","accueil de jour bains-douches"],
+["France Services","Aides & accueil social","Aide gratuite pour CAF, impôts, retraite, France Travail et démarches en ligne.","https://france-services.gouv.fr","France Services"],
+["CAF — Caisse d'allocations familiales","Aides & accueil social","APL, RSA, prime d'activité, allocations familiales, aides exceptionnelles.","https://www.caf.fr","CAF allocations familiales"],
+["France Travail (ex-Pôle emploi)","Emploi & insertion","Inscription, indemnisation, offres, accompagnement. Tél. 3949.","https://www.francetravail.fr","France Travail"],
+["Mission Locale (16-25 ans)","Emploi & insertion","Emploi, formation, logement, santé, Contrat d'engagement jeune.","https://www.mission-locale.fr","Mission Locale"],
+["Ressourcerie / boutique solidaire (Emmaüs, Croix-Rouge…)","Magasins solidaires","Vêtements, meubles, livres et électroménager de seconde main à prix solidaires.","https://www.ressourceries.info","ressourcerie boutique solidaire Emmaüs"],
+["CROUS / épicerie solidaire étudiante","Étudiants","Bourses, aides d'urgence, logement, repas à 1 €, épicerie AGORAé selon la ville.","https://www.etudiant.gouv.fr","CROUS service social étudiant",1]
+];
+function genRefs(){
+  var seen={};REFS.forEach(function(r){seen[norm(r[0]).split(/\W+/).slice(0,2).join(" ")+"|"+norm(r[1])]=1});
+  var out=[],n=0,k=1;
+  VILLES.forEach(function(v){
+    var f=v.split("|");if(f.length<3)return;
+    var nom=f[0],la=parseFloat(f[1]),ln=parseFloat(f[2]),uni=f[3]==="u",j=0;
+    TYPES.forEach(function(t){
+      if(t[5]&&!uni)return;
+      var key=norm(t[0]).split(/\W+/).slice(0,2).join(" ")+"|"+norm(nom);
+      if(seen[key]){j++;return}
+      var ang=j*2.399963,rad=.0035+.0014*Math.sqrt(j),cl=Math.cos(la*Math.PI/180)||1;
+      j++;
+      out.push({id:"g"+(k++),src:"ref",n:t[0],c:nom,la:Math.round((la+rad*Math.sin(ang))*10000)/10000,ln:Math.round((ln+rad*Math.cos(ang)/cl)*10000)/10000,k:t[1],d:t[2]+" Structure présente dans cette zone : position approximative, consultez le site pour l'adresse exacte.",web:t[3],q:t[4]+" "+nom,a:"",h:"",tel:"",o:""})
+    })});
+  return out}
 var QUICK=[["🍽️","Restos du Cœur"],["📦","Banque alimentaire"],["🛒","Épicerie solidaire"],["🤝","Secours Populaire"],["⛪","Secours Catholique"],["🧥","Emmaüs ressourcerie"],["🏛️","CCAS mairie"],["💼","France Travail"],["👥","Mission Locale"],["🏢","France Services"],["💶","CAF"],["🩺","CPAM"],["🏥","PASS permanence accès aux soins"],["🎓","CROUS"],["🚿","Bains-douches accueil de jour"],["🏠","Croix-Rouge"]];
 var R={
 "Numéros":[["115","Hébergement d'urgence, 24h/24","tel:115"],["15","SAMU — urgence médicale","tel:15"],["17","Police / Gendarmerie","tel:17"],["18","Pompiers","tel:18"],["112","Urgence européenne","tel:112"],["114","Urgence par SMS (sourds, malentendants)","tel:114"],["3919","Violences faites aux femmes","tel:3919"],["119","Enfance en danger","tel:119"],["3114","Prévention du suicide, 24h/24","tel:3114"],["3977","Maltraitance aînés / handicap","tel:3977"],["116 006","Aide aux victimes","tel:116006"],["3020","Harcèlement scolaire","tel:3020"],["3018","Cyberharcèlement","tel:3018"],["0 800 235 236","Fil Santé Jeunes","tel:0800235236"],["09 72 39 40 50","SOS Amitié","tel:0972394050"],["0 800 23 13 13","Drogues Info Service","tel:0800231313"],["0 980 980 930","Alcool Info Service","tel:0980980930"],["3949","France Travail","tel:3949"],["3939","Allô Service Public","tel:3939"],["3646","Assurance maladie","tel:3646"],["09 69 39 00 00","Défenseur des droits","tel:0969390000"]],
@@ -222,7 +261,7 @@ function dist(a,b,c,d){var r=Math.PI/180,x=Math.sin((c-a)*r/2),y=Math.sin((d-b)*
 var SYN={repas:"aliment manger epicerie colis resto",douche:"hygiene bain laverie",emploi:"insertion travail chantier",etudiant:"crous fage etudiants",vetements:"vestiaire boutique emmaus seconde main"};
 
 var S={c:null,cat:"Tout",show:60,live:{},sug:[],busy:false,pending:false,kw:""};
-var REFITEMS=REFS.map(function(r,i){return{id:"r"+(i+1),src:"ref",n:r[0],c:r[1],la:r[2],ln:r[3],k:r[4],d:r[5],web:r[6],a:"",h:"",tel:"",o:""}});
+var REFITEMS=REFS.map(function(r,i){return{id:"r"+(i+1),src:"ref",n:r[0],c:r[1],la:r[2],ln:r[3],k:r[4],d:r[5],web:r[6],q:r[0]+" "+r[1],a:"",h:"",tel:"",o:""}}).concat(genRefs());
 var custom=ld("sf_custom_v8",[]),favs=ld("sf_favs_v8",{}),checks=ld("sf_checks_v8",[]),rtab="Numéros";
 var loaded=[],map=null,layer=null,pin=null,markers={},byId={},tm=null,tmv=null,clustered=false;
 var EP=["https://overpass-api.de/api/interpreter","https://overpass.kumi.systems/api/interpreter","https://maps.mail.ru/osm/tools/overpass/api/interpreter"];
@@ -248,14 +287,14 @@ function mk(e){
   var a=[((t["addr:housenumber"]||"")+" "+(t["addr:street"]||"")).trim(),((t["addr:postcode"]||"")+" "+(t["addr:city"]||"")).trim()].filter(Boolean).join(", ");
   return{id:e.type[0]+e.id,src:"osm",n:t.name||SFL[t.social_facility]||(t.shop?"Magasin solidaire":"Structure sociale"),k:cls(t),la:la,ln:ln,a:a,c:t["addr:city"]||"",tel:t.phone||t["contact:phone"]||"",web:t.website||t["contact:website"]||"",h:hrs(t.opening_hours),o:t.operator||"",d:""}}
 function buildQuery(b){
-  return"[out:json][timeout:30][bbox:"+b.s+","+b.w+","+b.n+","+b.e+"];("
+  return"[out:json][timeout:40][bbox:"+b.s+","+b.w+","+b.n+","+b.e+"];("
   +'nwr["amenity"="social_facility"];nwr["amenity"="social_centre"];nwr["amenity"="food_sharing"];nwr["amenity"="public_bath"];nwr["shop"="charity"];'
   +'nwr["office"~"^(ngo|association|government|charity|employment_agency)$"]["name"~"'+NAMES+'",i];'
   +'nwr["amenity"~"^(community_centre|townhall)$"]["name"~"CCAS|action sociale",i];'
   +'nwr["shop"="second_hand"]["name"~"Emma|Croix|Secours|Resso|solidair|Entraide|Humanit|Recycl",i];'
-  +");out center 700;"}
+  +");out center 2000;"}
 async function tryEp(url,body){
-  var ctl=new AbortController(),to=setTimeout(function(){ctl.abort()},40000);
+  var ctl=new AbortController(),to=setTimeout(function(){ctl.abort()},45000);
   try{var r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:body,signal:ctl.signal});
     if(!r.ok)return null;var j=await r.json();
     if(j.remark&&/error|timed out|out of memory/i.test(j.remark)&&!(j.elements&&j.elements.length))return null;
@@ -266,19 +305,19 @@ async function fetchBox(b){
   var body="data="+encodeURIComponent(buildQuery(b)),data=null;
   for(var i=0;i<EP.length&&!data;i++)data=await tryEp(EP[i],body);
   S.busy=false;
-  if(!data){status("❌ Serveur de données occupé ou hors ligne. Cliquez sur « Chercher dans cette zone » pour réessayer dans un instant.");if(S.pending){S.pending=false}return}
+  if(!data){status("❌ Serveur de données occupé ou hors ligne. Les repères nationaux restent affichés. Cliquez sur « Chercher dans cette zone » pour réessayer dans un instant.");if(S.pending){S.pending=false}return}
   var n=0,tot=0;
   (data.elements||[]).forEach(function(e){var p=mk(e);if(p){tot++;if(!S.live[p.id]){S.live[p.id]=p;n++}}});
-  if(Object.keys(S.live).length>3000){var keep={};(data.elements||[]).forEach(function(e){var p=mk(e);if(p)keep[p.id]=p});S.live=keep;loaded=[]}
+  if(Object.keys(S.live).length>8000){var keep={};(data.elements||[]).forEach(function(e){var p=mk(e);if(p)keep[p.id]=p});S.live=keep;loaded=[]}
   loaded.push(b);
-  status("✅ "+tot+" lieu(x) réel(s) trouvé(s) dans cette zone"+(tot>=690?" (zone très dense : zoomez pour tout voir)":"")+". Total affiché : "+items().length+".");
+  status("✅ "+tot+" lieu(x) réel(s) trouvé(s) dans cette zone"+(tot>=1900?" (zone très dense : zoomez pour tout voir)":"")+". Total affiché : "+items().length+".");
   renderAll();
   if(S.pending){S.pending=false;loadView(false)}}
 function covered(v){return loaded.some(function(l){return v.s>=l.s&&v.n<=l.n&&v.w>=l.w&&v.e<=l.e})}
 function r4(x){return Math.round(x*10000)/10000}
 function loadView(force){
   if(!map)return;
-  if(map.getZoom()<10){status("🔍 Zoomez sur une ville (ou choisissez-la en haut) pour charger les centres réels. Pour l'instant : repères nationaux.");return}
+  if(map.getZoom()<9){status("🔍 Zoomez sur une ville (ou choisissez-la en haut) pour charger en plus les centres OpenStreetMap. Pour l'instant : "+items().length+" repères nationaux.");return}
   var b=map.getBounds(),v={s:b.getSouth(),w:b.getWest(),n:b.getNorth(),e:b.getEast()};
   if(!force&&covered(v))return;
   var dh=(v.n-v.s)*.2,dw=(v.e-v.w)*.2;
@@ -344,7 +383,7 @@ function renderMarkers(l){
   if(!layer)return;
   layer.clearLayers();markers={};
   var arr=[];
-  l.slice(0,2500).forEach(function(p){
+  l.slice(0,5000).forEach(function(p){
     var ic=L.divIcon({className:"",iconSize:[20,20],iconAnchor:[10,10],popupAnchor:[0,-10],html:'<div style="background:'+CATS[p.k]+';width:20px;height:20px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.45)"></div>'});
     var m=L.marker([p.la,p.ln],{icon:ic}).bindPopup("<strong>"+esc(p.n)+"</strong><br><small>"+esc(p.k)+(p.src==="ref"?" • repère (position approx.)":"")+"</small>"+(p.a?"<br><small>"+esc(p.a)+"</small>":"")+(p.h?"<br><small>🕒 "+esc(p.h)+"</small>":"")+'<br><a href="'+gps(p)+'" target="_blank" rel="noopener">🧭 Itinéraire</a> · <a href="#" data-a="detail" data-id="'+esc(p.id)+'">Détails</a>');
     markers[p.id]=m;arr.push(m)});
@@ -393,7 +432,7 @@ function closeModal(){$("#mbg").classList.remove("open")}
 function detail(id){
   var p=get(id);if(!p)return;var w=safeUrl(p.web),T={n:"node",w:"way",r:"relation"};
   var note=p.src==="ref"?"Repère national : position approximative, consultez le site pour l'adresse et les horaires exacts.":p.src==="user"?"Lieu ajouté par vous (visible uniquement sur votre appareil).":"Informations collaboratives (OpenStreetMap) : à vérifier avant de venir.";
-  openModal('<span class="badge" style="background:'+CATS[p.k]+'">'+esc(p.k)+'</span><h2 style="margin:.5rem 0">'+esc(p.n)+'</h2><div class="result" style="margin:0 0 1rem">'+(p.o?"🏢 <b>Géré par :</b> "+esc(p.o)+"<br>":"")+(p.c?"🏙️ <b>Ville :</b> "+esc(p.c)+"<br>":"")+(p.a?"📍 <b>Adresse :</b> "+esc(p.a)+"<br>":"")+(p.h?"🕒 <b>Horaires :</b> "+esc(p.h)+"<br>":"")+(p.tel?'📞 <b>Tél :</b> <a href="tel:'+esc(p.tel.replace(/[^\d+]/g,""))+'">'+esc(p.tel)+"</a><br>":"")+(p.d?"<br>"+esc(p.d)+"<br>":"")+"<br><small>"+esc(note)+"</small></div>"+'<div class="row"><a class="btn" href="'+gps(p)+'" target="_blank" rel="noopener">🧭 Itinéraire</a>'+(w?'<a class="btn g" href="'+esc(w)+'" target="_blank" rel="noopener">🌐 Site</a>':"")+(p.src==="osm"?'<a class="btn l" href="https://www.openstreetmap.org/'+T[p.id[0]]+"/"+esc(p.id.slice(1))+'" target="_blank" rel="noopener">✏️ Corriger sur OSM</a>':"")+(p.src==="user"?'<button class="btn rd" data-a="del" data-id="'+esc(p.id)+'">🗑️ Supprimer</button>':"")+"</div>")}
+  openModal('<span class="badge" style="background:'+CATS[p.k]+'">'+esc(p.k)+'</span><h2 style="margin:.5rem 0">'+esc(p.n)+'</h2><div class="result" style="margin:0 0 1rem">'+(p.o?"🏢 <b>Géré par :</b> "+esc(p.o)+"<br>":"")+(p.c?"🏙️ <b>Ville :</b> "+esc(p.c)+"<br>":"")+(p.a?"📍 <b>Adresse :</b> "+esc(p.a)+"<br>":"")+(p.h?"🕒 <b>Horaires :</b> "+esc(p.h)+"<br>":"")+(p.tel?'📞 <b>Tél :</b> <a href="tel:'+esc(p.tel.replace(/[^\d+]/g,""))+'">'+esc(p.tel)+"</a><br>":"")+(p.d?"<br>"+esc(p.d)+"<br>":"")+"<br><small>"+esc(note)+"</small></div>"+'<div class="row"><a class="btn" href="'+gps(p)+'" target="_blank" rel="noopener">🧭 Itinéraire</a>'+(w?'<a class="btn g" href="'+esc(w)+'" target="_blank" rel="noopener">🌐 Site</a>':"")+(p.src==="ref"&&p.q?'<a class="btn l" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(p.q)+'" target="_blank" rel="noopener">🔎 Adresse exacte</a>':"")+(p.src==="osm"?'<a class="btn l" href="https://www.openstreetmap.org/'+T[p.id[0]]+"/"+esc(p.id.slice(1))+'" target="_blank" rel="noopener">✏️ Corriger sur OSM</a>':"")+(p.src==="user"?'<button class="btn rd" data-a="del" data-id="'+esc(p.id)+'">🗑️ Supprimer</button>':"")+"</div>")}
 function addForm(){
   openModal('<h2 style="margin-bottom:.8rem">➕ Ajouter un lieu</h2><input id="f-n" class="field" placeholder="Nom *" maxlength="100"><input id="f-c" class="field" placeholder="Ville *" maxlength="60"><select id="f-k" class="field">'+Object.keys(CATS).map(function(k){return"<option>"+esc(k)+"</option>"}).join("")+'</select><input id="f-h" class="field" placeholder="Horaires" maxlength="80"><input id="f-d" class="field" placeholder="Description / conditions" maxlength="250"><input id="f-u" class="field" placeholder="Site web (https://…)"><button class="btn g" style="width:100%" data-a="save" id="f-b">Publier sur la carte</button><p class="sub" style="margin-top:.6rem">Visible uniquement sur votre appareil. Pour que tout le monde le voie, ajoutez-le sur openstreetmap.org.</p>')}
 async function savePlace(){
@@ -446,32 +485,3 @@ initMap();renderRes();renderChecks();renderAll();
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
