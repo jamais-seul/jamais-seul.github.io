@@ -1,117 +1,372 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Solidarité France — Carte & Entraide</title>
-<link rel="stylesheet" href="https://unpkg.com"/>
-<style>
-:root{--p:#0055ff;--s:#00a86b;--bg:#f4f6f9;--c:#fff;--t:#1e293b;--m:#475569;--b:#e2e8f0}
-body.hc{--bg:#000;--c:#111827;--t:#fff;--m:#e2e8f0;--b:#374151}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--t);line-height:1.5}
-.bar{background:#1e293b;color:#fff;font-size:.85rem;padding:.5rem;text-align:center}
-.bar a{color:#fde047;font-weight:700;text-decoration:none;margin:0 5px}
-header{background:linear-gradient(135deg,#0055ff,#003ec2);color:#fff;padding:2rem 1rem;text-align:center}
-.sbox{max-width:560px;margin:1rem auto 0;display:flex;gap:.5rem}
-.sbox input{flex:1;padding:.75rem;border-radius:8px;border:0;font-size:1rem;color:#000;background:#fff}
-.btn{background:var(--p);color:#fff;border:0;padding:.65rem 1rem;border-radius:8px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block}
-.btn2{background:var(--s)}
-.wrap{max-width:1020px;margin:1.5rem auto;padding:0 1rem}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.8rem;margin-bottom:1.2rem}
-.stat{background:var(--c);border:1px solid var(--b);padding:.8rem;border-radius:10px;text-align:center}
-.stat b{display:block;font-size:1.3rem;color:var(--p)}
-.filters{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin-bottom:1.2rem}
-.fbtn{background:var(--c);color:var(--t);border:1px solid var(--b);padding:.45rem .9rem;border-radius:20px;cursor:pointer;font-weight:500}
-.fbtn.on{background:var(--p);color:#fff;border-color:var(--p)}
-#map{height:400px;width:100%;border-radius:12px;border:1px solid var(--b);margin-bottom:1.8rem;z-index:1}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:1rem;margin-bottom:2rem}
-.card{background:var(--c);border:1px solid var(--b);border-radius:10px;padding:1.2rem;display:flex;flex-direction:column;justify-content:space-between}
-.badge{font-size:.75rem;padding:.2rem .5rem;border-radius:5px;background:#e0e7ff;color:var(--p);font-weight:700}
-.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
-.box{background:var(--c);border:1px solid var(--b);border-radius:10px;padding:1.3rem}
-.fld{width:100%;padding:.65rem;margin:.4rem 0 .8rem;border:1px solid var(--b);border-radius:6px;background:var(--bg);color:var(--t);font-size:.95rem}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);align-items:center;justify-content:center;padding:1rem;z-index:1000}
-.modal.open{display:flex}
-.mcard{background:var(--c);max-width:450px;width:100%;padding:1.5rem;border-radius:12px;position:relative}
-footer{text-align:center;padding:1.5rem;font-size:.85rem;color:var(--m);border-top:1px solid var(--b);margin-top:2rem}
-</style>
-</head>
-<body>
-<div class="bar">🚨 Urgences : <a href="tel:115">115</a> (Hébergement) | <a href="tel:15">15</a> (SAMU) | <a href="tel:114">114</a> (SMS) | <a href="tel:3919">3919</a> <button onclick="document.body.classList.toggle('hc')" style="margin-left:8px;padding:2px 6px;cursor:pointer">🌓 Contraste</button></div>
-<header>
-  <h1>Solidarité France</h1>
-  <p>Carte interactive des associations, épiceries solidaires, douches publiques et aides d'urgence</p>
-  <div class="sbox" id="sbox"></div>
-</header>
-<div class="wrap">
-  <div class="stats"><div class="stat"><b id="st1">0</b>Lieux recensés</div><div class="stat"><b>100%</b>Gratuit & Citoyen</div><div class="stat"><b>24h/24</b>Numéros d'urgence</div><div class="stat"><b id="st2">0</b>Villes couvertes</div></div>
-  <div class="filters" id="flt"></div>
-  <div id="map"></div>
-  <div class="grid" id="grid"></div>
-  <div class="cols">
-    <div class="box"><h3>🧭 À quelles aides ai-je droit ?</h3><div id="simBox"></div></div>
-    <div class="box"><h3>➕ Ajouter un lieu sur la carte</h3><div id="formBox"></div></div>
-  </div>
-</div>
-<div class="modal" id="mod"><div class="mcard"><button onclick="mod.classList.remove('open')" style="float:right;border:0;background:none;font-size:1.5rem;cursor:pointer;color:var(--t)">&times;</button><div id="mBody"></div></div></div>
-<footer>Portail citoyen libre sur GitHub Pages • Urgences : 17 (Police) • 18 (Pompiers) • 112</footer>
-<script src="https://unpkg.com"></script>
-<script>
-const cats={all:"🌍 Tout voir",alim:"🥫 Alimentaire",mag:"🛍️ Magasin",fin:"💶 Financier",log:"🏠 Logement/Santé",hyg:"🚿 Hygiène/Web"};
-const cols={alim:"#ef4444",mag:"#f59e0b",fin:"#10b981",log:"#3b82f6",hyg:"#8b5cf6"};
-let data=JSON.parse(localStorage.getItem("sf_data"))||[
-  {n:"Restos du Cœur — Centre Paris",v:"Paris",lat:48.876,lng:2.359,c:"alim",h:"Mar-Sam 9h-16h",d:"Distribution de repas chauds, paniers alimentaires et produits bébés.",u:"https://restosducoeur.org"},
-  {n:"Secours Populaire Français",v:"Lille",lat:50.629,lng:3.057,c:"alim",h:"Lun-Ven 9h-17h",d:"Aide alimentaire, vestimentaire et accompagnement social de proximité.",u:"https://secourspopulaire.fr"},
-  {n:"Communauté & Boutique Emmaüs",v:"Lyon",lat:45.758,lng:4.835,c:"mag",h:"Mer-Sam 10h-18h",d:"Vêtements, meubles et électroménager reconditionnés à prix solidaires.",u:"https://emmaus-france.org"},
-  {n:"CCAS — Action Sociale",v:"Bordeaux",lat:44.837,lng:-0.579,c:"fin",h:"Lun-Ven 8h30-17h",d:"Aides financières d'urgence, domiciliation administrative et chèques énergie.",u:"https://service-public.fr"},
-  {n:"Croix-Rouge Française — Halte Santé",v:"Marseille",lat:43.296,lng:5.369,c:"log",h:"7j/7 • 18h-23h",d:"Maraudes nocturnes, orientation vers le 115 et soins infirmiers gratuits.",u:"https://croix-rouge.fr"},
-  {n:"Bains-Douches & Bagagerie",v:"Toulouse",lat:43.604,lng:1.444,c:"hyg",h:"Tous les jours 8h-12h",d:"Douches gratuites, kits d'hygiène, consigne à bagages et point Wi-Fi.",u:"https://service-public.fr"},
-  {n:"Épicerie Étudiante AGORAé",v:"Strasbourg",lat:48.583,lng:7.745,c:"alim",h:"Mar & Jeu 12h-19h",d:"Produits frais et d'hygiène à -80% pour les étudiants en difficulté.",u:"https://fage.org"},
-  {n:"Permanence Soins PASS",v:"Nantes",lat:47.218,lng:-1.553,c:"log",h:"Lun-Ven 9h-17h",d:"Consultations médicales et médicaments gratuits sans avance de frais.",u:"https://sante.gouv.fr"}
-];
-let curCat="all",curQ="";
-const map=L.map("map").setView([46.6,2.2],6);
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
-const layer=L.layerGroup().addTo(map);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solidarité France - Portail National des Aides, Magasins & Actions Solidaires</title>
+    <style>
+        /* =========================================
+           1. VARIABLES & DESIGN SYSTEM
+           ========================================= */
+        :root {
+            --primary: #0f4c81;
+            --primary-hover: #0a355c;
+            --secondary: #2e8b57;
+            --secondary-hover: #236b43;
+            --accent: #e67e22;
+            --danger: #d93025;
+            --bg-body: #f0f4f8;
+            --bg-white: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 6px 15px rgba(0,0,0,0.08);
+            --shadow-lg: 0 15px 30px rgba(0,0,0,0.12);
+            --radius: 12px;
+        }
 
-sbox.innerHTML=`<input id="q" placeholder="Ville ou aide (ex: Paris, repas, douche)..."><button class="btn btn2" onclick="geo()">📍 Autour de moi</button>`;
-flt.innerHTML=Object.entries(cats).map(([k,v])=>`<button class="fbtn ${k==="all"?"on":""}" onclick="setCat('${k}',this)">${v}</button>`).join("");
-simBox.innerHTML=`<p style="font-size:.9rem;color:var(--m);margin:.5rem 0">Sélectionnez votre besoin prioritaire :</p><select id="s1" class="fld"><option value="f">Manger / Courses à petit prix</option><option value="m">Payer un loyer ou une facture</option><option value="s">Hébergement d'urgence ce soir</option><option value="h">Me soigner sans mutuelle</option></select><button class="btn" style="width:100%" onclick="sim()">Voir mes droits</button><div id="sRes" style="margin-top:10px;font-size:.9rem"></div>`;
-formBox.innerHTML=`<form id="addForm"><input id="fn" class="fld" placeholder="Nom de l'association *" required><select id="fc" class="fld"><option value="alim">🥫 Alimentaire</option><option value="mag">🛍️ Magasin</option><option value="fin">💶 Financier</option><option value="log">🏠 Logement/Santé</option><option value="hyg">🚿 Hygiène/Web</option></select><input id="fv" class="fld" placeholder="Ville (ex: Talence, Rennes) *" required><input id="fh" class="fld" placeholder="Horaires (ex: Lun-Ven 9h-17h) *" required><input id="fd" class="fld" placeholder="Description et conditions *" required><input id="fu" type="url" class="fld" placeholder="Lien web https://... *" required><button class="btn btn2" style="width:100%">Publier sur la carte</button></form>`;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            scroll-behavior: smooth;
+        }
 
-function setCat(c,el){curCat=c;document.querySelectorAll(".fbtn").forEach(b=>b.classList.remove("on"));el.classList.add("on");draw()}
-document.getElementById("q").oninput=e=>{curQ=e.target.value.toLowerCase();draw()};
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
 
-function draw(){
-  grid.innerHTML="";layer.clearLayers();
-  const list=data.filter(i=>(curCat==="all"||i.c===curCat)&&`${i.n} ${i.v} ${i.d}`.toLowerCase().includes(curQ));
-  if(!list.length)grid.innerHTML=`<p style="grid-column:1/-1;text-align:center;color:var(--m)">Aucun résultat trouvé.</p>`;
-  list.forEach(i=>{
-    const idx=data.indexOf(i);
-    grid.innerHTML+=`<div class="card"><div><span class="badge">${cats[i.c]}</span> <b>📍 ${i.v}</b><h4 style="margin:6px 0">${i.n}</h4><p style="font-size:.9rem;color:var(--m);margin-bottom:10px">${i.d}</p></div><div style="display:flex;gap:6px"><button class="btn" style="flex:1" onclick="openM(${idx})">Détails</button><button class="btn" style="background:transparent;border:1px solid var(--p);color:var(--p)" onclick="map.setView([${i.lat},${i.lng}],13);map.getContainer().scrollIntoView({behavior:'smooth'})">🗺️</button></div></div>`;
-    const ic=L.divIcon({className:"",html:`<div style="background:${cols[i.c]};width:20px;height:20px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 4px #0006"></div>`});
-    L.marker([i.lat,i.lng],{icon:ic}).addTo(layer).bindPopup(`<b>${i.n}</b><br>${i.v} • ${i.h}<br><button onclick="openM(${idx})" style="margin-top:5px;padding:3px 8px;background:#0055ff;color:#fff;border:0;border-radius:4px;cursor:pointer">Infos</button>`);
-  });
-  st1.textContent=data.length;st2.textContent=new Set(data.map(x=>x.v.trim().toLowerCase())).size;
-}
+        /* =========================================
+           2. BARRE D'URGENCE & NAVIGATION
+           ========================================= */
+        .emergency-bar {
+            background-color: var(--danger);
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
 
-function openM(i){const x=data[i];mBody.innerHTML=`<span class="badge">${cats[x.c]}</span><h3 style="margin:8px 0;color:var(--p)">${x.n}</h3><p><b>📍 Ville :</b> ${x.v}<br><b>🕒 Horaires :</b> ${x.h}</p><p style="margin:12px 0">${x.d}</p><a href="${x.u}" target="_blank" class="btn btn2" style="width:100%;text-align:center;margin-bottom:6px">🌐 Site officiel</a><a href="https://google.com{encodeURIComponent(x.n+' '+x.v)}" target="_blank" class="btn" style="width:100%;text-align:center">🗺️ Itinéraire GPS</a>`;mod.classList.add("open")}
-function geo(){navigator.geolocation?.getCurrentPosition(p=>{map.setView([p.coords.latitude,p.coords.longitude],12);L.circleMarker([p.coords.latitude,p.coords.longitude],{radius:8,color:"#0055ff"}).addTo(map).bindPopup("📍 Vous êtes ici").openPopup()},()=>alert("Position refusée"))}
-function sim(){const t={f:"👉 Demandez des bons alimentaires au CCAS de votre mairie et inscrivez-vous aux Restos du Cœur ou Secours Populaire.",m:"👉 Demandez le Fonds de Solidarité Logement (FSL) et vérifiez vos droits sur mesdroitssociaux.gouv.fr.",s:"👉 Appelez gratuitement le 115 (24h/24) pour une mise à l'abri d'urgence par le SAMU Social.",h:"👉 Demandez la Complémentaire Santé Solidaire (CSS) ou allez à la PASS de l'hôpital public (soins gratuits)."};sRes.innerHTML=`<div style="background:#ecfdf5;color:#065f46;padding:10px;border-radius:6px">${t[s1.value]}</div>`}
+        .emergency-btn {
+            background: white;
+            color: var(--danger);
+            text-decoration: none;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            transition: transform 0.2s;
+        }
 
-document.getElementById("addForm").onsubmit=async e=>{
-  e.preventDefault();
-  let lat=46.6+(Math.random()-.5)*4,lng=2.2+(Math.random()-.5)*4;
-  try{
-    const r=await(await fetch(`https://openstreetmap.org{encodeURIComponent(fv.value+', France')}&limit=1`)).json();
-    if(r&&r[0]){lat=parseFloat(r[0].lat);lng=parseFloat(r[0].lon)}
-  }catch(err){}
-  data.unshift({n:fn.value,v:fv.value,lat,lng,c:fc.value,h:fh.value,d:fd.value,u:fu.value});
-  localStorage.setItem("sf_data",JSON.stringify(data));
-  e.target.reset();draw();map.setView([lat,lng],12);
-};
-draw();
-</script>
-</body>
-</html>
+        .emergency-btn:hover {
+            transform: scale(1.05);
+        }
+
+        nav {
+            background-color: var(--bg-white);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 0 5%;
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .btn-nav-action {
+            background-color: var(--secondary);
+            color: white !important;
+            padding: 10px 18px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-nav-action:hover {
+            background-color: var(--secondary-hover);
+        }
+
+        /* =========================================
+           3. HERO SECTION (BANNIÈRE PRINCIPALE)
+           ========================================= */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, #1a6bb3 100%);
+            color: white;
+            padding: 70px 20px;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            margin-bottom: 18px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            opacity: 0.92;
+            margin-bottom: 35px;
+        }
+
+        .search-box {
+            background: white;
+            padding: 8px;
+            border-radius: 50px;
+            display: flex;
+            max-width: 680px;
+            margin: 0 auto 30px auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            padding: 14px 22px;
+            font-size: 1rem;
+            border-radius: 50px;
+            outline: none;
+            color: var(--text-main);
+        }
+
+        .search-box button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .search-box button:hover {
+            background-color: #d35400;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            background: rgba(255,255,255,0.12);
+            padding: 12px 24px;
+            border-radius: 10px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 800;
+            display: block;
+        }
+
+        /* =========================================
+           4. FILTRES & ONGLET FAVORIS
+           ========================================= */
+        .controls-section {
+            max-width: 1280px;
+            margin: 35px auto 20px auto;
+            padding: 0 20px;
+        }
+
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            background: var(--bg-white);
+            padding: 18px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .category-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .cat-btn {
+            background: var(--bg-body);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cat-btn:hover {
+            background: #e2e8f0;
+        }
+
+        .cat-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .fav-filter-btn {
+            background: #fff8e7;
+            border: 1px solid #f59e0b;
+            color: #b45309;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .fav-filter-btn.active {
+            background: #f59e0b;
+            color: white;
+        }
+
+        /* =========================================
+           5. GRILLE DE CARTES & BOUTONS D'ACTION
+           ========================================= */
+        .directory-container {
+            max-width: 1280px;
+            margin: 0 auto 60px auto;
+            padding: 0 20px;
+        }
+
+        .results-count {
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--bg-white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid var(--border);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            padding: 20px 22px 10px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .badge {
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 5px 10px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-alimentaire { background: #dcfce7; color: #166534; }
+        .badge-magasin { background: #ffedd5; color: #9a3412; }
+        .badge-financier { background: #dbeafe; color: #1e40af; }
+        .badge-logement { background: #f3e8ff; color: #6b21a8; }
+        .badge-sante { background: #fee2e2; color: #991b1b; }
+
+        .btn-fav {
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: #cbd5e1;
+            transition: color 0.2s, transform 0.2s;
+        }
+
+        .btn-fav.saved {
+            color: #f59e0b;
+        }
+
+        .btn-fav:hover {
+            transform: scale(1.2);
+        }
+
+        .card-body {
+            padding: 10px 22px 20px 22px;
+        }
+
+        .card-body h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .card-body p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
