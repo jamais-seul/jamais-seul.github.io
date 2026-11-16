@@ -1,372 +1,165 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solidarité France - Portail National des Aides, Magasins & Actions Solidaires</title>
-    <style>
-        /* =========================================
-           1. VARIABLES & DESIGN SYSTEM
-           ========================================= */
-        :root {
-            --primary: #0f4c81;
-            --primary-hover: #0a355c;
-            --secondary: #2e8b57;
-            --secondary-hover: #236b43;
-            --accent: #e67e22;
-            --danger: #d93025;
-            --bg-body: #f0f4f8;
-            --bg-white: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-            --shadow-md: 0 6px 15px rgba(0,0,0,0.08);
-            --shadow-lg: 0 15px 30px rgba(0,0,0,0.12);
-            --radius: 12px;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solidarité France — Portail d'Entraide Citoyen</title>
+  <style>
+    :root {
+      --primary: #0055ff;
+      --secondary: #00a86b;
+      --bg: #f4f6f9;
+      --card: #ffffff;
+      --text: #1e293b;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    header { background: var(--primary); color: #fff; padding: 2rem 1rem; text-align: center; }
+    header h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+    .filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; justify-content: center; }
+    .filter-btn { background: var(--card); border: 1px solid var(--border); padding: 0.5rem 1rem; border-radius: 20px; cursor: pointer; font-weight: 500; transition: 0.2s; }
+    .filter-btn.active, .filter-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 1rem; margin-bottom: 2.5rem; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
+    .badge { display: inline-block; font-size: 0.8rem; padding: 0.2rem 0.6rem; border-radius: 6px; background: #e0e7ff; color: var(--primary); font-weight: 600; margin-bottom: 0.5rem; width: fit-content; }
+    .card h3 { font-size: 1.15rem; margin-bottom: 0.5rem; }
+    .card p { font-size: 0.95rem; color: #475569; margin-bottom: 1rem; }
+    .btn { display: inline-block; text-align: center; padding: 0.6rem 1rem; border-radius: 6px; text-decoration: none; font-weight: 600; cursor: pointer; border: none; background: var(--primary); color: #fff; }
+    .btn-2 { background: var(--secondary); color: #fff; }
+    .form-section { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; margin-bottom: 2rem; }
+    .form-section h2 { margin-bottom: 1rem; font-size: 1.3rem; }
+    label { display: block; font-weight: 600; margin-bottom: 0.3rem; font-size: 0.9rem; }
+    input, select, textarea { width: 100%; padding: 0.65rem; margin-bottom: 1rem; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 0.95rem; }
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; padding: 1rem; z-index: 100; }
+    .modal.open { display: flex; }
+    .modal-card { background: var(--card); max-width: 450px; width: 100%; padding: 1.5rem; border-radius: 10px; position: relative; }
+    .close { position: absolute; top: 12px; right: 15px; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #64748b; }
+    footer { text-align: center; padding: 1.5rem; font-size: 0.85rem; color: #64748b; border-top: 1px solid var(--border); margin-top: 2rem; }
+  </style>
+</head>
+<body>
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            scroll-behavior: smooth;
-        }
+  <header>
+    <h1>Solidarité France</h1>
+    <p>Annuaire citoyen des associations, magasins solidaires et aides d'urgence</p>
+  </header>
 
-        body {
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            line-height: 1.6;
-        }
+  <div class="container">
+    <div class="filters" id="filters">
+      <button class="filter-btn active" data-cat="all">Tout voir</button>
+      <button class="filter-btn" data-cat="alimentaire">🥫 Aide Alimentaire</button>
+      <button class="filter-btn" data-cat="magasin">🛍️ Magasin Solidaire</button>
+      <button class="filter-btn" data-cat="financier">💶 Aide Financière</button>
+      <button class="filter-btn" data-cat="logement">🏠 Logement & Santé</button>
+    </div>
 
-        /* =========================================
-           2. BARRE D'URGENCE & NAVIGATION
-           ========================================= */
-        .emergency-bar {
-            background-color: var(--danger);
-            color: white;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
+    <div class="grid" id="grid"></div>
 
-        .emergency-btn {
-            background: white;
-            color: var(--danger);
-            text-decoration: none;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-weight: 800;
-            font-size: 0.85rem;
-            transition: transform 0.2s;
-        }
+    <section class="form-section">
+      <h2>Ajouter un lieu ou une association solidaire</h2>
+      <form id="form">
+        <label>Nom de l'association ou du magasin *</label>
+        <input type="text" id="fname" required placeholder="Ex : Épicerie Solidaire du Centre">
 
-        .emergency-btn:hover {
-            transform: scale(1.05);
-        }
+        <label>Catégorie *</label>
+        <select id="fcat">
+          <option value="alimentaire">🥫 Aide Alimentaire</option>
+          <option value="magasin">🛍️ Magasin Solidaire</option>
+          <option value="financier">💶 Aide Financière</option>
+          <option value="logement">🏠 Logement & Santé</option>
+        </select>
 
-        nav {
-            background-color: var(--bg-white);
-            box-shadow: var(--shadow-sm);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 0 5%;
-        }
+        <label>Description *</label>
+        <textarea id="fdesc" rows="2" required placeholder="Horaires, conditions d'accès, produits proposés..."></textarea>
 
-        .nav-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            height: 70px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        <label>Lien site web ou Google Maps *</label>
+        <input type="url" id="furl" required placeholder="https://...">
 
-        .logo {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: var(--primary);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        <button type="submit" class="btn btn-2" style="width:100%;padding:12px;font-size:1rem;">Ajouter au portail</button>
+      </form>
+    </section>
+  </div>
 
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 25px;
-            align-items: center;
-        }
+  <div class="modal" id="modal">
+    <div class="modal-card">
+      <button class="close" onclick="document.getElementById('modal').classList.remove('open')">&times;</button>
+      <h3 id="mtitle" style="margin-bottom:10px;color:var(--primary)"></h3>
+      <p id="mcond" style="margin-bottom:20px;color:var(--text)"></p>
+      <a id="murl" href="#" target="_blank" rel="noopener" class="btn btn-2" style="width:100%;display:block;">Accéder au site / itinéraire</a>
+    </div>
+  </div>
 
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-main);
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: color 0.2s;
-        }
+  <footer>
+    Portail citoyen libre et gratuit hébergé sur GitHub Pages. Urgences : 115 (SAMU Social) | 15 (SAMU) | 112 (Urgences)
+  </footer>
 
-        .nav-links a:hover {
-            color: var(--primary);
-        }
+  <script>
+    const items = [
+      { name: "Les Restos du Cœur", cat: "alimentaire", desc: "Distribution de repas chauds et de paniers alimentaires sur inscription.", url: "https://restosducoeur.org" },
+      { name: "Secours Populaire Français", cat: "alimentaire", desc: "Aide alimentaire, vestimentaire et accompagnement social de proximité.", url: "https://secourspopulaire.fr" },
+      { name: "Ressourcerie & Boutique Solidaire", cat: "magasin", desc: "Vêtements, meubles et électroménager reconditionnés à prix très réduits.", url: "https://emmaus-france.org" },
+      { name: "CCAS — Centre Communal d'Action Sociale", cat: "financier", desc: "Aides financières d'urgence, chèques énergie et accompagnement administratif.", url: "https://service-public.fr" },
+      { name: "Croix-Rouge Française — Accueil & Santé", cat: "logement", desc: "Maraudes, orientation vers l'hébergement d'urgence et soins gratuits.", url: "https://croix-rouge.fr" }
+    ];
 
-        .btn-nav-action {
-            background-color: var(--secondary);
-            color: white !important;
-            padding: 10px 18px;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
+    const labels = {
+      alimentaire: "🥫 Aide Alimentaire",
+      magasin: "🛍️ Magasin Solidaire",
+      financier: "💶 Aide Financière",
+      logement: "🏠 Logement & Santé"
+    };
 
-        .btn-nav-action:hover {
-            background-color: var(--secondary-hover);
-        }
+    const grid = document.getElementById("grid");
 
-        /* =========================================
-           3. HERO SECTION (BANNIÈRE PRINCIPALE)
-           ========================================= */
-        .hero {
-            background: linear-gradient(135deg, var(--primary) 0%, #1a6bb3 100%);
-            color: white;
-            padding: 70px 20px;
-            text-align: center;
-        }
+    function render(cat = "all") {
+      grid.innerHTML = "";
+      const filtered = cat === "all" ? items : items.filter(i => i.cat === cat);
+      filtered.forEach((item, index) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <div>
+            <span class="badge">${labels[item.cat]}</span>
+            <h3>${item.name}</h3>
+            <p>${item.desc}</p>
+          </div>
+          <button class="btn" onclick="openModal(${items.indexOf(item)})">Voir les détails</button>
+        `;
+        grid.appendChild(card);
+      });
+    }
 
-        .hero-content {
-            max-width: 850px;
-            margin: 0 auto;
-        }
+    function openModal(idx) {
+      const item = items[idx];
+      document.getElementById("mtitle").textContent = item.name;
+      document.getElementById("mcond").textContent = item.desc;
+      document.getElementById("murl").href = item.url;
+      document.getElementById("modal").classList.add("open");
+    }
 
-        .hero h1 {
-            font-size: 2.6rem;
-            font-weight: 800;
-            margin-bottom: 18px;
-            line-height: 1.2;
-        }
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        render(btn.dataset.cat);
+      });
+    });
 
-        .hero p {
-            font-size: 1.15rem;
-            opacity: 0.92;
-            margin-bottom: 35px;
-        }
+    document.getElementById("form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      items.unshift({
+        name: document.getElementById("fname").value,
+        cat: document.getElementById("fcat").value,
+        desc: document.getElementById("fdesc").value,
+        url: document.getElementById("furl").value
+      });
+      e.target.reset();
+      render();
+    });
 
-        .search-box {
-            background: white;
-            padding: 8px;
-            border-radius: 50px;
-            display: flex;
-            max-width: 680px;
-            margin: 0 auto 30px auto;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .search-box input {
-            flex: 1;
-            border: none;
-            padding: 14px 22px;
-            font-size: 1rem;
-            border-radius: 50px;
-            outline: none;
-            color: var(--text-main);
-        }
-
-        .search-box button {
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .search-box button:hover {
-            background-color: #d35400;
-        }
-
-        .hero-stats {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-
-        .stat-item {
-            background: rgba(255,255,255,0.12);
-            padding: 12px 24px;
-            border-radius: 10px;
-        }
-
-        .stat-number {
-            font-size: 1.5rem;
-            font-weight: 800;
-            display: block;
-        }
-
-        /* =========================================
-           4. FILTRES & ONGLET FAVORIS
-           ========================================= */
-        .controls-section {
-            max-width: 1280px;
-            margin: 35px auto 20px auto;
-            padding: 0 20px;
-        }
-
-        .filter-bar {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-            background: var(--bg-white);
-            padding: 18px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .category-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .cat-btn {
-            background: var(--bg-body);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .cat-btn:hover {
-            background: #e2e8f0;
-        }
-
-        .cat-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .fav-filter-btn {
-            background: #fff8e7;
-            border: 1px solid #f59e0b;
-            color: #b45309;
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .fav-filter-btn.active {
-            background: #f59e0b;
-            color: white;
-        }
-
-        /* =========================================
-           5. GRILLE DE CARTES & BOUTONS D'ACTION
-           ========================================= */
-        .directory-container {
-            max-width: 1280px;
-            margin: 0 auto 60px auto;
-            padding: 0 20px;
-        }
-
-        .results-count {
-            margin-bottom: 15px;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 25px;
-        }
-
-        .card {
-            background: var(--bg-white);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-md);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: transform 0.2s, box-shadow 0.2s;
-            border: 1px solid var(--border);
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .card-header {
-            padding: 20px 22px 10px 22px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-        .badge {
-            font-size: 0.78rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            padding: 5px 10px;
-            border-radius: 6px;
-            letter-spacing: 0.5px;
-        }
-
-        .badge-alimentaire { background: #dcfce7; color: #166534; }
-        .badge-magasin { background: #ffedd5; color: #9a3412; }
-        .badge-financier { background: #dbeafe; color: #1e40af; }
-        .badge-logement { background: #f3e8ff; color: #6b21a8; }
-        .badge-sante { background: #fee2e2; color: #991b1b; }
-
-        .btn-fav {
-            background: none;
-            border: none;
-            font-size: 1.4rem;
-            cursor: pointer;
-            color: #cbd5e1;
-            transition: color 0.2s, transform 0.2s;
-        }
-
-        .btn-fav.saved {
-            color: #f59e0b;
-        }
-
-        .btn-fav:hover {
-            transform: scale(1.2);
-        }
-
-        .card-body {
-            padding: 10px 22px 20px 22px;
-        }
-
-        .card-body h3 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            color: var(--text-main);
-        }
-
-        .card-body p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
+    render();
+  </script>
+</body>
+</html>
