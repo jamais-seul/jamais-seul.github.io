@@ -1,543 +1,399 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Solidarité France — Toutes les aides près de chez vous</title>
-<meta name="description" content="Centres d'aide, magasins solidaires, banques alimentaires, numéros utiles dans toutes les villes de France.">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+<title>Mon site d’articles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#0f4c81;--blue:#2563eb;--green:#059669;--amber:#d97706;--red:#991b1b;--bg:#f1f5f9;--card:#fff;--text:#0f172a;--muted:#475569;--bd:#cbd5e1;--sh:0 4px 12px rgba(15,23,42,.07)}
-body.dark{--bg:#0b1020;--card:#131b2e;--text:#f1f5f9;--muted:#9fb0c8;--bd:#25314a;--navy:#60a5fa;--sh:0 4px 12px rgba(0,0,0,.4)}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;scroll-padding-top:70px}
-body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
-a{color:var(--blue)}
-.urg{background:var(--red);color:#fff;font-size:.85rem;padding:.5rem 1rem;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.6rem}
-.urg a{background:#fff;color:var(--red);padding:2px 10px;border-radius:20px;text-decoration:none;font-weight:800}
-nav{background:var(--card);border-bottom:1px solid var(--bd);padding:.7rem 1rem;display:flex;align-items:center;gap:.8rem;position:sticky;top:0;z-index:1000}
-.logo{font-weight:800;font-size:1.15rem;color:var(--navy);text-decoration:none;white-space:nowrap}
-.links{display:flex;gap:.2rem;overflow-x:auto;flex:1}
-.links a{color:var(--text);text-decoration:none;font-weight:600;font-size:.88rem;padding:5px 9px;border-radius:6px;white-space:nowrap}
-.links a:hover{background:var(--bg)}
-.btn{background:var(--navy);color:#fff;border:0;padding:.6rem .95rem;border-radius:8px;font-weight:600;cursor:pointer;font-size:.88rem;text-decoration:none;text-align:center;display:inline-block;font-family:inherit}
-body.dark .btn{color:#0b1020}
-.btn:hover{opacity:.88}.g{background:var(--green);color:#fff!important}.l{background:var(--bg);color:var(--text)!important;border:1px solid var(--bd)}.fav{background:#fef3c7;color:#b45309!important;border:1px solid #fcd34d}.rd{background:#fee2e2;color:#991b1b!important;border:1px solid #fca5a5}
-.hero{background:linear-gradient(135deg,#0f4c81,#093154);color:#fff;padding:2.4rem 1.2rem 2rem;text-align:center}
-.hero h1{font-size:clamp(1.5rem,4vw,2.1rem);max-width:800px;margin:0 auto .6rem}
-.hero p{max-width:680px;margin:0 auto 1.3rem;opacity:.93}
-.sbox{max-width:680px;margin:0 auto;position:relative}
-.search{display:flex;background:#fff;border-radius:50px;padding:5px;box-shadow:0 8px 20px rgba(0,0,0,.25)}
-.search input{flex:1;min-width:0;border:0;padding:.75rem 1.2rem;border-radius:50px;font-size:1rem;outline:0;color:#0f172a;background:transparent}
-.search button{background:var(--amber);color:#fff;border:0;padding:.7rem 1.3rem;border-radius:50px;font-weight:700;cursor:pointer}
-.sug{position:absolute;left:10px;right:10px;top:100%;margin-top:6px;background:var(--card);color:var(--text);border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,.3);z-index:900;overflow:hidden;text-align:left}
-.sug button{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--bd);padding:.65rem 1rem;cursor:pointer;color:var(--text);font-size:.95rem;font-family:inherit}
-.sug button:hover{background:var(--bg)}.sug small{color:var(--muted)}
-.quick{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-top:1rem}
-.quick button{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.35);padding:.4rem .9rem;border-radius:20px;cursor:pointer;font-size:.85rem;font-family:inherit}
-.wrap{max-width:1160px;margin:1.4rem auto;padding:0 1rem}
-h2.t{font-size:1.4rem;margin:2.2rem 0 .3rem;color:var(--navy)}
-.sub{color:var(--muted);font-size:.92rem;margin-bottom:1rem}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.9rem}
-.kpi{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:.9rem;text-align:center;box-shadow:var(--sh)}
-.kpi b{display:block;font-size:1.5rem;color:var(--blue)}.kpi span{font-size:.82rem;color:var(--muted);font-weight:600}
-.chips{display:flex;flex-wrap:wrap;gap:.45rem;margin:1rem 0}
-.chip{background:var(--card);color:var(--text);border:1px solid var(--bd);padding:.5rem 1rem;border-radius:30px;font-weight:600;font-size:.86rem;cursor:pointer;font-family:inherit}
-.chip.on,.chip:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
-body.dark .chip.on,body.dark .chip:hover{color:#0b1020}
-.panel{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:1.2rem;box-shadow:var(--sh)}
-.mtop{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:.8rem}
-#map{height:520px;border-radius:10px;border:1px solid var(--bd);z-index:1;background:#dbe4ee}
-.nomap{display:flex;height:100%;align-items:center;justify-content:center;text-align:center;padding:1rem;color:#334155}
-.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:.7rem;font-size:.8rem;color:var(--muted)}
-.dot{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:-1px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1rem}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:1.1rem;display:flex;flex-direction:column;justify-content:space-between;gap:.8rem;box-shadow:var(--sh)}
-.card h3{font-size:1.02rem;margin:.5rem 0 .3rem}.card p{font-size:.88rem;color:var(--muted);margin-bottom:.2rem}
-.badge{display:inline-block;padding:2px 9px;border-radius:6px;font-size:.75rem;font-weight:700;color:#fff}
-.tag{display:inline-block;padding:1px 7px;border-radius:6px;font-size:.72rem;font-weight:700;background:var(--bg);color:var(--muted);border:1px solid var(--bd)}
-.meta{font-size:.82rem;font-weight:700;color:var(--muted)}
-.row{display:flex;gap:6px;flex-wrap:wrap}.row .btn{flex:1}
-.res{display:flex;flex-direction:column;gap:.3rem;text-decoration:none;color:var(--text);background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:1rem;box-shadow:var(--sh)}
-.res:hover{border-color:var(--blue)}.res b{color:var(--navy)}.res span{font-size:.88rem;color:var(--muted)}
-.res.tel b{font-size:1.25rem;color:var(--red)}
-.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:1.2rem}
-.field{width:100%;padding:.7rem;margin:.35rem 0 .8rem;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--text);font-size:.95rem;font-family:inherit}
-label.ck{display:flex;gap:10px;padding:.55rem;border-bottom:1px solid var(--bd);cursor:pointer;font-size:.92rem}
-label.ck.done span{text-decoration:line-through;opacity:.6}
-.bar{height:8px;background:var(--bg);border-radius:8px;overflow:hidden;margin:.5rem 0}.bar i{display:block;height:100%;background:var(--green);width:0;transition:.3s}
-.result{margin-top:1rem;background:var(--bg);border-left:4px solid var(--green);padding:.9rem;border-radius:8px;font-size:.92rem}
-.result li{margin:.4rem 0 .4rem 1.1rem}
-.mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);align-items:center;justify-content:center;padding:1rem;z-index:3000}
-.mbg.open{display:flex}
-.mbox{background:var(--card);color:var(--text);max-width:520px;width:100%;padding:1.5rem;border-radius:14px;max-height:90vh;overflow-y:auto}
-.x{float:right;border:0;background:none;font-size:1.7rem;cursor:pointer;color:var(--muted)}
-.empty{grid-column:1/-1;text-align:center;padding:2rem;color:var(--muted)}
-.warn{background:#fffbeb;border:1px solid #fcd34d;color:#78350f;border-radius:10px;padding:.7rem 1rem;font-size:.85rem;margin-top:.8rem}
-#status{font-weight:700}
-.tools{display:flex;flex-wrap:wrap;gap:.8rem;align-items:center;margin-bottom:.8rem}
-.tools input[type=search]{flex:1;min-width:200px;padding:.6rem .9rem;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--text);font-family:inherit}
-footer{background:var(--card);border-top:1px solid var(--bd);text-align:center;padding:2rem 1rem;font-size:.85rem;color:var(--muted);margin-top:2rem}
-@media(max-width:600px){#map{height:380px}.logo{font-size:1rem}}
+  :root {
+    --jaune: #FFD93D; --jaune-fonce: #F2BF00; --jaune-pale: #FFF0A0; --jaune-creme: #FFF6C9;
+    --rose: #FF5FA8; --rose-fonce: #E8337F; --rose-pale: #FFD6E8;
+    --prune: #2B1033; --creme: #FFF8E1;
+    --titre: "Bricolage Grotesque", "Arial Black", sans-serif;
+    --texte: "Newsreader", Georgia, serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 5rem; overflow-x: hidden; }
+  body { margin: 0; background: var(--creme); color: var(--prune); font-family: var(--texte); font-size: 1.15rem; line-height: 1.65; overflow-x: hidden; }
+
+  /* Neutralise les styles d'un éventuel thème GitHub Pages */
+  .site { width: 100%; max-width: none; float: none; position: static; }
+  .site h1, .site h2, .site h3, .site p, .site div, .site nav, .site a { float: none; max-width: none; }
+  .site h1, .site h2, .site h3 { border: 0; padding: 0; margin: 0; width: auto; color: var(--prune); }
+  .site p { margin: 0; }
+  .site a { color: inherit; }
+  :focus-visible { outline: 4px solid var(--prune); outline-offset: 3px; }
+
+  .bloc { width: 100%; padding: clamp(3rem, 7vw, 5.5rem) 5vw; border-bottom: 4px solid var(--prune); }
+  .contenu { width: 100%; max-width: 1200px; margin: 0 auto; }
+  .section-titre { font-family: var(--titre); font-weight: 800; font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1; letter-spacing: -.02em; margin-bottom: .6rem !important; }
+  .sous-titre { font-style: italic; margin-bottom: 2.2rem !important; max-width: 36rem !important; }
+  .btn {
+    font-family: var(--titre); font-weight: 800; font-size: 1.05rem; color: var(--prune) !important;
+    background: var(--rose); border: 3px solid var(--prune); border-radius: 999px;
+    padding: .55rem 1.4rem; cursor: pointer; text-decoration: none; display: inline-block;
+    box-shadow: 4px 4px 0 var(--prune); transition: transform .12s, box-shadow .12s;
+  }
+  .btn:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--prune); }
+  .btn.jaune { background: var(--jaune); }
+
+  /* Menu */
+  .menu { position: sticky; top: 0; z-index: 20; background: var(--jaune); border-bottom: 4px solid var(--prune); padding: .7rem 5vw; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .logo { font-family: var(--titre); font-weight: 800; font-size: 1.5rem; text-decoration: none; }
+  .menu nav { display: flex; gap: 1.4rem; align-items: center; font-family: var(--titre); font-weight: 800; }
+  .menu nav a:not(.btn) { text-decoration: none; }
+  .menu nav a:not(.btn):hover { text-decoration: underline; text-decoration-thickness: 3px; text-decoration-color: var(--rose); }
+  @media (max-width: 640px) { .menu nav a:not(.btn) { display: none; } }
+
+  /* Hero */
+  .hero { background-color: var(--jaune); background-image: radial-gradient(var(--jaune-fonce) 2.5px, transparent 3px); background-size: 28px 28px; }
+  .hero-grille { display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: center; }
+  .hero h1 { font-family: var(--titre); font-weight: 800; font-size: clamp(2.6rem, 8.5vw, 6.6rem); line-height: .95; letter-spacing: -.03em; overflow-wrap: break-word; }
+  .hero h1 span { background: var(--rose); padding: 0 .15em; border: 4px solid var(--prune); display: inline-block; transform: rotate(-2deg); box-shadow: 8px 8px 0 var(--prune); margin-top: .2em; }
+  .hero p.intro { max-width: 34rem !important; margin: 2rem 0 !important; font-size: 1.3rem; font-style: italic; }
+  .boutons { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .pastille { width: 170px; height: 170px; border-radius: 50%; background: var(--rose); border: 4px solid var(--prune); box-shadow: 6px 6px 0 var(--prune); display: grid; place-items: center; text-align: center; font-family: var(--titre); font-weight: 800; line-height: 1.15; transform: rotate(10deg); }
+  .pastille b { font-size: 3rem; display: block; line-height: 1; }
+  @media (max-width: 1000px) { .hero-grille { grid-template-columns: 1fr; } .pastille { display: none; } }
+
+  .bandeau { background: var(--prune); color: var(--jaune); overflow: hidden; white-space: nowrap; font-family: var(--titre); font-weight: 800; font-size: 1.4rem; padding: .8rem 0; border-bottom: 4px solid var(--prune); width: 100%; }
+  .bandeau div { display: inline-block; animation: defile 30s linear infinite; }
+  .bandeau span { margin: 0 1.3rem; } .bandeau .r { color: var(--rose); }
+  @keyframes defile { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .bandeau div { animation: none; } html { scroll-behavior: auto; } }
+
+  /* Univers */
+  .univers { background-color: var(--creme); background-image: radial-gradient(var(--rose-pale) 2.5px, transparent 3px); background-size: 30px 30px; }
+  .tuiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.8rem; }
+  .tuile { text-align: left; font: inherit; color: inherit; cursor: pointer; border: 4px solid var(--prune); border-radius: 22px; padding: 1.6rem; box-shadow: 8px 8px 0 var(--prune); transition: transform .15s, box-shadow .15s; display: flex; flex-direction: column; gap: .5rem; }
+  .tuile:hover { transform: translate(4px, 4px) rotate(0); box-shadow: 4px 4px 0 var(--prune); }
+  .tuile:nth-child(odd) { transform: rotate(-.8deg); } .tuile:nth-child(even) { transform: rotate(.8deg); }
+  .tuile .emoji { font-size: 2.6rem; line-height: 1; }
+  .tuile h3 { font-family: var(--titre); font-weight: 800; font-size: 1.8rem; line-height: 1; }
+  .tuile small { font-family: var(--titre); font-weight: 800; font-size: .95rem; }
+  .t-legendes, .carte.legendes { background: var(--jaune); }
+  .t-ecrivains, .carte.ecrivains { background: var(--rose-pale); }
+  .t-artistes, .carte.artistes { background: var(--jaune-pale); }
+  .t-meurtriers, .carte.meurtriers { background: var(--rose); }
+
+  /* À la une */
+  .une { background: linear-gradient(135deg, var(--rose) 0%, var(--rose-fonce) 100%); }
+  .une .section-titre, .une .sous-titre { color: var(--creme) !important; }
+  .une-carte { background: var(--creme); border: 4px solid var(--prune); border-radius: 26px; box-shadow: 10px 10px 0 var(--prune); padding: clamp(1.6rem, 4vw, 3rem); display: grid; gap: 1rem; max-width: 900px; cursor: pointer; text-align: left; font: inherit; color: inherit; width: 100%; }
+  .une-carte:hover { transform: translate(4px, 4px); box-shadow: 6px 6px 0 var(--prune); }
+  .une-carte h3 { font-family: var(--titre); font-weight: 800; font-size: clamp(1.9rem, 5vw, 3.2rem); line-height: 1; letter-spacing: -.02em; }
+
+  /* Articles */
+  .outils { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-bottom: 2.2rem; }
+  .filtres { display: flex; flex-wrap: wrap; gap: .7rem; }
+  .filtres button { font-family: var(--titre); font-weight: 800; font-size: 1rem; background: var(--creme); color: var(--prune); border: 3px solid var(--prune); border-radius: 999px; padding: .4rem 1.1rem; cursor: pointer; box-shadow: 3px 3px 0 var(--prune); }
+  .filtres button[aria-pressed="true"] { background: var(--rose); }
+  .recherche, .tri { font: inherit; font-size: 1.05rem; padding: .55rem 1.1rem; border: 3px solid var(--prune); border-radius: 999px; background: #fff; color: var(--prune); }
+  .recherche { flex: 1; min-width: 200px; }
+  .grille { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 2rem; }
+  .carte { border: 4px solid var(--prune); border-radius: 20px; padding: 1.5rem; display: flex; flex-direction: column; gap: .7rem; box-shadow: 8px 8px 0 var(--prune); text-align: left; font: inherit; color: inherit; cursor: pointer; transition: transform .15s, box-shadow .15s; }
+  .carte:nth-child(odd) { transform: rotate(-.6deg); } .carte:nth-child(even) { transform: rotate(.6deg); }
+  .carte:hover { transform: translate(4px, 4px) rotate(0); box-shadow: 4px 4px 0 var(--prune); }
+  .tag { align-self: flex-start; font-family: var(--titre); font-weight: 800; font-size: .9rem; background: var(--prune); color: var(--creme); border-radius: 999px; padding: .1rem .9rem; }
+  .carte h3 { font-family: var(--titre); font-weight: 800; font-size: 1.65rem; line-height: 1.05; }
+  .carte p { flex: 1; }
+  .meta { font-family: var(--titre); font-weight: 500; font-size: .92rem; }
+  .vide { display: none; font-style: italic; margin-top: 1rem !important; }
+
+  /* Idée d'article */
+  .idee { background: var(--prune); color: var(--creme); text-align: center; }
+  .idee .section-titre { color: var(--jaune) !important; }
+  .idee .sous-titre { margin-left: auto !important; margin-right: auto !important; }
+
+  /* À propos */
+  .apropos { background: linear-gradient(180deg, var(--jaune-pale), var(--jaune-creme)); }
+  .apropos-grille { display: grid; grid-template-columns: 1fr 1.3fr; gap: 3rem; align-items: center; }
+  @media (max-width: 800px) { .apropos-grille { grid-template-columns: 1fr; } }
+  .portrait { aspect-ratio: 1; width: 100%; max-width: 380px; background: var(--rose); border: 4px solid var(--prune); border-radius: 30px 30px 120px 30px; box-shadow: 10px 10px 0 var(--prune); display: grid; place-items: center; font-size: 6rem; }
+  .apropos p + p { margin-top: 1rem !important; }
+  .chiffres { display: flex; gap: 1.2rem; flex-wrap: wrap; margin-top: 1.6rem; }
+  .chiffres div { background: var(--creme); border: 3px solid var(--prune); border-radius: 16px; padding: .6rem 1.2rem; font-family: var(--titre); font-weight: 800; text-align: center; }
+  .chiffres b { display: block; font-size: 2rem; line-height: 1; }
+
+  .pied { background: var(--prune); color: var(--creme); padding: 2.5rem 5vw; font-family: var(--titre); width: 100%; border-top: 4px solid var(--rose); }
+  .pied .contenu { display: flex; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; align-items: center; }
+  .pied a { color: var(--jaune) !important; }
+  .haut { position: fixed; right: 1.2rem; bottom: 1.2rem; z-index: 30; display: none; }
+
+  /* Fenêtre de lecture + commentaires */
+  dialog { border: 4px solid var(--prune); border-radius: 24px; padding: 0; width: min(780px, 94vw); max-height: 92vh; background: var(--creme); color: var(--prune); box-shadow: 10px 10px 0 var(--prune); margin: auto; }
+  dialog::backdrop { background: rgba(43, 16, 51, .65); }
+  .lecture-haut { padding: 1.6rem 2rem 1.2rem; border-bottom: 4px solid var(--prune); position: sticky; top: 0; z-index: 2; background: var(--jaune-pale); }
+  .lecture-haut h2 { font-family: var(--titre); font-weight: 800; font-size: clamp(1.7rem, 4.5vw, 2.6rem); line-height: 1.02; margin: .6rem 3.5rem .4rem 0 !important; }
+  .fermer { position: absolute; right: 1.2rem; top: 1.2rem; width: 2.8rem; height: 2.8rem; padding: 0; font-size: 1.3rem; text-align: center; }
+  .lecture-corps { padding: 1.8rem 2rem; max-width: 40rem; }
+  .lecture-corps p + p { margin-top: 1.1rem !important; }
+  .commentaires { padding: 1.8rem 2rem 2.2rem; background: #fff; border-top: 4px solid var(--prune); }
+  .commentaires h3 { font-family: var(--titre); font-weight: 800; font-size: 1.7rem; margin-bottom: 1rem !important; }
+  .aide-commentaires { background: var(--jaune-pale); border: 3px dashed var(--prune); border-radius: 14px; padding: 1rem 1.2rem; font-size: 1rem; }
 </style>
 </head>
 <body>
-<div class="urg"><span>🚨 Gratuit, 24h/24 :</span>
-<a href="tel:115">115 Hébergement</a><a href="tel:15">15 SAMU</a><a href="tel:17">17 Police</a><a href="tel:112">112 Europe</a><a href="tel:3919">3919 Violences</a><a href="tel:3114">3114 Détresse</a><a href="tel:119">119 Enfance</a></div>
+<div class="site">
 
-<nav>
-<a class="logo" href="#top">🤝 Solidarité France</a>
-<div class="links"><a href="#carte">Carte</a><a href="#pres">Près de chez vous</a><a href="#ressources">Numéros & sites</a><a href="#simulateur">Simulateur</a><a href="#benevolat">Bénévolat</a></div>
-<button class="btn l" data-a="theme" aria-label="Mode sombre / clair">🌓</button>
-<button class="btn g" data-a="add">+ Lieu</button>
-</nav>
-
-<header class="hero" id="top">
-<h1>Trouvez de l'aide dans n'importe quelle ville de France</h1>
-<p>Tapez votre ville ou votre code postal : banques alimentaires, magasins solidaires, hébergements, accueils de jour, centres sociaux… autour de vous.</p>
-<div class="sbox">
-<form class="search" id="sform" autocomplete="off"><input id="city" type="search" placeholder="Ville ou code postal (ex : Bordeaux, 33000)" aria-label="Ville ou code postal"><button type="submit">Chercher</button></form>
-<div class="sug" id="sug" hidden></div>
-</div>
-<div class="quick">
-<button data-a="locate">📍 Autour de moi</button>
-<button data-a="kw" data-v="repas">🥫 Manger</button><button data-a="kw" data-v="douche">🚿 Douche</button><button data-a="kw" data-v="emploi">💼 Emploi</button><button data-a="kw" data-v="étudiant">🎓 Étudiant</button><button data-a="kw" data-v="vêtements">👕 Vêtements</button>
-</div>
-</header>
-
-<main class="wrap">
-<div class="kpis">
-<div class="kpi"><b id="k1">0</b><span>Lieux référencés</span></div>
-<div class="kpi"><b>35 000</b><span>Communes cherchables</span></div>
-<div class="kpi"><b id="k3">0</b><span>Vos favoris</span></div>
-<div class="kpi"><b>100 %</b><span>Gratuit & sans compte</span></div>
+<div class="menu">
+  <a class="logo" href="#haut">Mon site ✦</a>
+  <nav>
+    <a href="#univers">Univers</a>
+    <a href="#articles">Articles</a>
+    <a href="#apropos">À propos</a>
+    <a class="btn" href="mailto:ton.adresse@mail.com">Me contacter</a>
+  </nav>
 </div>
 
-<h2 class="t" id="carte">🗺️ Carte des centres d'aide</h2>
-<p class="sub" id="status" aria-live="polite">Zoomez sur votre ville ou tapez-la en haut : les centres réels se chargent automatiquement.</p>
-<div class="chips" id="chips"></div>
-<div class="panel">
-<div class="tools">
-<input type="search" id="kw" placeholder="Filtrer par mot-clé (ex : repas, douche, Emmaüs)…" aria-label="Filtrer">
-<label style="font-size:.88rem"><input type="checkbox" id="auto" checked> Charger en déplaçant la carte</label>
-</div>
-<div class="mtop"><strong id="count"></strong>
-<div class="row"><button class="btn g" data-a="here">🔄 Chercher dans cette zone</button><button class="btn l" data-a="reset">🇫🇷 Vue France</button></div></div>
-<div id="map"></div>
-<div class="legend" id="legend"></div>
-<div class="warn">⚠️ Les lieux « Repère » ont une position approximative (centre-ville) : ils signalent le type de structure présent dans la ville et renvoient vers le site officiel. Les autres viennent d'OpenStreetMap (données collaboratives, parfois incomplètes ou dépassées). Appelez ou vérifiez avant de vous déplacer.</div>
-</div>
-<div class="grid" id="cards" style="margin-top:1.2rem"></div>
-<div style="text-align:center;margin-top:1rem"><button class="btn l" id="more" data-a="more" hidden>Voir plus de résultats</button></div>
-
-<h2 class="t" id="pres">🔎 Services publics & associations près de chez vous</h2>
-<p class="sub" id="presub">Choisissez d'abord une ville en haut de la page.</p>
-<div class="grid" id="quick"></div>
-
-<h2 class="t" id="ressources">📞 Numéros utiles & sites officiels</h2>
-<div class="chips" id="rtabs"></div>
-<div class="grid" id="rgrid"></div>
-
-<h2 class="t" id="simulateur">🧭 Simulateur & démarches</h2>
-<div class="two">
-<div class="panel"><h3>Que puis-je faire ?</h3>
-<label for="sn">Mon besoin</label>
-<select id="sn" class="field"><option value="food">🥫 Manger / courses à petit prix</option><option value="money">💶 Payer loyer, factures</option><option value="sleep">🏠 Pas d'hébergement ce soir</option><option value="health">🩺 Soins sans mutuelle</option><option value="job">💼 Emploi / réinsertion</option><option value="admin">📄 Papiers, numérique, droits</option><option value="violence">🛡️ Violences / danger</option></select>
-<label for="sp">Ma situation</label>
-<select id="sp" class="field"><option value="single">Personne seule</option><option value="family">Famille avec enfant(s)</option><option value="student">Étudiant(e) / moins de 25 ans</option><option value="jobseeker">Demandeur d'emploi</option><option value="exit">Sortie de détention / de rue</option></select>
-<button class="btn" style="width:100%" data-a="sim">Afficher mes pistes</button><div id="sres"></div></div>
-<div class="panel"><h3>✅ Checklist des démarches</h3>
-<div class="bar"><i id="pbar"></i></div><div class="sub" id="ptxt"></div><div id="checks"></div>
-<button class="btn l" style="margin-top:.8rem" data-a="resetchecks">Réinitialiser</button></div>
+<div class="bloc hero" id="haut">
+  <div class="contenu hero-grille">
+    <div>
+      <h1>Légendes, plumes, pinceaux et <span>crimes.</span></h1>
+      <p class="intro">Bienvenue ! Ici je raconte ceux qu’on n’oublie pas : les héros de légende, les écrivains, les artistes… et les meurtriers. Installe-toi, lis, et dis-moi ce que tu en penses en commentaire.</p>
+      <div class="boutons">
+        <a class="btn" href="#articles">Lire les articles</a>
+        <button class="btn jaune" id="hasard" type="button">Surprends-moi 🎲</button>
+      </div>
+    </div>
+    <div class="pastille"><div><b id="nb-articles">0</b>articles<br>à lire</div></div>
+  </div>
 </div>
 
-<h2 class="t" id="benevolat">🙋 Bénévolat, dons & partage</h2>
-<div class="two">
-<div class="panel"><h3>Aider à son tour</h3>
-<ul style="margin:.6rem 0 1rem 1.2rem;font-size:.92rem;line-height:1.8"><li><b>Alimentaire :</b> conserves, huile, café, lait infantile, couches.</li><li><b>Hygiène :</b> savons, brosses à dents, protections périodiques.</li><li><b>Temps :</b> maraudes, distributions, aide aux devoirs, accueil.</li></ul>
-<a class="btn g" href="https://www.jeveuxaider.gouv.fr" target="_blank" rel="noopener">Trouver une mission bénévole</a></div>
-<div class="panel"><h3>Sauvegarde & partage</h3><p class="sub">Exportez les lieux chargés ou partagez le portail.</p>
-<div class="row"><button class="btn" data-a="export">📥 Exporter (.json)</button><button class="btn l" data-a="copy">🔗 Copier le lien</button><button class="btn l" data-a="print">🖨️ Imprimer</button></div>
-<p class="sub" style="margin-top:1rem">Favoris et lieux ajoutés : stockés uniquement sur votre appareil.</p></div>
+<div class="bandeau" aria-hidden="true"><div id="defile"></div></div>
+
+<div class="bloc univers" id="univers">
+  <div class="contenu">
+    <h2 class="section-titre">Choisis ton univers</h2>
+    <p class="sous-titre">Quatre thèmes, quatre ambiances. Clique sur une case pour voir seulement ces articles.</p>
+    <div class="tuiles" id="tuiles"></div>
+  </div>
 </div>
-</main>
 
-<footer><strong>Solidarité France</strong> — portail citoyen libre et gratuit. Informations indicatives : seuls les organismes officiels font foi.<br>Données : © contributeurs OpenStreetMap • Communes : geo.api.gouv.fr<br>Urgences : 15 • 17 • 18 • 112 • 115</footer>
+<div class="bloc une" id="une">
+  <div class="contenu">
+    <h2 class="section-titre">À la une</h2>
+    <p class="sous-titre">Le dernier article publié, à ne pas manquer.</p>
+    <button class="une-carte" id="une-carte" type="button"></button>
+  </div>
+</div>
 
-<div class="mbg" id="mbg" role="dialog" aria-modal="true"><div class="mbox" id="mbox"></div></div>
+<div class="bloc" id="articles">
+  <div class="contenu">
+    <h2 class="section-titre">Tous les articles</h2>
+    <p class="sous-titre">Filtre par thème, cherche un mot, puis clique sur un article pour le lire et laisser un commentaire.</p>
+    <div class="outils">
+      <div class="filtres" id="filtres" role="group" aria-label="Filtrer par thème"></div>
+      <input class="recherche" id="recherche" type="search" placeholder="Rechercher un article…" aria-label="Rechercher un article">
+      <select class="tri" id="tri" aria-label="Trier les articles">
+        <option value="recent">Plus récents</option>
+        <option value="ancien">Plus anciens</option>
+      </select>
+    </div>
+    <div class="grille" id="grille"></div>
+    <p class="vide" id="vide">Aucun article ne correspond. Essaie un autre thème ou un autre mot.</p>
+  </div>
+</div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<div class="bloc idee">
+  <div class="contenu">
+    <h2 class="section-titre">Une idée d’article ?</h2>
+    <p class="sous-titre">Une légende, un auteur, une affaire dont tu voudrais que je parle ? Dis-le-moi.</p>
+    <a class="btn jaune" href="mailto:ton.adresse@mail.com">Proposer un sujet</a>
+  </div>
+</div>
+
+<div class="bloc apropos" id="apropos">
+  <div class="contenu apropos-grille">
+    <div class="portrait" aria-hidden="true">✍️</div>
+    <div>
+      <h2 class="section-titre">À propos</h2>
+      <p>Salut, moi c’est [ton prénom ou pseudo]. J’écris sur les histoires qui fascinent : celles qu’on se raconte depuis des siècles, celles des gens qui créent, et les plus sombres aussi.</p>
+      <p>Remplace ce texte par ta présentation : qui tu es, pourquoi ces thèmes, et à quelle fréquence tu publies.</p>
+      <div class="chiffres">
+        <div><b id="c-articles">0</b>articles</div>
+        <div><b>4</b>univers</div>
+        <div><b>∞</b>curiosité</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="pied">
+  <div class="contenu">
+    <span>© <span id="annee"></span> Mon site · Tous droits réservés</span>
+    <span>Une question ? <a href="mailto:ton.adresse@mail.com">Écris-moi</a></span>
+  </div>
+</div>
+
+<a class="btn jaune haut" id="haut-btn" href="#haut" aria-label="Retour en haut">↑</a>
+
+<dialog id="lecture" aria-labelledby="lecture-titre">
+  <div class="lecture-haut">
+    <span class="tag" id="lecture-tag"></span>
+    <h2 id="lecture-titre"></h2>
+    <div class="meta" id="lecture-meta"></div>
+    <button class="btn fermer" id="fermer" type="button" aria-label="Fermer">✕</button>
+  </div>
+  <div class="lecture-corps" id="lecture-corps"></div>
+  <div class="commentaires">
+    <h3>💬 Commentaires</h3>
+    <div id="zone-commentaires"></div>
+  </div>
+</dialog>
+
+</div>
+
 <script>
-"use strict";
-var CATS={"Alimentaire":"#ef4444","Magasins solidaires":"#f59e0b","Aides & accueil social":"#10b981","Santé & logement":"#3b82f6","Hygiène & numérique":"#8b5cf6","Emploi & insertion":"#0891b2","Étudiants":"#db2777"};
-var SFL={food_bank:"Aide alimentaire",soup_kitchen:"Repas gratuits",shelter:"Hébergement d'urgence",outreach:"Accueil / maraude",ambulatory_care:"Soins ambulatoires",workshop:"Atelier d'insertion",group_home:"Logement accompagné"};
-/* Repères nationaux : position approximative (centre-ville), pas d'horaires inventés */
-var REFS=[
-["Restos du Cœur","Talence",44.808,-0.588,"Alimentaire","Repas, colis alimentaires, espace bébé, ateliers. Inscription selon revenus.","https://www.restosducoeur.org"],
-["Épiceries solidaires étudiantes AGORAé","Talence",44.801,-0.598,"Étudiants","Produits frais et hygiène à très bas prix pour étudiants (réseau FAGE).","https://www.fage.org"],
-["CCAS (Centre communal d'action sociale)","Bordeaux",44.838,-0.579,"Aides & accueil social","Aides d'urgence, domiciliation postale, aide alimentaire, dossiers APA/RSA.","https://www.service-public.fr"],
-["PASS — Permanence d'accès aux soins","Bordeaux",44.834,-0.578,"Santé & logement","Consultations et médicaments sans avance de frais à l'hôpital public.","https://sante.gouv.fr"],
-["Secours Populaire Français","Paris",48.876,2.359,"Alimentaire","Aide alimentaire, vestiaire, accès aux vacances, aide juridique.","https://www.secourspopulaire.fr"],
-["Mission Locale (16-25 ans)","Paris",48.857,2.352,"Emploi & insertion","Accompagnement emploi, formation, logement, santé, Contrat d'engagement jeune.","https://www.mission-locale.fr"],
-["Emmaüs — boutique solidaire","Lyon",45.758,4.835,"Magasins solidaires","Vêtements, meubles, livres et électroménager à prix solidaires.","https://emmaus-france.org"],
-["Croix-Rouge — vestiboutique","Lyon",45.764,4.836,"Magasins solidaires","Vêtements et articles de seconde main à petits prix.","https://www.croix-rouge.fr"],
-["Croix-Rouge — halte santé / maraude","Marseille",43.296,5.369,"Santé & logement","Maraudes, orientation vers le 115, soins infirmiers gratuits.","https://www.croix-rouge.fr"],
-["Bains-douches & bagagerie solidaire","Toulouse",43.604,1.444,"Hygiène & numérique","Douches, kits d'hygiène, consigne à bagages, Wi-Fi.","https://soliguide.fr"],
-["Banque alimentaire & épicerie sociale","Lille",50.629,3.057,"Alimentaire","Colis alimentaires via associations partenaires, ateliers cuisine.","https://www.banquealimentaire.org"],
-["Ressourcerie & atelier vélo solidaire","Nantes",47.218,-1.553,"Magasins solidaires","Seconde main à prix libre, auto-réparation de vélos.","https://www.ressourceries.info"],
-["Point Conseil Budget (PCB)","Rennes",48.117,-1.677,"Aides & accueil social","Accompagnement gratuit : impayés, budget, surendettement.","https://www.service-public.fr"],
-["Accueil de jour & laverie solidaire","Nice",43.710,7.262,"Hygiène & numérique","Petit-déjeuner, machines à laver, ordinateurs, domiciliation.","https://www.croix-rouge.fr"],
-["Épicerie sociale & solidaire","Strasbourg",48.573,7.752,"Alimentaire","Courses à prix réduit après orientation d'une assistante sociale.","https://www.andes-france.fr"],
-["Chantier d'insertion (SIAE)","Montpellier",43.611,3.877,"Emploi & insertion","Contrat de travail + accompagnement. Accès via France Travail ou Mission Locale.","https://emplois.inclusion.beta.gouv.fr"],
-["CROUS — aide sociale étudiante","Grenoble",45.188,5.724,"Étudiants","Bourses, aides d'urgence, logement, repas à 1 € pour étudiants éligibles.","https://www.etudiant.gouv.fr"],
-["France Services","Rouen",49.443,1.099,"Aides & accueil social","Aide gratuite pour CAF, impôts, retraite, France Travail, démarches en ligne.","https://france-services.gouv.fr"],
-["Secours Catholique — accueil","Dijon",47.322,5.041,"Alimentaire","Accueil, aide alimentaire, accompagnement, aide aux démarches.","https://www.secours-catholique.org"],
-["Réseau Cocagne — jardins solidaires","Angers",47.478,-0.563,"Emploi & insertion","Paniers de légumes bio et emploi d'insertion.","https://www.reseaucocagne.asso.fr"],
-["Maison d'accueil de jour","Clermont-Ferrand",45.777,3.087,"Hygiène & numérique","Accueil, douches, courrier, repos, orientation sociale.","https://soliguide.fr"],
-["Espace santé jeunes","Strasbourg",48.585,7.745,"Santé & logement","Écoute, santé, contraception, prévention pour les jeunes.","https://www.filsantejeunes.com"],
-["Banque alimentaire","Bordeaux",44.865,-0.563,"Alimentaire","Distribution de colis aux associations et épiceries partenaires.","https://www.banquealimentaire.org"],
-["Vestiaire solidaire","Orléans",47.903,1.909,"Magasins solidaires","Vêtements à très bas prix ou gratuits sur orientation.","https://www.secourspopulaire.fr"]
-];
+  /* ============ 1. COMMENTAIRES (Giscus) ============
+     Remplis ces 4 valeurs (étapes données avec le code).
+     Tant qu'elles sont vides, un message d'aide s'affiche. */
+  const GISCUS = { repo: "", repoId: "", category: "", categoryId: "" };
 
-/* ---------- Villes couvertes : préfectures + grandes villes (nom|lat|lng|u = ville universitaire) ---------- */
-var VILLES=("Bourg-en-Bresse|46.21|5.23;Laon|49.56|3.62;Moulins|46.57|3.33;Digne-les-Bains|44.09|6.24;Gap|44.56|6.08;Nice|43.70|7.27|u;Privas|44.74|4.60;Charleville-Mézières|49.77|4.72;Foix|42.97|1.61;Troyes|48.30|4.07|u;Carcassonne|43.21|2.35;Rodez|44.35|2.57;Marseille|43.30|5.37|u;Caen|49.18|-0.37|u;Aurillac|44.93|2.44;Angoulême|45.65|0.16;La Rochelle|46.16|-1.15|u;Bourges|47.08|2.40;Tulle|45.27|1.77;Ajaccio|41.92|8.74|u;Bastia|42.70|9.45;Dijon|47.32|5.04|u;Saint-Brieuc|48.51|-2.76;Guéret|46.17|1.87;Périgueux|45.18|0.72;Besançon|47.24|6.02|u;Valence|44.93|4.89|u;Évreux|49.02|1.15;Chartres|48.45|1.49;Quimper|48.00|-4.10;Nîmes|43.84|4.36|u;Toulouse|43.60|1.44|u;Auch|43.65|0.59;Bordeaux|44.84|-0.58|u;Montpellier|43.61|3.88|u;Rennes|48.12|-1.68|u;Châteauroux|46.81|1.69;Tours|47.39|0.69|u;Grenoble|45.19|5.72|u;Lons-le-Saunier|46.67|5.55;Mont-de-Marsan|43.89|-0.50;Blois|47.59|1.33;Saint-Étienne|45.44|4.39|u;Le Puy-en-Velay|45.04|3.88;Nantes|47.22|-1.55|u;Orléans|47.90|1.91|u;Cahors|44.45|1.44;Agen|44.20|0.62;Mende|44.52|3.50;Angers|47.47|-0.55|u;Saint-Lô|49.12|-1.09;Châlons-en-Champagne|48.96|4.36;Chaumont|48.11|5.14;Laval|48.07|-0.77;Nancy|48.69|6.18|u;Bar-le-Duc|48.77|5.16;Vannes|47.66|-2.76|u;Metz|49.12|6.18|u;Nevers|46.99|3.16;Lille|50.63|3.06|u;Beauvais|49.43|2.08;Alençon|48.43|0.09;Arras|50.29|2.78|u;Clermont-Ferrand|45.78|3.08|u;Pau|43.30|-0.37|u;Tarbes|43.23|0.07;Perpignan|42.70|2.90|u;Strasbourg|48.58|7.75|u;Colmar|48.08|7.36;Lyon|45.76|4.84|u;Vesoul|47.62|6.15;Mâcon|46.31|4.83;Le Mans|48.00|0.20|u;Chambéry|45.57|5.92|u;Annecy|45.90|6.13;Paris|48.86|2.35|u;Rouen|49.44|1.10|u;Melun|48.54|2.66;Versailles|48.80|2.13|u;Niort|46.32|-0.46;Amiens|49.89|2.30|u;Albi|43.93|2.15|u;Montauban|44.02|1.35;Toulon|43.12|5.93|u;Avignon|43.95|4.81|u;La Roche-sur-Yon|46.67|-1.43;Poitiers|46.58|0.34|u;Limoges|45.83|1.26|u;Épinal|48.17|6.45;Auxerre|47.80|3.57;Belfort|47.64|6.86|u;Évry|48.63|2.43|u;Nanterre|48.89|2.21|u;Bobigny|48.91|2.44|u;Créteil|48.79|2.46|u;Cergy|49.04|2.08|u;"
-+"Basse-Terre|16.00|-61.73;Pointe-à-Pitre|16.24|-61.53|u;Fort-de-France|14.61|-61.07|u;Cayenne|4.94|-52.33|u;Saint-Denis (La Réunion)|-20.88|55.45|u;Mamoudzou|-12.78|45.23;"
-+"Le Havre|49.49|0.11|u;Reims|49.26|4.03|u;Saint-Nazaire|47.27|-2.21;Brest|48.39|-4.49|u;Lorient|47.75|-3.37|u;Mulhouse|47.75|7.34|u;Dunkerque|51.03|2.38|u;Roubaix|50.69|3.17;Tourcoing|50.72|3.16;Villeurbanne|45.77|4.88;Cannes|43.55|7.01;Antibes|43.58|7.12;Saint-Denis|48.94|2.36;Montreuil|48.86|2.44;Argenteuil|48.95|2.25;Calais|50.95|1.86;Béziers|43.34|3.22;Bayonne|43.49|-1.47|u;Mérignac|44.84|-0.65;Pessac|44.81|-0.63;Villeneuve-d'Ascq|50.62|3.14|u;Aix-en-Provence|43.53|5.45|u;Saint-Pierre (La Réunion)|-21.34|55.48|u;Saint-Malo|48.65|-2.01;Cholet|47.06|-0.88;Valenciennes|50.36|3.52|u;Compiègne|49.42|2.83|u;Colombes|48.92|2.25;Boulogne-sur-Mer|50.73|1.61;Roanne|46.04|4.07;Vénissieux|45.70|4.89;Saint-Quentin|49.85|3.29;Narbonne|43.18|3.00;Montluçon|46.34|2.60;Vitry-sur-Seine|48.79|2.40;Sète|43.40|3.70;Douai|50.37|3.08;Châteauroux|46.81|1.69").split(";");
-/* Structures présentes dans (presque) toutes les villes : [libellé, catégorie, description, site, recherche Maps, universitaire seulement] */
-var TYPES=[
-["CCAS / mairie — action sociale","Aides & accueil social","Aides d'urgence, domiciliation postale, aide alimentaire, orientation vers les dispositifs locaux.","https://www.service-public.fr","CCAS action sociale"],
-["Restos du Cœur — association locale","Alimentaire","Repas, colis alimentaires, espace bébé, ateliers. Inscription selon revenus.","https://www.restosducoeur.org/pres-de-chez-vous/","Restos du Cœur"],
-["Banque alimentaire","Alimentaire","Distribution de denrées aux associations et épiceries solidaires partenaires du département.","https://www.banquealimentaire.org","Banque alimentaire"],
-["Secours Populaire — fédération / comité","Alimentaire","Aide alimentaire, vestiaire, accès aux vacances et à la culture, aide juridique.","https://www.secourspopulaire.fr","Secours Populaire"],
-["Secours Catholique — délégation","Alimentaire","Accueil, aide alimentaire, accompagnement, aide aux démarches.","https://www.secours-catholique.org","Secours Catholique"],
-["Épicerie sociale ou solidaire","Alimentaire","Courses à prix réduit après orientation d'un travailleur social (CCAS, assistante sociale).","https://www.andes-france.fr","épicerie solidaire"],
-["Croix-Rouge française — unité locale","Santé & logement","Maraudes, aide alimentaire, accompagnement social, premiers secours.","https://www.croix-rouge.fr","Croix-Rouge"],
-["PASS — permanence d'accès aux soins (hôpital)","Santé & logement","Consultations et médicaments sans avance de frais à l'hôpital public.","https://sante.gouv.fr","hôpital PASS permanence accès aux soins"],
-["CPAM — Assurance maladie","Santé & logement","Droits santé, complémentaire santé solidaire (C2S), carte Vitale. Tél. 3646.","https://www.ameli.fr","CPAM Assurance Maladie"],
-["Accueil de jour / bains-douches","Hygiène & numérique","Douches, petit-déjeuner, consigne, courrier, orientation sociale. Voir aussi Soliguide.","https://soliguide.fr","accueil de jour bains-douches"],
-["France Services","Aides & accueil social","Aide gratuite pour CAF, impôts, retraite, France Travail et démarches en ligne.","https://france-services.gouv.fr","France Services"],
-["CAF — Caisse d'allocations familiales","Aides & accueil social","APL, RSA, prime d'activité, allocations familiales, aides exceptionnelles.","https://www.caf.fr","CAF allocations familiales"],
-["France Travail (ex-Pôle emploi)","Emploi & insertion","Inscription, indemnisation, offres, accompagnement. Tél. 3949.","https://www.francetravail.fr","France Travail"],
-["Mission Locale (16-25 ans)","Emploi & insertion","Emploi, formation, logement, santé, Contrat d'engagement jeune.","https://www.mission-locale.fr","Mission Locale"],
-["Ressourcerie / boutique solidaire (Emmaüs, Croix-Rouge…)","Magasins solidaires","Vêtements, meubles, livres et électroménager de seconde main à prix solidaires.","https://www.ressourceries.info","ressourcerie boutique solidaire Emmaüs"],
-["CROUS / épicerie solidaire étudiante","Étudiants","Bourses, aides d'urgence, logement, repas à 1 €, épicerie AGORAé selon la ville.","https://www.etudiant.gouv.fr","CROUS service social étudiant",1]
-];
+  /* ============ 2. TES ARTICLES ============
+     Copie un bloc { ... } pour en ajouter un.
+     theme : legendes, ecrivains, artistes ou meurtriers
+     texte : une liste de paragraphes entre guillemets, séparés par des virgules */
+  const articles = [
+    { id: "a1", theme: "legendes", date: "2026-11-01", minutes: 5,
+      titre: "Titre de ton article sur une légende",
+      resume: "Deux ou trois phrases pour donner envie de lire la suite.",
+      texte: ["Premier paragraphe de ton article.", "Deuxième paragraphe. Écris autant de paragraphes que tu veux."] },
+    { id: "a2", theme: "ecrivains", date: "2026-10-20", minutes: 4,
+      titre: "Titre de ton article sur un écrivain",
+      resume: "Deux ou trois phrases pour donner envie de lire la suite.",
+      texte: ["Premier paragraphe de ton article.", "Deuxième paragraphe."] },
+    { id: "a3", theme: "artistes", date: "2026-10-05", minutes: 6,
+      titre: "Titre de ton article sur un artiste",
+      resume: "Deux ou trois phrases pour donner envie de lire la suite.",
+      texte: ["Premier paragraphe de ton article.", "Deuxième paragraphe."] },
+    { id: "a4", theme: "meurtriers", date: "2026-09-18", minutes: 7,
+      titre: "Titre de ton article sur un meurtrier",
+      resume: "Deux ou trois phrases pour donner envie de lire la suite.",
+      texte: ["Premier paragraphe de ton article.", "Deuxième paragraphe."] }
+  ];
 
-/* ===== EXTENSION : ~700 villes supplémentaires (sous-préfectures + villes > 20 000 hab.) ===== */
-var VILLES2=(
-/* Île-de-France */
-"Saint-Germain-en-Laye|48.90|2.09;Poissy|48.93|2.05;Mantes-la-Jolie|48.99|1.72;Rambouillet|48.64|1.83;Meaux|48.96|2.88;Provins|48.56|3.30;Fontainebleau|48.40|2.70;Étampes|48.43|2.16;Palaiseau|48.71|2.25;Massy|48.73|2.28;Corbeil-Essonnes|48.61|2.48;Savigny-sur-Orge|48.68|2.34;Sainte-Geneviève-des-Bois|48.64|2.32;Les Ulis|48.68|2.17;Boulogne-Billancourt|48.84|2.24;Issy-les-Moulineaux|48.82|2.27;Courbevoie|48.90|2.26;Asnières-sur-Seine|48.91|2.29;Levallois-Perret|48.89|2.29;Rueil-Malmaison|48.88|2.19;Neuilly-sur-Seine|48.88|2.27;Clichy|48.90|2.31;Antony|48.75|2.30;Clamart|48.80|2.26;Montrouge|48.82|2.32;Aubervilliers|48.91|2.38;Aulnay-sous-Bois|48.94|2.50;Drancy|48.92|2.45;Noisy-le-Grand|48.85|2.55;Pantin|48.89|2.40;Épinay-sur-Seine|48.95|2.31;Saint-Ouen-sur-Seine|48.91|2.33;Sevran|48.94|2.53;Bondy|48.90|2.49;Le Blanc-Mesnil|48.94|2.47;Livry-Gargan|48.92|2.54;Gennevilliers|48.93|2.30;Sarcelles|48.99|2.38;Garges-lès-Gonesse|48.97|2.41;Villiers-le-Bel|49.01|2.39;Gonesse|48.99|2.45;Pontoise|49.05|2.10;Franconville|48.99|2.23;Sartrouville|48.94|2.16;Houilles|48.93|2.19;Cormeilles-en-Parisis|48.97|2.20;Ivry-sur-Seine|48.81|2.39;Champigny-sur-Marne|48.82|2.51;Saint-Maur-des-Fossés|48.80|2.49;Maisons-Alfort|48.81|2.44;Vincennes|48.85|2.44;Fontenay-sous-Bois|48.85|2.48;Villejuif|48.79|2.36;Choisy-le-Roi|48.77|2.41;Alfortville|48.80|2.42;Orly|48.74|2.39;Thiais|48.76|2.39;Chelles|48.88|2.59;Pontault-Combault|48.80|2.61;Torcy|48.85|2.65;Savigny-le-Temple|48.60|2.59;Mitry-Mory|48.98|2.61;Combs-la-Ville|48.66|2.56;Montereau-Fault-Yonne|48.38|2.95;Montgeron|48.70|2.45;Yerres|48.71|2.49;Brétigny-sur-Orge|48.61|2.30;Sucy-en-Brie|48.77|2.52;Villeneuve-Saint-Georges|48.73|2.45;Le Perreux-sur-Marne|48.84|2.50;Neuilly-sur-Marne|48.86|2.55;Montfermeil|48.90|2.57;Gagny|48.89|2.54;Rosny-sous-Bois|48.87|2.49;Les Mureaux|48.99|1.91;Conflans-Sainte-Honorine|48.99|2.10;Trappes|48.78|1.99;Plaisir|48.82|1.95;Guyancourt|48.77|2.07;Élancourt|48.78|1.96;Chatou|48.89|2.16;Le Chesnay|48.82|2.12;Vélizy-Villacoublay|48.78|2.19;Montigny-le-Bretonneux|48.77|2.03;Bezons|48.92|2.21;Taverny|49.03|2.22;Herblay|48.99|2.16;Montmorency|48.99|2.34;Eaubonne|48.99|2.28;Deuil-la-Barre|48.97|2.33;"
-/* Hauts-de-France */
-+"Lens|50.43|2.83;Liévin|50.42|2.78;Béthune|50.53|2.64;Bruay-la-Buissière|50.48|2.55;Hénin-Beaumont|50.42|2.95;Carvin|50.49|2.96;Harnes|50.45|2.91;Saint-Omer|50.75|2.26;Cambrai|50.18|3.23;Maubeuge|50.28|3.97;Denain|50.33|3.40;Lambersart|50.65|3.02;Wattrelos|50.70|3.22;Marcq-en-Barœul|50.67|3.09;Armentières|50.69|2.88;Hazebrouck|50.72|2.54;Loos|50.61|3.02;Mons-en-Barœul|50.64|3.11;Wasquehal|50.67|3.13;Halluin|50.78|3.12;Grande-Synthe|51.01|2.30;Coudekerque-Branche|51.02|2.38;Gravelines|50.99|2.13;Arques|50.74|2.30;Le Touquet-Paris-Plage|50.52|1.59;Berck|50.40|1.57;Étaples|50.51|1.64;Abbeville|50.11|1.83;Péronne|49.93|2.93;Montdidier|49.65|2.57;Creil|49.26|2.48;Nogent-sur-Oise|49.27|2.47;Senlis|49.21|2.59;Clermont (Oise)|49.38|2.41;Noyon|49.58|3.00;Soissons|49.38|3.32;Château-Thierry|49.04|3.40;Hirson|49.92|4.08;Vervins|49.83|3.90;Chauny|49.62|3.22;Tergnier|49.66|3.30;Lillers|50.56|2.48;Somain|50.36|3.28;Anzin|50.37|3.51;Bailleul|50.74|2.74;Aire-sur-la-Lys|50.64|2.40;Aulnoye-Aymeries|50.20|3.84;Fourmies|50.01|4.05;Le Cateau-Cambrésis|50.10|3.54;Caudry|50.12|3.41;Hautmont|50.25|3.93;Seclin|50.55|3.03;Haubourdin|50.61|2.99;Comines|50.76|3.01;Wattignies|50.58|3.04;Méru|49.24|2.13;Chantilly|49.19|2.47;Crépy-en-Valois|49.23|2.89;Villers-Cotterêts|49.25|3.09;"
-/* Normandie */
-+"Cherbourg-en-Cotentin|49.64|-1.62;Dieppe|49.92|1.08;Fécamp|49.76|0.37;Lisieux|49.15|0.23;Bayeux|49.28|-0.70;Vire|48.84|-0.89;Argentan|48.74|-0.02;Flers|48.75|-0.57;Granville|48.84|-1.60;Avranches|48.68|-1.36;Coutances|49.05|-1.44;Saint-Étienne-du-Rouvray|49.38|1.10;Sotteville-lès-Rouen|49.41|1.09;Le Grand-Quevilly|49.41|1.04;Le Petit-Quevilly|49.42|1.06;Elbeuf|49.29|1.01;Mont-Saint-Aignan|49.46|1.07;Bolbec|49.57|0.47;Lillebonne|49.52|0.54;Louviers|49.22|1.17;Vernon|49.09|1.48;Les Andelys|49.24|1.41;Bernay|49.09|0.60;Honfleur|49.42|0.23;Deauville|49.36|0.07;Hérouville-Saint-Clair|49.21|-0.31;Mortagne-au-Perche|48.52|0.55;L'Aigle|48.76|0.63;Gisors|49.28|1.78;Barentin|49.55|0.96;Yvetot|49.62|0.75;Neufchâtel-en-Bray|49.73|1.44;Valognes|49.51|-1.47;Condé-en-Normandie|48.85|-0.55;"
-/* Bretagne */
-+"Morlaix|48.58|-3.83;Lannion|48.73|-3.46;Guingamp|48.56|-3.15;Dinan|48.46|-2.05;Fougères|48.35|-1.20;Vitré|48.12|-1.21;Redon|47.65|-2.08;Pontivy|48.07|-2.97;Ploërmel|47.93|-2.40;Lanester|47.77|-3.34;Hennebont|47.80|-3.27;Concarneau|47.87|-3.92;Douarnenez|48.09|-4.33;Landerneau|48.45|-4.25;Quimperlé|47.87|-3.55;Carhaix-Plouguer|48.27|-3.57;Châteaulin|48.19|-4.09;Saint-Jacques-de-la-Lande|48.09|-1.71;Cesson-Sévigné|48.12|-1.60;Bruz|48.02|-1.75;Pacé|48.15|-1.78;Auray|47.67|-2.98;Plérin|48.54|-2.77;Lamballe-Armor|48.47|-2.52;Loudéac|48.18|-2.75;Landivisiau|48.51|-4.07;Plougastel-Daoulas|48.37|-4.37;Guilers|48.43|-4.55;Ploufragan|48.49|-2.79;"
-/* Pays de la Loire */
-+"Saint-Herblain|47.21|-1.65;Rezé|47.18|-1.55;Orvault|47.27|-1.62;Vertou|47.17|-1.47;Saint-Sébastien-sur-Loire|47.20|-1.50;Carquefou|47.30|-1.49;La Baule-Escoublac|47.29|-2.36;Guérande|47.33|-2.43;Pornic|47.11|-2.10;Châteaubriant|47.72|-1.38;Ancenis-Saint-Géréon|47.37|-1.18;Les Sables-d'Olonne|46.50|-1.78;Fontenay-le-Comte|46.47|-0.81;Challans|46.85|-1.88;Saumur|47.26|-0.08;Trélazé|47.45|-0.47;Saint-Barthélemy-d'Anjou|47.49|-0.50;Segré-en-Anjou-Bleu|47.69|-0.88;Mayenne|48.30|-0.62;Château-Gontier-sur-Mayenne|47.83|-0.70;Sablé-sur-Sarthe|47.84|-0.34;La Flèche|47.70|-0.08;Mamers|48.35|0.37;Allonnes|47.96|0.16;Coulaines|48.02|0.21;Montaigu-Vendée|46.97|-1.31;Les Herbiers|46.87|-1.01;La Ferté-Bernard|48.19|0.65;"
-/* Centre-Val de Loire */
-+"Dreux|48.74|1.37;Vendôme|47.79|1.07;Romorantin-Lanthenay|47.36|1.74;Issoudun|46.95|1.99;Vierzon|47.22|2.07;Saint-Amand-Montrond|46.72|2.50;Amboise|47.41|0.98;Joué-lès-Tours|47.35|0.67;Saint-Cyr-sur-Loire|47.41|0.65;Saint-Pierre-des-Corps|47.39|0.74;Chinon|47.17|0.24;Loches|47.13|1.00;Montargis|47.99|2.73;Pithiviers|48.17|2.25;Gien|47.69|2.63;Saint-Jean-de-Braye|47.92|1.97;Fleury-les-Aubrais|47.92|1.92;Saint-Jean-de-la-Ruelle|47.91|1.87;Olivet|47.86|1.90;Le Blanc|46.63|1.06;La Châtre|46.58|1.99;Nogent-le-Rotrou|48.32|0.82;Châteaudun|48.07|1.34;Lucé|48.44|1.46;Mainvilliers|48.46|1.46;Luisant|48.43|1.47;Saint-Doulchard|47.10|2.35;"
-/* Bourgogne-Franche-Comté */
-+"Beaune|47.03|4.84;Chalon-sur-Saône|46.78|4.85;Le Creusot|46.80|4.43;Montceau-les-Mines|46.67|4.37;Autun|46.95|4.30;Sens|48.20|3.28;Avallon|47.49|3.91;Joigny|47.98|3.40;Cosne-Cours-sur-Loire|47.41|2.93;Clamecy|47.46|3.52;Dole|47.09|5.49;Saint-Claude|46.39|5.86;Pontarlier|46.90|6.35;Montbéliard|47.51|6.80;Audincourt|47.48|6.84;Sochaux|47.51|6.83;Héricourt|47.57|6.76;Morteau|47.06|6.60;Lure|47.68|6.50;Gray|47.45|5.59;Montbard|47.62|4.34;Paray-le-Monial|46.45|4.12;Louhans|46.63|5.23;Auxonne|47.19|5.38;Chenôve|47.29|5.00;Talant|47.34|4.99;Quetigny|47.31|5.10;Longvic|47.29|5.07;Tournus|46.57|4.91;Cluny|46.43|4.66;Charolles|46.43|4.27;Digoin|46.48|3.98;Decize|46.83|3.45;"
-/* Grand Est */
-+"Haguenau|48.82|7.79;Schiltigheim|48.61|7.75;Illkirch-Graffenstaden|48.53|7.72;Sélestat|48.26|7.45;Saverne|48.74|7.36;Wissembourg|49.04|7.95;Molsheim|48.54|7.50;Bischwiller|48.77|7.85;Lingolsheim|48.56|7.68;Saint-Louis|47.59|7.56;Thann|47.81|7.10;Guebwiller|47.91|7.21;Riedisheim|47.75|7.37;Illzach|47.77|7.35;Kingersheim|47.79|7.34;Ribeauvillé|48.20|7.32;Forbach|49.19|6.90;Sarreguemines|49.11|7.07;Thionville|49.36|6.17;Hayange|49.33|6.06;Woippy|49.15|6.15;Montigny-lès-Metz|49.10|6.15;Saint-Avold|49.10|6.71;Creutzwald|49.21|6.70;Stiring-Wendel|49.20|6.93;Longwy|49.52|5.76;Verdun|49.16|5.38;Lunéville|48.59|6.50;Toul|48.68|5.89;Pont-à-Mousson|48.91|6.06;Vandœuvre-lès-Nancy|48.65|6.18;Laxou|48.69|6.15;Villers-lès-Nancy|48.67|6.15;Saint-Max|48.70|6.21;Saint-Dié-des-Vosges|48.29|6.95;Remiremont|48.02|6.59;Neufchâteau|48.35|5.70;Saint-Dizier|48.64|4.95;Langres|47.86|5.33;Épernay|49.04|3.96;Vitry-le-François|48.73|4.58;Tinqueux|49.25|3.99;Bétheny|49.29|4.05;Rethel|49.51|4.37;Sedan|49.70|4.94;Revin|49.92|4.64;Romilly-sur-Seine|48.52|3.73;Nogent-sur-Seine|48.49|3.50;Bar-sur-Aube|48.23|4.71;Sainte-Savine|48.30|4.04;La Chapelle-Saint-Luc|48.32|4.05;Gérardmer|48.07|6.88;Mirecourt|48.30|6.13;Commercy|48.76|5.59;Briey|49.25|5.93;Rombas|49.25|6.09;Yutz|49.35|6.20;Florange|49.32|6.12;Fameck|49.30|6.11;Hagondange|49.25|6.17;Freyming-Merlebach|49.15|6.79;Bitche|49.05|7.43;Sarrebourg|48.74|7.05;Obernai|48.46|7.48;Erstein|48.42|7.66;Brumath|48.73|7.71;"
-/* Auvergne-Rhône-Alpes */
-+"Oyonnax|46.26|5.66;Ambérieu-en-Bugey|45.96|5.36;Belley|45.76|5.69;Gex|46.33|6.06;Ferney-Voltaire|46.26|6.11;Saint-Genis-Pouilly|46.24|6.02;Vichy|46.13|3.43;Yzeure|46.56|3.35;Cusset|46.13|3.46;Thiers|45.86|3.55;Riom|45.89|3.11;Issoire|45.54|3.25;Cournon-d'Auvergne|45.74|3.19;Chamalières|45.77|3.06;Beaumont|45.74|3.09;Gerzat|45.83|3.15;Ambert|45.55|3.74;Brioude|45.29|3.38;Saint-Flour|45.03|3.09;Mauriac|45.22|2.33;Montélimar|44.56|4.75;Romans-sur-Isère|45.04|5.05;Bourg-lès-Valence|44.95|4.88;Pierrelatte|44.38|4.70;Die|44.75|5.37;Annonay|45.24|4.67;Aubenas|44.62|4.39;Tournon-sur-Rhône|45.07|4.83;Vienne|45.52|4.87;Bourgoin-Jallieu|45.59|5.27;Voiron|45.36|5.59;Échirolles|45.14|5.72;Saint-Martin-d'Hères|45.18|5.76;Fontaine|45.19|5.69;Meylan|45.21|5.78;Seyssinet-Pariset|45.17|5.69;Sassenage|45.20|5.66;Saint-Égrève|45.23|5.68;Villefontaine|45.61|5.15;L'Isle-d'Abeau|45.62|5.22;La Tour-du-Pin|45.57|5.44;Saint-Marcellin|45.15|5.32;La Mure|44.91|5.80;Vizille|45.07|5.77;Annemasse|46.19|6.24;Thonon-les-Bains|46.37|6.48;Évian-les-Bains|46.40|6.59;Cluses|46.06|6.58;Sallanches|45.94|6.63;Chamonix-Mont-Blanc|45.92|6.87;Bonneville|46.08|6.40;Albertville|45.68|6.39;Aix-les-Bains|45.69|5.91;Cran-Gevrier|45.90|6.10;Seynod|45.88|6.09;Saint-Julien-en-Genevois|46.14|6.08;Annecy-le-Vieux|45.92|6.14;Saint-Jean-de-Maurienne|45.28|6.35;Moûtiers|45.49|6.53;Challes-les-Eaux|45.55|5.98;La Motte-Servolex|45.59|5.88;Bron|45.73|4.91;Décines-Charpieu|45.77|5.00;Caluire-et-Cuire|45.80|4.85;Rillieux-la-Pape|45.82|4.90;Saint-Priest|45.70|4.94;Meyzieu|45.77|5.00;Vaulx-en-Velin|45.78|4.92;Oullins-Pierre-Bénite|45.71|4.81;Givors|45.59|4.77;Tarare|45.90|4.43;Villefranche-sur-Saône|45.99|4.72;Saint-Fons|45.71|4.86;Écully|45.77|4.77;Tassin-la-Demi-Lune|45.76|4.75;Sainte-Foy-lès-Lyon|45.74|4.79;Francheville|45.73|4.77;Mions|45.67|4.95;Genas|45.73|5.00;Brignais|45.67|4.75;Saint-Chamond|45.48|4.51;Firminy|45.39|4.29;Rive-de-Gier|45.53|4.61;Montbrison|45.61|4.06;Saint-Just-Saint-Rambert|45.50|4.25;Saint-Priest-en-Jarez|45.48|4.37;La Ricamarie|45.40|4.36;Le Chambon-Feugerolles|45.39|4.32;Sorbiers|45.49|4.40;Monistrol-sur-Loire|45.29|4.17;Yssingeaux|45.14|4.12;Riorges|46.04|4.04;Le Coteau|46.03|4.10;Mably|46.07|4.07;"
-/* Nouvelle-Aquitaine */
-+"Talence|44.81|-0.59;Bègles|44.81|-0.55;Villenave-d'Ornon|44.78|-0.56;Gradignan|44.77|-0.62;Le Bouscat|44.87|-0.60;Cenon|44.86|-0.53;Floirac|44.84|-0.52;Lormont|44.88|-0.52;Blanquefort|44.91|-0.63;Eysines|44.88|-0.65;Saint-Médard-en-Jalles|44.90|-0.72;Le Haillan|44.87|-0.67;Libourne|44.92|-0.24;Arcachon|44.66|-1.17;La Teste-de-Buch|44.63|-1.15;Gujan-Mestras|44.64|-1.07;Andernos-les-Bains|44.75|-1.10;Lesparre-Médoc|45.31|-0.94;Langon|44.55|-0.25;Bazas|44.43|-0.21;Marmande|44.50|0.17;Villeneuve-sur-Lot|44.41|0.71;Nérac|44.13|0.34;Sarlat-la-Canéda|44.89|1.22;Bergerac|44.85|0.48;Trélissac|45.19|0.76;Mussidan|45.04|0.37;Nontron|45.53|0.66;Brive-la-Gaillarde|45.16|1.53;Ussel|45.55|2.31;Saint-Junien|45.89|0.90;Cognac|45.70|-0.33;Jarnac|45.68|-0.17;Soyaux|45.64|0.20;Rochefort|45.94|-0.96;Saintes|45.75|-0.63;Royan|45.63|-1.03;Saint-Jean-d'Angély|45.95|-0.52;Jonzac|45.45|-0.43;Châtellerault|46.82|0.55;Bressuire|46.84|-0.49;Parthenay|46.65|-0.25;Thouars|46.98|-0.21;Melle|46.22|-0.14;Buxerolles|46.60|0.37;Saint-Benoît|46.52|0.36;Dax|43.71|-1.05;Biarritz|43.48|-1.56;Anglet|43.49|-1.52;Hendaye|43.36|-1.77;Saint-Jean-de-Luz|43.39|-1.66;Oloron-Sainte-Marie|43.19|-0.61;Orthez|43.49|-0.77;Lescar|43.33|-0.43;Billère|43.30|-0.39;Mourenx|43.37|-0.62;Saint-Paul-lès-Dax|43.73|-1.06;Tarnos|43.54|-1.47;Biscarrosse|44.39|-1.17;Mimizan|44.21|-1.23;Boé|44.19|0.62;Le Passage|44.19|0.63;Tonneins|44.39|0.31;Fumel|44.50|0.96;Aubusson|45.96|2.17;Bellac|46.12|1.05;Rochechouart|45.82|0.82;Panazol|45.83|1.31;Isle|45.82|1.20;Égletons|45.41|2.05;"
-/* Occitanie */
-+"Blagnac|43.63|1.39;Colomiers|43.61|1.34;Tournefeuille|43.59|1.34;Muret|43.46|1.33;Balma|43.61|1.50;Ramonville-Saint-Agne|43.55|1.47;L'Union|43.66|1.48;Cugnaux|43.54|1.34;Plaisance-du-Touch|43.56|1.29;Saint-Orens-de-Gameville|43.55|1.53;Castanet-Tolosan|43.51|1.50;Saint-Gaudens|43.11|0.72;Villefranche-de-Lauragais|43.40|1.72;Castelnaudary|43.32|1.95;Revel|43.46|2.00;Castres|43.60|2.24;Mazamet|43.49|2.37;Gaillac|43.90|1.90;Graulhet|43.76|1.99;Lavaur|43.70|1.82;Carmaux|44.05|2.15;Millau|44.10|3.08;Villefranche-de-Rouergue|44.35|2.03;Onet-le-Château|44.38|2.58;Decazeville|44.56|2.25;Figeac|44.61|2.03;Gourdon|44.74|1.38;Moissac|44.10|1.09;Castelsarrasin|44.04|1.11;Condom|43.96|0.37;Lectoure|43.93|0.62;Lourdes|43.09|-0.05;Bagnères-de-Bigorre|43.07|0.15;Lannemezan|43.13|0.38;Pamiers|43.12|1.61;Saint-Girons|42.98|1.15;Lavelanet|42.93|1.84;Limoux|43.05|2.22;Lézignan-Corbières|43.20|2.76;Alès|44.13|4.08;Bagnols-sur-Cèze|44.16|4.62;Beaucaire|43.81|4.64;Vauvert|43.69|4.28;Uzès|44.01|4.42;Le Vigan|43.99|3.62;Saint-Gilles|43.68|4.43;Lunel|43.68|4.14;Mauguio|43.62|4.01;Castelnau-le-Lez|43.64|3.91;Lattes|43.57|3.93;Villeneuve-lès-Maguelone|43.53|3.86;Frontignan|43.45|3.76;Agde|43.31|3.47;Pézenas|43.46|3.42;Lodève|43.73|3.32;Ganges|43.93|3.71;Clermont-l'Hérault|43.63|3.43;Saint-Jean-de-Védas|43.57|3.83;Pérols|43.56|3.95;Marvejols|44.55|3.29;Argelès-sur-Mer|42.55|3.02;Canet-en-Roussillon|42.70|3.01;Saint-Estève|42.71|2.84;Rivesaltes|42.77|2.87;Prades|42.62|2.42;Céret|42.49|2.75;Saint-Laurent-de-la-Salanque|42.77|2.99;Thuir|42.63|2.75;Cazères|43.21|1.09;"
-/* PACA */
-+"Aubagne|43.29|5.57;La Ciotat|43.17|5.60;Martigues|43.41|5.05;Istres|43.51|4.99;Vitrolles|43.46|5.25;Marignane|43.42|5.21;Salon-de-Provence|43.64|5.10;Arles|43.68|4.63;Miramas|43.58|5.00;Gardanne|43.45|5.47;Les Pennes-Mirabeau|43.41|5.31;Allauch|43.34|5.48;Fos-sur-Mer|43.44|4.95;Port-de-Bouc|43.40|4.99;Tarascon|43.81|4.66;Châteaurenard|43.88|4.85;Cavaillon|43.84|5.04;Carpentras|44.06|5.05;Orange|44.14|4.81;Apt|43.88|5.40;L'Isle-sur-la-Sorgue|43.92|5.05;Sorgues|44.01|4.87;Le Pontet|43.96|4.86;Pertuis|43.69|5.50;Manosque|43.83|5.78;Sisteron|44.20|5.94;Forcalquier|43.96|5.78;Briançon|44.90|6.64;Embrun|44.56|6.50;Grasse|43.66|6.92;Cagnes-sur-Mer|43.66|7.15;Vallauris|43.58|7.05;Le Cannet|43.58|7.02;Mandelieu-la-Napoule|43.55|6.94;Menton|43.78|7.50;Vence|43.72|7.11;Saint-Laurent-du-Var|43.67|7.19;Mougins|43.60|6.99;Fréjus|43.43|6.74;Saint-Raphaël|43.43|6.77;Draguignan|43.54|6.47;Brignoles|43.41|6.06;Hyères|43.12|6.13;La Seyne-sur-Mer|43.10|5.88;Six-Fours-les-Plages|43.10|5.82;La Garde|43.12|6.01;Sanary-sur-Mer|43.12|5.80;Ollioules|43.14|5.85;Cogolin|43.25|6.53;Sainte-Maxime|43.31|6.64;Saint-Tropez|43.27|6.64;Vidauban|43.43|6.43;Le Luc|43.39|6.31;Bandol|43.14|5.75;La Valette-du-Var|43.14|5.98;"
-/* Corse */
-+"Calvi|42.57|8.76;Porto-Vecchio|41.59|9.28;Bonifacio|41.39|9.16;Corte|42.31|9.15;Sartène|41.62|8.97;Propriano|41.68|8.90;Ghisonaccia|42.01|9.41;Borgo|42.56|9.42;Biguglia|42.62|9.43;Lucciana|42.55|9.44;"
-/* Outre-mer */
-+"Le Gosier|16.21|-61.49;Les Abymes|16.27|-61.50;Baie-Mahault|16.27|-61.59;Le Lamentin (Guadeloupe)|16.27|-61.63;Sainte-Anne (Guadeloupe)|16.23|-61.38;Saint-François|16.25|-61.27;Le Moule|16.33|-61.35;Capesterre-Belle-Eau|16.04|-61.57;Petit-Bourg|16.19|-61.59;Saint-Martin|18.07|-63.08;Le Lamentin (Martinique)|14.61|-61.00;Schœlcher|14.61|-61.09;Le Robert|14.68|-60.94;Saint-Joseph (Martinique)|14.66|-61.04;Sainte-Marie (Martinique)|14.78|-61.00;Ducos|14.57|-60.98;Le François|14.62|-60.90;La Trinité|14.74|-60.96;Le Marin|14.47|-60.87;Kourou|5.16|-52.65;Saint-Laurent-du-Maroni|5.50|-54.03;Remire-Montjoly|4.91|-52.27;Matoury|4.85|-52.33;Macouria|4.93|-52.37;Saint-Paul (La Réunion)|-21.01|55.27;Le Tampon|-21.28|55.52;Saint-André (La Réunion)|-20.96|55.65;Saint-Louis (La Réunion)|-21.29|55.41;Le Port|-20.94|55.29;Saint-Benoît (La Réunion)|-21.03|55.71;La Possession|-20.93|55.33;Saint-Joseph (La Réunion)|-21.38|55.62;Sainte-Marie (La Réunion)|-20.90|55.55;Sainte-Suzanne|-20.91|55.61;Saint-Leu|-21.17|55.29;Dzaoudzi|-12.79|45.28;Koungou|-12.73|45.20;Dembéni|-12.83|45.19"
-).split(";");
+  const univers = {
+    legendes:   { nom: "Légendes",   emoji: "🐉", desc: "Héros, monstres et récits qui traversent les siècles." },
+    ecrivains:  { nom: "Écrivains",  emoji: "🪶", desc: "Les vies et les plumes derrière les grands livres." },
+    artistes:   { nom: "Artistes",   emoji: "🎨", desc: "Peintres, musiciens, créateurs et leurs œuvres." },
+    meurtriers: { nom: "Meurtriers", emoji: "🔪", desc: "Des affaires criminelles célèbres, racontées avec soin." }
+  };
 
-/* 11 nouveaux types : [libellé, catégorie, description, site, recherche Maps, universitaire seulement(0/1), aussi dans les villes moyennes(0/1)] */
-var TYPES2=[
-["Point Conseil Budget (PCB)","Aides & accueil social","Accompagnement gratuit : impayés, budget, surendettement.","https://www.service-public.fr","Point Conseil Budget",0,1],
-["Centre social / maison de quartier","Aides & accueil social","Accueil, aide aux démarches, activités pour les familles, aide aux devoirs.","https://www.centres-sociaux.fr","centre social maison de quartier",0,1],
-["Point d'accès au droit / aide juridique","Aides & accueil social","Consultations juridiques gratuites : travail, logement, famille, droits des étrangers.","https://www.service-public.fr","point d'accès au droit aide juridique",0,0],
-["ADIL — conseil logement gratuit","Santé & logement","Conseil juridique et financier gratuit : loyers impayés, expulsion, achat, travaux.","https://www.anil.org","ADIL conseil logement",0,0],
-["CHRS / hébergement d'urgence","Santé & logement","Hébergement et accompagnement social. Pour une place le soir même : appelez le 115.","https://soliguide.fr","hébergement d'urgence CHRS",0,0],
-["Centre de santé / maison de santé","Santé & logement","Consultations de médecine générale, souvent en tiers payant.","https://www.ameli.fr","centre de santé maison de santé",0,1],
-["CMP — centre médico-psychologique","Santé & logement","Consultations de santé mentale gratuites, par secteur géographique. En détresse : 3114.","https://www.service-public.fr","centre médico-psychologique CMP",0,0],
-["Planning familial / santé sexuelle","Santé & logement","Contraception, IVG, dépistage, écoute, accès aux droits.","https://www.planning-familial.org","planning familial",0,0],
-["Info Jeunes (BIJ / CRIJ)","Emploi & insertion","Orientation, emploi, logement, droits et jobs d'été pour les jeunes.","https://www.cidj.com","Info Jeunes BIJ",0,0],
-["Chantier / entreprise d'insertion (SIAE)","Emploi & insertion","Contrat de travail + accompagnement. Accès via France Travail ou Mission Locale.","https://emplois.inclusion.beta.gouv.fr","chantier d'insertion entreprise d'insertion",0,0],
-["Cap Emploi (handicap)","Emploi & insertion","Accompagnement vers l'emploi pour les personnes en situation de handicap.","https://www.capemploi.info","Cap Emploi",0,0]
-];
-/* index dans TYPES gardés pour les villes moyennes : CCAS, Restos, Banque alim., Secours Pop., Secours Cath., France Services, France Travail, Mission Locale */
-var CORE=[0,1,2,3,4,10,12,13];
+  const $ = id => document.getElementById(id);
+  const recents = [...articles].sort((a, b) => b.date.localeCompare(a.date));
+  const fmt = d => new Date(d).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  let theme = "tous", requete = "", ordre = "recent";
 
-function genRefs(){
-  var seen={};REFS.forEach(function(r){seen[norm(r[0]).split(/\W+/).slice(0,2).join(" ")+"|"+norm(r[1])]=1});
-  var known={},out=[],k=1;
-  function run(v,types){
-    var f=v.split("|");if(f.length<3)return;
-    var nom=f[0],la=parseFloat(f[1]),ln=parseFloat(f[2]),uni=f[3]==="u",j=0;
-    if(isNaN(la)||isNaN(ln))return;
-    types.forEach(function(t){
-      if(t[5]&&!uni)return;
-      var key=norm(t[0]).split(/\W+/).slice(0,2).join(" ")+"|"+norm(nom);
-      if(seen[key]){j++;return}
-      var ang=j*2.399963,rad=.0035+.0014*Math.sqrt(j),cl=Math.cos(la*Math.PI/180)||1;
-      j++;
-      out.push({id:"g"+(k++),src:"ref",n:t[0],c:nom,la:Math.round((la+rad*Math.sin(ang))*10000)/10000,ln:Math.round((ln+rad*Math.cos(ang)/cl)*10000)/10000,k:t[1],d:t[2]+" Structure présente dans cette zone : position approximative, consultez le site pour l'adresse exacte.",web:t[3],q:t[4]+" "+nom,a:"",h:"",tel:"",o:""})
-    })}
-  /* grandes villes et préfectures : toutes les structures */
-  VILLES.forEach(function(v){known[norm(v.split("|")[0])]=1;run(v,TYPES.concat(TYPES2))});
-  /* villes moyennes : structures essentielles + 3 types légers */
-  var light=CORE.map(function(i){return TYPES[i]}).concat(TYPES2.filter(function(t){return t[6]===1}));
-  VILLES2.forEach(function(v){var key=norm(v.split("|")[0]);if(known[key])return;known[key]=1;run(v,light)});
-  return out}
-var QUICK=[["🍽️","Restos du Cœur"],["📦","Banque alimentaire"],["🛒","Épicerie solidaire"],["🤝","Secours Populaire"],["⛪","Secours Catholique"],["🧥","Emmaüs ressourcerie"],["🏛️","CCAS mairie"],["💼","France Travail"],["👥","Mission Locale"],["🏢","France Services"],["💶","CAF"],["🩺","CPAM"],["🏥","PASS permanence accès aux soins"],["🎓","CROUS"],["🚿","Bains-douches accueil de jour"],["🏠","Croix-Rouge"]];
-var R={
-"Numéros":[["115","Hébergement d'urgence, 24h/24","tel:115"],["15","SAMU — urgence médicale","tel:15"],["17","Police / Gendarmerie","tel:17"],["18","Pompiers","tel:18"],["112","Urgence européenne","tel:112"],["114","Urgence par SMS (sourds, malentendants)","tel:114"],["3919","Violences faites aux femmes","tel:3919"],["119","Enfance en danger","tel:119"],["3114","Prévention du suicide, 24h/24","tel:3114"],["3977","Maltraitance aînés / handicap","tel:3977"],["116 006","Aide aux victimes","tel:116006"],["3020","Harcèlement scolaire","tel:3020"],["3018","Cyberharcèlement","tel:3018"],["0 800 235 236","Fil Santé Jeunes","tel:0800235236"],["09 72 39 40 50","SOS Amitié","tel:0972394050"],["0 800 23 13 13","Drogues Info Service","tel:0800231313"],["0 980 980 930","Alcool Info Service","tel:0980980930"],["3949","France Travail","tel:3949"],["3939","Allô Service Public","tel:3939"],["3646","Assurance maladie","tel:3646"],["09 69 39 00 00","Défenseur des droits","tel:0969390000"]],
-"Sites utiles":[["Service-Public.fr","Toutes vos démarches","https://www.service-public.fr"],["Mes Droits Sociaux","Simulateur officiel de vos aides","https://www.mesdroitssociaux.gouv.fr"],["Soliguide","Annuaire des services sociaux","https://soliguide.fr"],["CAF","APL, RSA, prime d'activité","https://www.caf.fr"],["Ameli","Santé, complémentaire santé solidaire","https://www.ameli.fr"],["Chèque énergie","Aide pour vos factures d'énergie","https://chequeenergie.gouv.fr"],["Action Logement","Aides logement, Visale","https://www.actionlogement.fr"],["ADIL / ANIL","Conseil juridique logement gratuit","https://www.anil.org"],["France Services","Aide gratuite aux démarches","https://france-services.gouv.fr"],["Défenseur des droits","Discrimination, droits","https://www.defenseurdesdroits.fr"],["JeVeuxAider","Bénévolat partout en France","https://www.jeveuxaider.gouv.fr"],["Don en confiance","Donner en sécurité","https://www.donenconfiance.org"],["Restos du Cœur","Centres par code postal","https://www.restosducoeur.org/pres-de-chez-vous/"],["Banques alimentaires","Associations par département","https://www.banquealimentaire.org"],["Épiceries solidaires (ANDES)","Réseau national","https://www.andes-france.fr"],["Ressourceries","Seconde main solidaire","https://www.ressourceries.info"]],
-"Étudiants":[["Dossier Social Étudiant","Bourses et logement CROUS","https://www.messervices.etudiant.gouv.fr"],["Aides d'urgence CROUS","Aide ponctuelle ou annuelle, via l'assistante sociale","https://www.etudiant.gouv.fr"],["Repas à 1 €","Pour étudiants boursiers ou précaires, au restaurant universitaire","https://www.etudiant.gouv.fr"],["Garantie Visale","Caution gratuite, 18-30 ans","https://www.visale.fr"],["APL","Aide au logement via la CAF","https://www.caf.fr"],["Santé Psy Étudiant","Séances gratuites chez un psychologue","https://santepsy.etudiant.gouv.fr"],["Épiceries AGORAé (FAGE)","Épiceries solidaires étudiantes","https://www.fage.org"],["1jeune1solution","Aides, jobs, stages, formation","https://www.1jeune1solution.gouv.fr"],["Info Jeunes (CIDJ)","Orientation, droits, logement","https://www.cidj.com"]],
-"Emploi & chômage":[["France Travail","Inscription, indemnisation, offres","https://www.francetravail.fr"],["RSA","Via la CAF ou la MSA","https://www.mesdroitssociaux.gouv.fr"],["Prime d'activité","Complément pour travailleurs modestes","https://www.caf.fr"],["Mon Compte Formation","Financer une formation (CPF)","https://www.moncompteformation.gouv.fr"],["Aides à la mobilité","Permis, transport, déménagement","https://www.francetravail.fr"],["Cap Emploi","Emploi et handicap","https://www.capemploi.info"],["La Bonne Boîte","Entreprises qui recrutent","https://labonneboite.francetravail.fr"],["Mission Locale","16-25 ans : Contrat d'engagement jeune","https://www.mission-locale.fr"],["Wimoov","Mobilité vers l'emploi","https://www.wimoov.org"]],
-"Réinsertion":[["Plateforme de l'inclusion","Insertion par l'activité économique (SIAE)","https://emplois.inclusion.beta.gouv.fr"],["Emmaüs","Accueil, travail, logement solidaire","https://emmaus-france.org"],["Réseau Cocagne","Jardins d'insertion","https://www.reseaucocagne.asso.fr"],["SPIP","Sortie de détention : conseiller d'insertion","https://www.justice.gouv.fr"],["Fondation Abbé Pierre","Logement, droits","https://www.fondation-abbe-pierre.fr"],["Domiciliation","Adresse postale gratuite (CCAS, associations)","https://www.service-public.fr"],["DALO","Recours pour mal-logés","https://www.service-public.fr"],["Secours Catholique","Accueil, accompagnement","https://www.secours-catholique.org"],["Croix-Rouge","Aide alimentaire, accompagnement social","https://www.croix-rouge.fr"]]};
-var CHECK=["Ouvrir ou mettre à jour mon dossier CAF","Demander la complémentaire santé solidaire (C2S)","Vérifier mon éligibilité au chèque énergie","Voir une assistante sociale (CCAS / CROUS)","Demander une domiciliation postale si besoin","M'inscrire à une épicerie solidaire / aide alimentaire","M'inscrire à France Travail / Mission Locale","Faire une simulation sur mesdroitssociaux.gouv.fr"];
-var ADV={food:["Demandez au CCAS une orientation vers une épicerie solidaire.","Inscrivez-vous aux Restos du Cœur, Secours Populaire ou banque alimentaire (boutons « Près de chez vous »)."],money:["Contactez le CCAS : aide d'urgence, Fonds de solidarité logement (FSL).","Prenez rendez-vous avec un Point Conseil Budget (gratuit).","Prévenez vite votre bailleur ou fournisseur."],sleep:["Appelez le 115 (gratuit, 24h/24).","Danger immédiat : 17 ou 112.","Soliguide indique accueils de jour et centres ouverts."],health:["Allez à la PASS d'un hôpital public (soins sans avance de frais).","Demandez la C2S sur ameli.fr (3646).","Soutien psychologique : 3114."],job:["Inscrivez-vous à France Travail (3949).","Voyez une structure d'insertion via la plateforme de l'inclusion.","Moins de 26 ans : Mission Locale."],admin:["Allez dans un espace France Services (gratuit).","Adresse postale : domiciliation via le CCAS."],violence:["Danger immédiat : 17 ou 112 (114 par SMS).","Violences conjugales : 3919 (gratuit, 24h/24).","Enfant concerné : 119."]};
-var BON={single:"",family:"👨‍👩‍👧 Famille : aides exceptionnelles CAF, PMI, cantine à tarif social.",student:"🎓 Étudiant : service social du CROUS, repas à 1 € si éligible, Santé Psy Étudiant.",jobseeker:"💼 Demandeur d'emploi : droits ARE / ASS / RSA, aide à la mobilité, CPF.",exit:"🔑 Réinsertion : SPIP, domiciliation, SIAE, Fondation Abbé Pierre."};
+  $("nb-articles").textContent = articles.length;
+  $("c-articles").textContent = articles.length;
+  $("annee").textContent = new Date().getFullYear();
 
-function $(s){return document.querySelector(s)}
-function ld(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}}
-function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
-function safeUrl(u){u=String(u||"").trim();if(!u)return"";if(!/^https?:\/\//i.test(u))u="https://"+u;return /^https?:\/\/[^\s"'<>]+$/i.test(u)?u:""}
-function norm(s){return String(s==null?"":s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")}
-function dist(a,b,c,d){var r=Math.PI/180,x=Math.sin((c-a)*r/2),y=Math.sin((d-b)*r/2),h=x*x+Math.cos(a*r)*Math.cos(c*r)*y*y;return Math.round(12742*Math.atan2(Math.sqrt(h),Math.sqrt(1-h))*10)/10}
-var SYN={repas:"aliment manger epicerie colis resto",douche:"hygiene bain laverie",emploi:"insertion travail chantier",etudiant:"crous fage etudiants",vetements:"vestiaire boutique emmaus seconde main"};
+  // Bandeau
+  const mots = Object.values(univers).map(u => u.nom);
+  let bande = "";
+  for (let i = 0; i < 16; i++) bande += '<span class="' + (i % 2 ? "r" : "") + '">' + mots[i % 4] + "</span>";
+  $("defile").innerHTML = bande + bande;
 
-var S={c:null,cat:"Tout",show:60,live:{},sug:[],busy:false,pending:false,kw:""};
-var REFITEMS=REFS.map(function(r,i){return{id:"r"+(i+1),src:"ref",n:r[0],c:r[1],la:r[2],ln:r[3],k:r[4],d:r[5],web:r[6],q:r[0]+" "+r[1],a:"",h:"",tel:"",o:""}}).concat(genRefs());
-var custom=ld("sf_custom_v8",[]),favs=ld("sf_favs_v8",{}),checks=ld("sf_checks_v8",[]),rtab="Numéros";
-var loaded=[],map=null,layer=null,pin=null,markers={},byId={},tm=null,tmv=null,clustered=false;
-var EP=["https://overpass-api.de/api/interpreter","https://overpass.kumi.systems/api/interpreter","https://maps.mail.ru/osm/tools/overpass/api/interpreter"];
-var NAMES="Restos|Secours Populaire|Secours Catholique|Croix.Rouge|Emma.s|Banque alimentaire|CCAS|action sociale|Mission locale|France Travail|P.le emploi|France Services|picerie sociale|picerie solidaire|Entraide|Accueil de jour|Caisse d.Allocations";
+  // Tuiles des univers
+  Object.entries(univers).forEach(([cle, u]) => {
+    const n = articles.filter(a => a.theme === cle).length;
+    const t = document.createElement("button");
+    t.type = "button"; t.className = "tuile t-" + cle;
+    t.innerHTML = '<span class="emoji"></span><h3></h3><p></p><small></small>';
+    t.querySelector(".emoji").textContent = u.emoji;
+    t.querySelector("h3").textContent = u.nom;
+    t.querySelector("p").textContent = u.desc;
+    t.querySelector("small").textContent = n + (n > 1 ? " articles" : " article");
+    t.onclick = () => { choisir(cle); $("articles").scrollIntoView(); };
+    $("tuiles").appendChild(t);
+  });
 
-/* ---------- Classement et conversion des données OpenStreetMap ---------- */
-function cls(t){
-  var n=t.name||"",sf=t.social_facility||"";
-  if(/tudiant|crous|fage|agora/i.test(n))return"Étudiants";
-  if(/picerie (sociale|solidaire)|restos|banque alimentaire/i.test(n)||sf==="food_bank"||sf==="soup_kitchen"||t.amenity==="food_sharing")return"Alimentaire";
-  if(/mission locale|insertion|chantier|cocagne|france travail|p.le emploi/i.test(n)||sf==="workshop"||t.office==="employment_agency")return"Emploi & insertion";
-  if(t.amenity==="public_bath"||/douche|bagagerie|laverie/i.test(n))return"Hygiène & numérique";
-  if(t.shop)return"Magasins solidaires";
-  if(/shelter|outreach|group_home|ambulatory_care/.test(sf)||/PASS|sant/i.test(n))return"Santé & logement";
-  return"Aides & accueil social"}
-function hrs(s){if(!s)return"";var m={Mo:"Lun",Tu:"Mar",We:"Mer",Th:"Jeu",Fr:"Ven",Sa:"Sam",Su:"Dim",PH:"Fériés",off:"fermé"};return s.replace(/\b(Mo|Tu|We|Th|Fr|Sa|Su|PH|off)\b/g,function(x){return m[x]})}
-function mk(e){
-  var t=e.tags||{};
-  if(/assisted_living|nursing_home|day_care|nursery/.test(t.social_facility||""))return null;
-  if(/senior/.test(t["social_facility:for"]||""))return null;
-  var la=e.lat!=null?e.lat:(e.center&&e.center.lat),ln=e.lon!=null?e.lon:(e.center&&e.center.lon);
-  if(la==null||ln==null)return null;
-  var a=[((t["addr:housenumber"]||"")+" "+(t["addr:street"]||"")).trim(),((t["addr:postcode"]||"")+" "+(t["addr:city"]||"")).trim()].filter(Boolean).join(", ");
-  return{id:e.type[0]+e.id,src:"osm",n:t.name||SFL[t.social_facility]||(t.shop?"Magasin solidaire":"Structure sociale"),k:cls(t),la:la,ln:ln,a:a,c:t["addr:city"]||"",tel:t.phone||t["contact:phone"]||"",web:t.website||t["contact:website"]||"",h:hrs(t.opening_hours),o:t.operator||"",d:""}}
-function buildQuery(b){
-  return"[out:json][timeout:40][bbox:"+b.s+","+b.w+","+b.n+","+b.e+"];("
-  +'nwr["amenity"="social_facility"];nwr["amenity"="social_centre"];nwr["amenity"="food_sharing"];nwr["amenity"="public_bath"];nwr["shop"="charity"];'
-  +'nwr["office"~"^(ngo|association|government|charity|employment_agency)$"]["name"~"'+NAMES+'",i];'
-  +'nwr["amenity"~"^(community_centre|townhall)$"]["name"~"CCAS|action sociale",i];'
-  +'nwr["shop"="second_hand"]["name"~"Emma|Croix|Secours|Resso|solidair|Entraide|Humanit|Recycl",i];'
-  +");out center 2000;"}
-async function tryEp(url,body){
-  var ctl=new AbortController(),to=setTimeout(function(){ctl.abort()},45000);
-  try{var r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:body,signal:ctl.signal});
-    if(!r.ok)return null;var j=await r.json();
-    if(j.remark&&/error|timed out|out of memory/i.test(j.remark)&&!(j.elements&&j.elements.length))return null;
-    return j}catch(e){return null}finally{clearTimeout(to)}}
-async function fetchBox(b){
-  if(S.busy){S.pending=true;return}
-  S.busy=true;status("⏳ Chargement des centres de la zone…");
-  var body="data="+encodeURIComponent(buildQuery(b)),data=null;
-  for(var i=0;i<EP.length&&!data;i++)data=await tryEp(EP[i],body);
-  S.busy=false;
-  if(!data){status("❌ Serveur de données occupé ou hors ligne. Les repères nationaux restent affichés. Cliquez sur « Chercher dans cette zone » pour réessayer dans un instant.");if(S.pending){S.pending=false}return}
-  var n=0,tot=0;
-  (data.elements||[]).forEach(function(e){var p=mk(e);if(p){tot++;if(!S.live[p.id]){S.live[p.id]=p;n++}}});
-  if(Object.keys(S.live).length>8000){var keep={};(data.elements||[]).forEach(function(e){var p=mk(e);if(p)keep[p.id]=p});S.live=keep;loaded=[]}
-  loaded.push(b);
-  status("✅ "+tot+" lieu(x) réel(s) trouvé(s) dans cette zone"+(tot>=1900?" (zone très dense : zoomez pour tout voir)":"")+". Total affiché : "+items().length+".");
-  renderAll();
-  if(S.pending){S.pending=false;loadView(false)}}
-function covered(v){return loaded.some(function(l){return v.s>=l.s&&v.n<=l.n&&v.w>=l.w&&v.e<=l.e})}
-function r4(x){return Math.round(x*10000)/10000}
-function loadView(force){
-  if(!map)return;
-  if(map.getZoom()<9){status("🔍 Zoomez sur une ville (ou choisissez-la en haut) pour charger en plus les centres OpenStreetMap. Pour l'instant : "+items().length+" repères nationaux.");return}
-  var b=map.getBounds(),v={s:b.getSouth(),w:b.getWest(),n:b.getNorth(),e:b.getEast()};
-  if(!force&&covered(v))return;
-  var dh=(v.n-v.s)*.2,dw=(v.e-v.w)*.2;
-  fetchBox({s:r4(v.s-dh),w:r4(v.w-dw),n:r4(v.n+dh),e:r4(v.e+dw)})}
-function status(t){$("#status").textContent=t}
+  // À la une
+  const une = recents[0];
+  if (une) {
+    const c = $("une-carte");
+    c.innerHTML = '<span class="tag"></span><h3></h3><p></p><span class="meta"></span>';
+    c.querySelector(".tag").textContent = univers[une.theme].emoji + " " + univers[une.theme].nom;
+    c.querySelector("h3").textContent = une.titre;
+    c.querySelector("p").textContent = une.resume;
+    c.querySelector(".meta").textContent = fmt(une.date) + " · " + une.minutes + " min de lecture";
+    c.onclick = () => ouvrir(une);
+  }
 
-/* ---------- Villes (geo.api.gouv.fr) ---------- */
-async function cities(q){
-  q=q.trim();if(q.length<2)return[];
-  var p=/^\d{5}$/.test(q)?"codePostal="+q:"nom="+encodeURIComponent(q);
-  try{var r=await fetch("https://geo.api.gouv.fr/communes?"+p+"&fields=nom,centre,departement,codesPostaux&boost=population&limit=7");var j=await r.json();
-    return j.filter(function(c){return c.centre}).map(function(c){return{nom:c.nom,dep:c.departement?c.departement.nom:"",cp:(c.codesPostaux||[])[0]||"",la:c.centre.coordinates[1],ln:c.centre.coordinates[0]}})}catch(e){return[]}}
-function showSug(l){
-  S.sug=l;var el=$("#sug");
-  if(!l.length){el.hidden=true;return}
-  el.innerHTML=l.map(function(c,i){return'<button type="button" data-a="city" data-i="'+i+'">'+esc(c.nom)+" <small>"+esc(c.cp)+(c.dep?" • "+esc(c.dep):"")+"</small></button>"}).join("");el.hidden=false}
-function pick(c){
-  $("#sug").hidden=true;$("#city").value=c.nom;
-  S.c={la:c.la,ln:c.ln,label:c.nom+(c.dep?" ("+c.dep+")":""),nom:c.nom};
-  if(map){
-    map.setView([c.la,c.ln],12,{animate:false});
-    if(pin)map.removeLayer(pin);
-    pin=L.circleMarker([c.la,c.ln],{radius:9,color:"#059669",fillOpacity:.9}).addTo(map).bindPopup("📍 "+esc(c.nom));
-    loadView(true)
-  }else fetchBox({s:r4(c.la-.09),w:r4(c.ln-.13),n:r4(c.la+.09),e:r4(c.ln+.13)});
-  renderQuick();renderAll();$("#carte").scrollIntoView({behavior:"smooth"})}
+  // Filtres, recherche, tri
+  [["tous", "Tout"], ...Object.entries(univers).map(([k, u]) => [k, u.nom])].forEach(([cle, nom]) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.textContent = nom; b.dataset.theme = cle;
+    b.setAttribute("aria-pressed", cle === "tous");
+    b.onclick = () => choisir(cle);
+    $("filtres").appendChild(b);
+  });
+  function choisir(cle) {
+    theme = cle;
+    document.querySelectorAll("#filtres button").forEach(b => b.setAttribute("aria-pressed", b.dataset.theme === cle));
+    afficher();
+  }
+  $("recherche").addEventListener("input", e => { requete = e.target.value.toLowerCase(); afficher(); });
+  $("tri").addEventListener("change", e => { ordre = e.target.value; afficher(); });
 
-/* ---------- Données affichées ---------- */
-function items(){return REFITEMS.concat(custom,Object.keys(S.live).map(function(k){return S.live[k]}))}
-function refPt(){if(map&&map.getZoom()>=9){var c=map.getCenter();return{la:c.lat,ln:c.lng}}return S.c?{la:S.c.la,ln:S.c.ln}:null}
-function list(){
-  var rp=refPt(),words=norm(S.kw).split(/\s+/).filter(Boolean);
-  var src=S.cat==="Favoris"?Object.keys(favs).map(function(k){return favs[k]}):items();
-  var l=src.filter(function(p){
-    if(S.cat!=="Favoris"&&S.cat!=="Tout"&&p.k!==S.cat)return false;
-    if(!words.length)return true;
-    var t=norm([p.n,p.a,p.k,p.d,p.o,p.c].join(" "));
-    return words.every(function(w){return t.indexOf(w)>-1||(SYN[w]&&SYN[w].split(" ").some(function(s){return t.indexOf(s)>-1}))})});
-  l.forEach(function(p){p.dist=rp?dist(rp.la,rp.ln,p.la,p.ln):null});
-  if(rp)l.sort(function(a,b){return a.dist-b.dist});
-  return l}
-function gps(p){return"https://www.google.com/maps/dir/?api=1&destination="+p.la+","+p.ln}
-function get(id){return byId[id]||favs[id]}
+  // Grille d'articles
+  function afficher() {
+    const g = $("grille"); g.innerHTML = "";
+    const base = ordre === "recent" ? recents : [...recents].reverse();
+    const liste = base.filter(a => (theme === "tous" || a.theme === theme) &&
+      (a.titre + " " + a.resume).toLowerCase().includes(requete));
+    liste.forEach(a => {
+      const el = document.createElement("button");
+      el.type = "button"; el.className = "carte " + a.theme;
+      el.innerHTML = '<span class="tag"></span><h3></h3><p></p><span class="meta"></span>';
+      el.querySelector(".tag").textContent = univers[a.theme].emoji + " " + univers[a.theme].nom;
+      el.querySelector("h3").textContent = a.titre;
+      el.querySelector("p").textContent = a.resume;
+      el.querySelector(".meta").textContent = fmt(a.date) + " · " + a.minutes + " min";
+      el.onclick = () => ouvrir(a);
+      g.appendChild(el);
+    });
+    $("vide").style.display = liste.length ? "none" : "block";
+  }
 
-function renderChips(){
-  var cnt={},all=items();all.forEach(function(p){cnt[p.k]=(cnt[p.k]||0)+1});
-  var tabs=["Tout"].concat(Object.keys(CATS),["Favoris"]);
-  $("#chips").innerHTML=tabs.map(function(t){
-    var n=t==="Tout"?all.length:t==="Favoris"?Object.keys(favs).length:(cnt[t]||0);
-    return'<button class="chip'+(t===S.cat?" on":"")+'" data-a="cat" data-v="'+esc(t)+'">'+(t==="Favoris"?"⭐ ":"")+esc(t)+" ("+n+")</button>"}).join("");
-  $("#legend").innerHTML=Object.keys(CATS).map(function(k){return'<span><i class="dot" style="background:'+CATS[k]+'"></i>'+esc(k)+"</span>"}).join("");
-  $("#k1").textContent=all.length;$("#k3").textContent=Object.keys(favs).length}
-function renderList(l){
-  l=l||list();byId={};items().forEach(function(p){byId[p.id]=p});
-  var rp=refPt();
-  $("#count").textContent=l.length+" lieu"+(l.length>1?"x":"")+(rp?" (triés par distance du centre de la carte)":"");
-  var v=l.slice(0,S.show);
-  $("#cards").innerHTML=v.length?v.map(function(p){
-    var f=!!favs[p.id];
-    return'<article class="card"><div><span class="badge" style="background:'+CATS[p.k]+'">'+esc(p.k)+"</span> "+(p.src==="ref"?'<span class="tag">Repère</span>':"")+(p.src==="user"?'<span class="tag">Ajouté par vous</span>':"")+(p.dist!=null&&rp?' <span class="meta" style="color:var(--green)">📏 '+p.dist+" km</span>":"")+"<h3>"+esc(p.n)+"</h3>"+(p.c&&p.src!=="osm"?"<p>📍 "+esc(p.c)+"</p>":"")+(p.a?"<p>📍 "+esc(p.a)+"</p>":"")+(p.h?"<p>🕒 "+esc(p.h)+"</p>":"")+(p.tel?'<p>📞 <a href="tel:'+esc(p.tel.replace(/[^\d+]/g,""))+'">'+esc(p.tel)+"</a></p>":"")+(p.d?"<p>"+esc(p.d)+"</p>":"")+'</div><div class="row"><button class="btn" data-a="detail" data-id="'+esc(p.id)+'">Détails</button><button class="btn l" data-a="focus" data-id="'+esc(p.id)+'" title="Voir sur la carte">🗺️</button><button class="btn fav" data-a="fav" data-id="'+esc(p.id)+'" aria-label="Favori">'+(f?"★":"☆")+"</button></div></article>"}).join(""):'<div class="empty">Aucun lieu pour ce filtre. Zoomez sur une ville ou changez de catégorie.</div>';
-  $("#more").hidden=l.length<=S.show}
-function renderMarkers(l){
-  if(!layer)return;
-  layer.clearLayers();markers={};
-  var arr=[];
-  l.slice(0,15000).forEach(function(p){
-    var ic=L.divIcon({className:"",iconSize:[20,20],iconAnchor:[10,10],popupAnchor:[0,-10],html:'<div style="background:'+CATS[p.k]+';width:20px;height:20px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.45)"></div>'});
-    var m=L.marker([p.la,p.ln],{icon:ic}).bindPopup("<strong>"+esc(p.n)+"</strong><br><small>"+esc(p.k)+(p.src==="ref"?" • repère (position approx.)":"")+"</small>"+(p.a?"<br><small>"+esc(p.a)+"</small>":"")+(p.h?"<br><small>🕒 "+esc(p.h)+"</small>":"")+'<br><a href="'+gps(p)+'" target="_blank" rel="noopener">🧭 Itinéraire</a> · <a href="#" data-a="detail" data-id="'+esc(p.id)+'">Détails</a>');
-    markers[p.id]=m;arr.push(m)});
-  if(clustered)layer.addLayers(arr);else arr.forEach(function(m){m.addTo(layer)})}
-function renderAll(){renderChips();var l=list();renderList(l);renderMarkers(l)}
-function renderQuick(){
-  if(!S.c){$("#quick").innerHTML="";return}
-  $("#presub").textContent="Ouvre la recherche Google Maps pour "+S.c.nom+" (adresses et horaires à jour).";
-  $("#quick").innerHTML=QUICK.map(function(q){return'<a class="res" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q[1]+" "+S.c.nom)+'" target="_blank" rel="noopener"><b>'+q[0]+" "+esc(q[1])+"</b><span>Près de "+esc(S.c.nom)+"</span></a>"}).join("")+'<a class="res" href="https://soliguide.fr" target="_blank" rel="noopener"><b>🧭 Soliguide</b><span>Annuaire national des services sociaux</span></a>'}
-function renderRes(){
-  $("#rtabs").innerHTML=Object.keys(R).map(function(t){return'<button class="chip'+(t===rtab?" on":"")+'" data-a="rtab" data-v="'+esc(t)+'">'+esc(t)+"</button>"}).join("");
-  $("#rgrid").innerHTML=R[rtab].map(function(r){var tel=r[2].indexOf("tel:")===0;return'<a class="res'+(tel?" tel":"")+'" href="'+r[2]+'"'+(tel?"":' target="_blank" rel="noopener"')+"><b>"+(tel?"📞 ":"🌐 ")+esc(r[0])+"</b><span>"+esc(r[1])+"</span></a>"}).join("")}
-function renderChecks(){
-  $("#checks").innerHTML=CHECK.map(function(t,i){var d=checks.indexOf(i)>-1;return'<label class="ck'+(d?" done":"")+'"><input type="checkbox" data-a="check" data-id="'+i+'"'+(d?" checked":"")+"><span>"+esc(t)+"</span></label>"}).join("");
-  $("#pbar").style.width=Math.round(checks.length/CHECK.length*100)+"%";
-  $("#ptxt").textContent=checks.length+" / "+CHECK.length+" démarches faites"}
+  // Fenêtre de lecture + commentaires
+  const dlg = $("lecture");
+  function ouvrir(a) {
+    $("lecture-tag").textContent = univers[a.theme].emoji + " " + univers[a.theme].nom;
+    $("lecture-titre").textContent = a.titre;
+    $("lecture-meta").textContent = fmt(a.date) + " · " + a.minutes + " min de lecture";
+    const corps = $("lecture-corps"); corps.innerHTML = "";
+    a.texte.forEach(t => { const p = document.createElement("p"); p.textContent = t; corps.appendChild(p); });
+    chargerCommentaires(a);
+    dlg.showModal(); dlg.scrollTop = 0;
+  }
+  function chargerCommentaires(a) {
+    const z = $("zone-commentaires"); z.innerHTML = "";
+    if (!GISCUS.repo) {
+      z.innerHTML = '<div class="aide-commentaires">Les commentaires ne sont pas encore activés. Remplis la ligne <b>GISCUS</b> en haut du script pour les activer.</div>';
+      return;
+    }
+    const s = document.createElement("script");
+    s.src = "https://giscus.app/client.js";
+    const attrs = { repo: GISCUS.repo, "repo-id": GISCUS.repoId, category: GISCUS.category, "category-id": GISCUS.categoryId,
+      mapping: "specific", term: a.titre, "reactions-enabled": "1", "emit-metadata": "0",
+      "input-position": "top", theme: "light", lang: "fr", loading: "lazy" };
+    Object.entries(attrs).forEach(([k, v]) => s.setAttribute("data-" + k, v));
+    s.crossOrigin = "anonymous"; s.async = true;
+    z.appendChild(s);
+  }
+  $("fermer").onclick = () => dlg.close();
+  dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
+  dlg.addEventListener("close", () => { $("zone-commentaires").innerHTML = ""; });
 
-/* ---------- Carte ---------- */
-function initMap(){
-  var el=$("#map");
-  if(typeof L==="undefined"){el.innerHTML='<div class="nomap"><div>La carte n\'a pas pu se charger.<br>La liste et les boutons fonctionnent quand même.</div></div>';return}
-  try{
-    map=L.map("map").setView([46.6,2.4],6);
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; contributeurs OpenStreetMap"}).addTo(map);
-    if(L.markerClusterGroup){layer=L.markerClusterGroup({chunkedLoading:true,maxClusterRadius:50});clustered=true}else layer=L.layerGroup();
-    layer.addTo(map);
-    setTimeout(function(){map.invalidateSize()},300);
-    window.addEventListener("resize",function(){map.invalidateSize()});
-    map.on("moveend",function(){
-      clearTimeout(tmv);tmv=setTimeout(function(){
-        renderList();
-        if($("#auto").checked)loadView(false)},800)})
-  }catch(e){map=null;el.innerHTML='<div class="nomap">Erreur de carte. Rechargez la page.</div>'}}
-function focusPlace(id){
-  var p=get(id);if(!p||!map)return;
-  $("#carte").scrollIntoView({behavior:"smooth"});
-  setTimeout(function(){map.invalidateSize();map.setView([p.la,p.ln],16);var m=markers[id];if(m){if(clustered&&layer.zoomToShowLayer)layer.zoomToShowLayer(m,function(){m.openPopup()});else m.openPopup()}},350)}
-function locate(){
-  if(!navigator.geolocation)return alert("Géolocalisation indisponible : tapez votre ville.");
-  navigator.geolocation.getCurrentPosition(function(pos){
-    pick({nom:"votre position",dep:"",la:pos.coords.latitude,ln:pos.coords.longitude})},function(){alert("Autorisez la localisation, ou tapez votre ville.")},{timeout:10000})}
+  $("hasard").onclick = () => ouvrir(articles[Math.floor(Math.random() * articles.length)]);
+  addEventListener("scroll", () => { $("haut-btn").style.display = scrollY > 700 ? "inline-block" : "none"; });
 
-/* ---------- Fenêtres ---------- */
-function openModal(h){$("#mbox").innerHTML='<button class="x" data-a="close" aria-label="Fermer">&times;</button>'+h;$("#mbg").classList.add("open")}
-function closeModal(){$("#mbg").classList.remove("open")}
-function detail(id){
-  var p=get(id);if(!p)return;var w=safeUrl(p.web),T={n:"node",w:"way",r:"relation"};
-  var note=p.src==="ref"?"Repère national : position approximative, consultez le site pour l'adresse et les horaires exacts.":p.src==="user"?"Lieu ajouté par vous (visible uniquement sur votre appareil).":"Informations collaboratives (OpenStreetMap) : à vérifier avant de venir.";
-  openModal('<span class="badge" style="background:'+CATS[p.k]+'">'+esc(p.k)+'</span><h2 style="margin:.5rem 0">'+esc(p.n)+'</h2><div class="result" style="margin:0 0 1rem">'+(p.o?"🏢 <b>Géré par :</b> "+esc(p.o)+"<br>":"")+(p.c?"🏙️ <b>Ville :</b> "+esc(p.c)+"<br>":"")+(p.a?"📍 <b>Adresse :</b> "+esc(p.a)+"<br>":"")+(p.h?"🕒 <b>Horaires :</b> "+esc(p.h)+"<br>":"")+(p.tel?'📞 <b>Tél :</b> <a href="tel:'+esc(p.tel.replace(/[^\d+]/g,""))+'">'+esc(p.tel)+"</a><br>":"")+(p.d?"<br>"+esc(p.d)+"<br>":"")+"<br><small>"+esc(note)+"</small></div>"+'<div class="row"><a class="btn" href="'+gps(p)+'" target="_blank" rel="noopener">🧭 Itinéraire</a>'+(w?'<a class="btn g" href="'+esc(w)+'" target="_blank" rel="noopener">🌐 Site</a>':"")+(p.src==="ref"&&p.q?'<a class="btn l" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(p.q)+'" target="_blank" rel="noopener">🔎 Adresse exacte</a>':"")+(p.src==="osm"?'<a class="btn l" href="https://www.openstreetmap.org/'+T[p.id[0]]+"/"+esc(p.id.slice(1))+'" target="_blank" rel="noopener">✏️ Corriger sur OSM</a>':"")+(p.src==="user"?'<button class="btn rd" data-a="del" data-id="'+esc(p.id)+'">🗑️ Supprimer</button>':"")+"</div>")}
-function addForm(){
-  openModal('<h2 style="margin-bottom:.8rem">➕ Ajouter un lieu</h2><input id="f-n" class="field" placeholder="Nom *" maxlength="100"><input id="f-c" class="field" placeholder="Ville *" maxlength="60"><select id="f-k" class="field">'+Object.keys(CATS).map(function(k){return"<option>"+esc(k)+"</option>"}).join("")+'</select><input id="f-h" class="field" placeholder="Horaires" maxlength="80"><input id="f-d" class="field" placeholder="Description / conditions" maxlength="250"><input id="f-u" class="field" placeholder="Site web (https://…)"><button class="btn g" style="width:100%" data-a="save" id="f-b">Publier sur la carte</button><p class="sub" style="margin-top:.6rem">Visible uniquement sur votre appareil. Pour que tout le monde le voie, ajoutez-le sur openstreetmap.org.</p>')}
-async function savePlace(){
-  var n=$("#f-n").value.trim(),c=$("#f-c").value.trim();
-  if(!n||!c)return alert("Indiquez au moins le nom et la ville.");
-  var b=$("#f-b");b.disabled=true;b.textContent="Recherche de la ville…";
-  var r=await cities(c);
-  if(!r.length){b.disabled=false;b.textContent="Publier sur la carte";return alert("Ville introuvable : vérifiez l'orthographe.")}
-  var p={id:"u"+Date.now(),src:"user",n:n,c:r[0].nom,la:r[0].la,ln:r[0].ln,k:$("#f-k").value,h:$("#f-h").value.trim(),d:$("#f-d").value.trim(),web:safeUrl($("#f-u").value),a:"",tel:"",o:""};
-  custom.unshift(p);sv("sf_custom_v8",custom);closeModal();S.cat="Tout";renderAll();focusPlace(p.id)}
-function simulate(){
-  var n=$("#sn").value,s=$("#sp").value;
-  $("#sres").innerHTML='<div class="result"><b>Pistes pour vous :</b><ul>'+ADV[n].map(function(a){return"<li>"+esc(a)+"</li>"}).join("")+"</ul>"+(BON[s]?"<p>"+esc(BON[s])+"</p>":"")+'<p style="margin-top:.6rem"><a href="https://www.mesdroitssociaux.gouv.fr" target="_blank" rel="noopener">Simulateur officiel →</a> · <a href="#pres">Près de chez vous</a></p></div>'}
-function setTheme(d){document.body.classList.toggle("dark",d);sv("sf_dark",d)}
-
-/* ---------- Événements (phase de capture : fonctionne aussi dans les popups de la carte) ---------- */
-document.addEventListener("click",function(e){
-  var t=e.target.closest("[data-a]");
-  if(!t){if(e.target.id==="mbg")closeModal();if(!e.target.closest(".sbox"))$("#sug").hidden=true;return}
-  var a=t.dataset.a,id=t.dataset.id,v=t.dataset.v;
-  if(a==="detail"){e.preventDefault();detail(id)}
-  else if(a==="close")closeModal();
-  else if(a==="theme")setTheme(!document.body.classList.contains("dark"));
-  else if(a==="add")addForm();
-  else if(a==="save")savePlace();
-  else if(a==="del"){custom=custom.filter(function(p){return p.id!==id});delete favs[id];sv("sf_custom_v8",custom);sv("sf_favs_v8",favs);closeModal();renderAll()}
-  else if(a==="city")pick(S.sug[Number(t.dataset.i)]);
-  else if(a==="cat"){S.cat=v;S.show=60;renderAll()}
-  else if(a==="more"){S.show+=60;renderList()}
-  else if(a==="rtab"){rtab=v;renderRes()}
-  else if(a==="focus")focusPlace(id);
-  else if(a==="fav"){var p=get(id);if(p){if(favs[id])delete favs[id];else favs[id]=p;sv("sf_favs_v8",favs);renderAll()}}
-  else if(a==="locate")locate();
-  else if(a==="kw"){S.kw=v;$("#kw").value=v;S.show=60;renderAll();$("#carte").scrollIntoView({behavior:"smooth"})}
-  else if(a==="here"){if(!map)return alert("La carte n'est pas disponible.");loadView(true)}
-  else if(a==="reset"){if(map)map.setView([46.6,2.4],6);status("Vue France : zoomez sur une ville pour charger les centres réels.")}
-  else if(a==="sim")simulate();
-  else if(a==="check"){var i=Number(id);checks=checks.indexOf(i)>-1?checks.filter(function(x){return x!==i}):checks.concat(i);sv("sf_checks_v8",checks);renderChecks()}
-  else if(a==="resetchecks"){checks=[];sv("sf_checks_v8",checks);renderChecks()}
-  else if(a==="export"){var l=document.createElement("a");l.href=URL.createObjectURL(new Blob([JSON.stringify(items(),null,2)],{type:"application/json"}));l.download="solidarite-france.json";l.click()}
-  else if(a==="copy"){(navigator.clipboard?navigator.clipboard.writeText(location.href):Promise.reject()).then(function(){alert("Lien copié !")},function(){prompt("Copiez ce lien :",location.href)})}
-  else if(a==="print")window.print()},true);
-document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeModal();$("#sug").hidden=true}});
-$("#city").addEventListener("input",function(){var q=this.value;clearTimeout(tm);tm=setTimeout(async function(){showSug(await cities(q))},250)});
-$("#sform").addEventListener("submit",async function(e){e.preventDefault();var l=await cities($("#city").value);if(l.length)pick(l[0]);else alert("Ville introuvable. Essayez le nom complet ou le code postal.")});
-$("#kw").addEventListener("input",function(){S.kw=this.value;S.show=60;renderAll()});
-
-if(ld("sf_dark",window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches))document.body.classList.add("dark");
-initMap();renderRes();renderChecks();renderAll();
+  afficher();
 </script>
 </body>
 </html>
