@@ -1564,47 +1564,354 @@ initMap();renderRes();renderChecks();renderAll();
 </script>
 
 <script type="module">
-const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-const e=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const SECS={carte:"🗺️ Carte",pres:"🔎 Près de chez vous",ressources:"📞 Numéros & sites",assistant:"🤖 Assistant",cv:"📄 Mon CV",simulateur:"🧭 Simulateur",benevolat:"🙋 Bénévolat"};
-const DEF={primary:"#0f4c81",accent:"#2563eb",bg:"#f1f5f9",card:"#ffffff",text:"#0f172a",font:"system-ui",size:16,title:"",calm:true,maintenance:false,mmsg:"Le site est en maintenance. Retour très bientôt !",urgBar:true,order:Object.keys(SECS),hidden:[]};
-const FONTS={"system-ui":"Système","Georgia,serif":"Georgia","'Trebuchet MS',sans-serif":"Trebuchet","Verdana,sans-serif":"Verdana"};
-let cfg={...DEF};try{const s=localStorage.getItem("sf_cfg");if(s)cfg={...DEF,...JSON.parse(s)}}catch(err){}
-let theme=localStorage.getItem("sf_theme")||"0",lang=localStorage.getItem("sf_lang")||"fr",tab="app";
-function applyTheme(){/* kept minimal */}
-function applyLang(){/* translations applied by main script */}
-function applyCfg(){
-  const c={...DEF,...cfg};
-  document.body.style.fontFamily=c.font;
-  document.documentElement.style.fontSize=c.size+"px";
-  const h1=document.querySelector(".hero h1");
-  if(h1){if(!h1.dataset.o)h1.dataset.o=h1.textContent;h1.textContent=c.title||h1.dataset.o}
-  const urg=document.querySelector(".urg");if(urg)urg.style.display=c.urgBar?"":"none";
-  const calm=document.getElementById("calm");if(calm)calm.hidden=!c.calm;
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const e = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+const SECS = {
+  carte: "🗺️ Carte",
+  pres: "🔎 Près de chez vous",
+  ressources: "📞 Numéros & sites",
+  assistant: "🤖 Assistant",
+  cv: "📄 Mon CV",
+  simulateur: "🧭 Simulateur",
+  benevolat: "🙋 Bénévolat"
+};
+const DEF = {
+  primary: "#0f4c81", accent: "#2563eb", bg: "#f1f5f9", card: "#ffffff", text: "#0f172a",
+  font: "system-ui", size: 16, title: "", calm: true, maintenance: false,
+  mmsg: "Le site est en maintenance. Retour très bientôt !", urgBar: true,
+  order: Object.keys(SECS), hidden: []
+};
+const FONTS = {
+  "system-ui": "Système",
+  "Georgia,serif": "Georgia (serif)",
+  "'Trebuchet MS',sans-serif": "Trebuchet",
+  "Verdana,sans-serif": "Verdana",
+  "'Courier New',monospace": "Machine à écrire"
+};
+
+let cfg = {...DEF};
+try { const s = localStorage.getItem("sf_cfg"); if (s) cfg = {...DEF, ...JSON.parse(s)}; } catch(err) {}
+let tab = "app";
+let user = null;
+let fbReady = false;
+let auth = null;
+
+// Firebase config (projet Solidarité)
+const firebaseConfig = {
+  apiKey: "AIzaSyDummy-replace-if-needed",
+  authDomain: "jamais-seul-1559b.firebaseapp.com",
+  projectId: "jamais-seul-1559b",
+  storageBucket: "jamais-seul-1559b.appspot.com",
+  messagingSenderId: "000000000000",
+  appId: "1:000000000000:web:000000000000"
+};
+
+// Auth locale de secours (si Firebase indisponible)
+function localHash(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = ((h << 5) - h) + str.charCodeAt(i) | 0;
+  return "lh_" + Math.abs(h).toString(36);
 }
-function panel(){
-  const S=document.getElementById("side");if(!S)return;
-  const min=S.classList.contains("min");
-  S.innerHTML=`<button id="sArrow">${min?"◀":"▶"}</button><div class="sh"><b>⚙️ Espace créateur</b><span><button class="btn rd" id="sX">✕ Fermer</button></span></div><div id="sBody" style="display:contents"></div>`;
-  document.getElementById("sArrow").onclick=()=>{const m=!S.classList.contains("min");S.classList.toggle("min",m);document.body.classList.toggle("padr",!m);document.getElementById("sArrow").textContent=m?"◀":"▶"};
-  document.getElementById("sX").onclick=()=>{S.hidden=true;document.body.classList.remove("padr")};
-  const B=document.getElementById("sBody");
-  B.innerHTML=`<div class="sb">
-    <div class="two2"><label>Couleur principale<input id="cP" type="color" class="field" value="${cfg.primary}"></label>
-    <label>Accent<input id="cA" type="color" class="field" value="${cfg.accent}"></label></div>
-    <label>Fond<input id="cBg" type="color" class="field" value="${cfg.bg||"#f1f5f9"}"></label>
-    <label>Cartes (blancs)<input id="cCard" type="color" class="field" value="${cfg.card||"#ffffff"}"></label>
-    <label>Titre d'accueil<input id="cT" class="field" value="${e(cfg.title)}" maxlength="120"></label>
-    <label class="ck"><input type="checkbox" id="cC"${cfg.calm?" checked":""}><span>Bandeau rassurant</span></label>
-    <div class="sf"><button class="btn g" id="aSave">💾 Sauvegarder</button><button class="btn l" id="aRst">↩︎ Par défaut</button><span class="sub" id="aMsg"></span></div>
+function localAuthCheck(email, pass) {
+  const stored = localStorage.getItem("sf_admin_cred");
+  if (!stored) {
+    // Première connexion : créer le compte admin local
+    localStorage.setItem("sf_admin_cred", JSON.stringify({ email, hash: localHash(email + ":" + pass) }));
+    return { ok: true, created: true };
+  }
+  try {
+    const o = JSON.parse(stored);
+    if (o.email === email && o.hash === localHash(email + ":" + pass)) return { ok: true };
+    return { ok: false, msg: "Email ou mot de passe incorrect." };
+  } catch { return { ok: false, msg: "Erreur d'auth locale." }; }
+}
+
+async function tryFirebaseLogin(email, pass) {
+  if (!auth) return null;
+  try {
+    const cred = await signInWithEmailAndPassword(auth, email, pass);
+    return cred.user;
+  } catch (err) {
+    return { error: err.message };
+  }
+}
+
+function applyCfg() {
+  const c = {...DEF, ...cfg};
+  document.body.style.fontFamily = c.font;
+  document.documentElement.style.fontSize = c.size + "px";
+  if (!document.body.classList.contains("dark")) {
+    if (c.primary) {
+      document.body.style.setProperty("--navy", c.primary);
+      document.body.style.setProperty("--h1", c.primary);
+      document.body.style.setProperty("--h2", c.primary);
+    }
+    if (c.accent) document.body.style.setProperty("--blue", c.accent);
+    if (c.bg) document.body.style.setProperty("--bg", c.bg);
+    if (c.card) document.body.style.setProperty("--card", c.card);
+    if (c.text) document.body.style.setProperty("--text", c.text);
+  }
+  const h1 = document.querySelector(".hero h1");
+  if (h1) {
+    if (!h1.dataset.o) h1.dataset.o = h1.textContent;
+    h1.textContent = c.title || h1.dataset.o;
+  }
+  const urg = document.querySelector(".urg");
+  if (urg) urg.style.display = c.urgBar ? "" : "none";
+  const calm = document.getElementById("calm");
+  if (calm) calm.hidden = !c.calm;
+
+  // Maintenance overlay
+  let ov = document.getElementById("maintOv");
+  if (c.maintenance) {
+    if (!ov) {
+      ov = document.createElement("div");
+      ov.id = "maintOv";
+      ov.style.cssText = "position:fixed;inset:0;background:rgba(15,23,42,.92);color:#fff;z-index:99999;display:flex;align-items:center;justify-content:center;padding:2rem;text-align:center;font-size:1.2rem";
+      document.body.appendChild(ov);
+    }
+    ov.innerHTML = `<div><p style="font-size:1.4rem;margin-bottom:1rem">🔨 Maintenance</p><p>${e(c.mmsg)}</p></div>`;
+    ov.hidden = false;
+  } else if (ov) ov.hidden = true;
+
+  // Section order / hide
+  const main = document.querySelector("main") || document.body;
+  (c.order || Object.keys(SECS)).forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const wrap = el.closest("[data-sec]") || el;
+    if (c.hidden && c.hidden.includes(id)) wrap.style.display = "none";
+    else wrap.style.display = "";
+  });
+}
+
+function panelLogin() {
+  const S = $("#side");
+  S.innerHTML = `
+    <div class="sh"><b>🔒 Connexion créateur</b><span><button class="btn rd" id="sX">✕</button></span></div>
+    <div class="sb">
+      <p class="sub">Réservé à l'administrateur. Entrez votre e-mail et mot de passe.</p>
+      <label>E-mail</label>
+      <input id="authEmail" class="field" type="email" placeholder="vous@email.com" autocomplete="username">
+      <label>Mot de passe</label>
+      <input id="authPass" class="field" type="password" placeholder="••••••••" autocomplete="current-password">
+      <button class="btn g" id="authGo" style="width:100%;margin-top:.8rem">Se connecter</button>
+      <p class="sub" id="authMsg" style="margin-top:.6rem"></p>
+      <p class="sub" style="margin-top:1rem;font-size:.78rem">Si c'est la première fois sur cet appareil, le compte sera créé localement avec ces identifiants.</p>
+    </div>`;
+  $("#sX").onclick = () => { S.hidden = true; document.body.classList.remove("padr"); };
+  $("#authGo").onclick = async () => {
+    const email = ($("#authEmail").value || "").trim();
+    const pass = $("#authPass").value || "";
+    const msg = $("#authMsg");
+    if (!email || !pass) { msg.textContent = "Remplissez e-mail et mot de passe."; return; }
+    msg.textContent = "Connexion…";
+    // Try Firebase first if available
+    if (auth) {
+      const r = await tryFirebaseLogin(email, pass);
+      if (r && r.email) {
+        user = r;
+        panel();
+        return;
+      }
+      // Firebase failed — try local
+    }
+    const loc = localAuthCheck(email, pass);
+    if (loc.ok) {
+      user = { email, local: true };
+      sessionStorage.setItem("sf_creator_ok", "1");
+      msg.textContent = loc.created ? "✅ Compte admin créé sur cet appareil." : "✅ Connecté.";
+      setTimeout(() => panel(), 400);
+    } else {
+      msg.textContent = "❌ " + (loc.msg || "Identifiants incorrects.");
+    }
+  };
+  $("#authPass").onkeydown = ev => { if (ev.key === "Enter") $("#authGo").click(); };
+}
+
+function panel() {
+  const S = $("#side");
+  if (!S) return;
+  if (!user && sessionStorage.getItem("sf_creator_ok") !== "1") {
+    panelLogin();
+    return;
+  }
+  if (!user) user = { email: "admin", local: true };
+
+  const min = S.classList.contains("min");
+  S.innerHTML = `
+    <button id="sArrow" aria-label="Réduire">${min ? "◀" : "▶"}</button>
+    <div class="sh"><b>⚙️ Espace créateur</b><span><button class="btn l" id="sLogout" style="padding:.3rem .6rem;font-size:.8rem">Déconnexion</button> <button class="btn rd" id="sX">✕</button></span></div>
+    <div id="sBody" style="display:contents"></div>`;
+
+  $("#sArrow").onclick = () => {
+    const m = !S.classList.contains("min");
+    S.classList.toggle("min", m);
+    document.body.classList.toggle("padr", !m);
+    $("#sArrow").textContent = m ? "◀" : "▶";
+  };
+  $("#sX").onclick = () => { S.hidden = true; document.body.classList.remove("padr"); };
+  $("#sLogout").onclick = async () => {
+    user = null;
+    sessionStorage.removeItem("sf_creator_ok");
+    if (auth) try { await signOut(auth); } catch(e) {}
+    panelLogin();
+  };
+
+  const B = $("#sBody");
+  const TABS = [
+    ["app", "🎨 Apparence"],
+    ["col", "🌈 Couleurs"],
+    ["sec", "📐 Sections"],
+    ["mnt", "🔨 Maintenance"],
+    ["code", "</> Code"]
+  ];
+  let h = `<div class="tabs" style="display:flex;flex-wrap:wrap;gap:.35rem;padding:.6rem 1rem;border-bottom:1px solid var(--bd)">${TABS.map(t =>
+    `<button class="chip${t[0]===tab?" on":""}" data-t="${t[0]}">${t[1]}</button>`
+  ).join("")}</div><div class="sb">`;
+
+  if (tab === "app") {
+    h += `
+      <label>Police<select id="cF" class="field">${Object.entries(FONTS).map(([k,v])=>`<option value="${e(k)}"${k===cfg.font?" selected":""}>${v}</option>`).join("")}</select></label>
+      <label>Taille du texte : <b id="cSv">${cfg.size}</b> px
+        <input id="cS" type="range" min="13" max="22" value="${cfg.size}" style="width:100%"></label>
+      <label>Titre d'accueil (vide = d'origine)<input id="cT" class="field" value="${e(cfg.title)}" maxlength="120"></label>
+      <label class="ck"><input type="checkbox" id="cC"${cfg.calm?" checked":""}><span>Bandeau rassurant 💙</span></label>
+      <label class="ck"><input type="checkbox" id="cU"${cfg.urgBar?" checked":""}><span>Barre d'urgences en haut</span></label>
+      <p class="sub">Connecté : ${e(user.email || "admin")}${user.local ? " (local)" : ""}</p>`;
+  } else if (tab === "col") {
+    h += `
+      <p class="sub">Couleurs exactes (perso sur cet appareil + sauvegarde créateur)</p>
+      <label>Principale <input id="cP" type="color" class="field" value="${cfg.primary}"></label>
+      <label>Accent <input id="cA" type="color" class="field" value="${cfg.accent}"></label>
+      <label>Fond de page <input id="cBg" type="color" class="field" value="${cfg.bg || "#f1f5f9"}"></label>
+      <label>Cartes (zones blanches) <input id="cCard" type="color" class="field" value="${cfg.card || "#ffffff"}"></label>
+      <label>Texte <input id="cTx" type="color" class="field" value="${cfg.text || "#0f172a"}"></label>`;
+  } else if (tab === "sec") {
+    h += `<p class="sub">Cochez pour masquer une section. Glissez l'ordre avec les flèches.</p>`;
+    const order = cfg.order || Object.keys(SECS);
+    order.forEach((id, i) => {
+      const hidden = (cfg.hidden || []).includes(id);
+      h += `<div style="display:flex;align-items:center;gap:.5rem;margin:.4rem 0;padding:.4rem;border:1px solid var(--bd);border-radius:8px">
+        <label class="ck" style="flex:1;margin:0"><input type="checkbox" data-hide="${id}"${hidden?" checked":""}><span>${SECS[id]||id}</span></label>
+        <button type="button" class="btn l" data-up="${id}" ${i===0?"disabled":""} style="padding:.2rem .5rem">↑</button>
+        <button type="button" class="btn l" data-dn="${id}" ${i===order.length-1?"disabled":""} style="padding:.2rem .5rem">↓</button>
+      </div>`;
+    });
+  } else if (tab === "mnt") {
+    h += `
+      <label class="ck"><input type="checkbox" id="cM"${cfg.maintenance?" checked":""}><span>Mode maintenance (bloque le site)</span></label>
+      <label>Message de maintenance<textarea id="cMm" class="field" rows="3">${e(cfg.mmsg)}</textarea></label>
+      <p class="sub">Attention : active uniquement si vous devez couper l'accès public temporairement.</p>`;
+  } else if (tab === "code") {
+    h += `
+      <p class="sub">Configuration actuelle (JSON). Vous pouvez copier pour sauvegarde.</p>
+      <textarea id="cJson" class="field" rows="12" readonly style="font-family:monospace;font-size:.78rem">${e(JSON.stringify(cfg, null, 2))}</textarea>
+      <button class="btn l" id="cCopy" style="margin-top:.5rem">📋 Copier</button>`;
+  }
+
+  h += `</div><div class="sf">
+    <button class="btn g" id="aSave">💾 Sauvegarder</button>
+    <button class="btn l" id="aRst">↩︎ Par défaut</button>
+    <span class="sub" id="aMsg"></span>
   </div>`;
-  const bind=(id,key,type)=>{const el=document.getElementById(id);if(!el)return;el.oninput=()=>{if(type==="b")cfg[key]=el.checked;else cfg[key]=el.value;applyCfg()}};
-  bind("cP","primary");bind("cA","accent");bind("cBg","bg");bind("cCard","card");bind("cT","title");bind("cC","calm","b");
-  document.getElementById("aSave").onclick=()=>{localStorage.setItem("sf_cfg",JSON.stringify(cfg));document.getElementById("aMsg").textContent="✅ Sauvegardé"};
-  document.getElementById("aRst").onclick=()=>{if(confirm("Remettre par défaut ?")){cfg={...DEF};localStorage.setItem("sf_cfg",JSON.stringify(cfg));applyCfg();panel()}};
+  B.innerHTML = h;
+
+  // Bindings
+  const bind = (id, key, type) => {
+    const el = $("#" + id);
+    if (!el) return;
+    el.oninput = () => {
+      if (type === "b") cfg[key] = el.checked;
+      else if (type === "n") cfg[key] = +el.value;
+      else cfg[key] = el.value;
+      if (id === "cS") { const s = $("#cSv"); if (s) s.textContent = cfg.size; }
+      applyCfg();
+    };
+  };
+  bind("cF", "font"); bind("cS", "size", "n"); bind("cT", "title");
+  bind("cC", "calm", "b"); bind("cU", "urgBar", "b");
+  bind("cP", "primary"); bind("cA", "accent"); bind("cBg", "bg");
+  bind("cCard", "card"); bind("cTx", "text");
+  bind("cM", "maintenance", "b"); bind("cMm", "mmsg");
+
+  $$("[data-hide]").forEach(el => {
+    el.onchange = () => {
+      const id = el.dataset.hide;
+      cfg.hidden = cfg.hidden || [];
+      if (el.checked) { if (!cfg.hidden.includes(id)) cfg.hidden.push(id); }
+      else cfg.hidden = cfg.hidden.filter(x => x !== id);
+      applyCfg();
+    };
+  });
+  $$("[data-up]").forEach(btn => {
+    btn.onclick = () => {
+      const id = btn.dataset.up;
+      const o = [...(cfg.order || Object.keys(SECS))];
+      const i = o.indexOf(id);
+      if (i > 0) { [o[i-1], o[i]] = [o[i], o[i-1]]; cfg.order = o; panel(); applyCfg(); }
+    };
+  });
+  $$("[data-dn]").forEach(btn => {
+    btn.onclick = () => {
+      const id = btn.dataset.dn;
+      const o = [...(cfg.order || Object.keys(SECS))];
+      const i = o.indexOf(id);
+      if (i >= 0 && i < o.length-1) { [o[i], o[i+1]] = [o[i+1], o[i]]; cfg.order = o; panel(); applyCfg(); }
+    };
+  });
+
+  const cCopy = $("#cCopy");
+  if (cCopy) cCopy.onclick = () => {
+    navigator.clipboard?.writeText(JSON.stringify(cfg, null, 2));
+    $("#aMsg").textContent = "📋 Copié";
+  };
+
+  $("#aSave").onclick = () => {
+    localStorage.setItem("sf_cfg", JSON.stringify(cfg));
+    $("#aMsg").textContent = "✅ Sauvegardé";
+    applyCfg();
+  };
+  $("#aRst").onclick = () => {
+    if (confirm("Remettre toute la config créateur par défaut ?")) {
+      cfg = {...DEF};
+      localStorage.setItem("sf_cfg", JSON.stringify(cfg));
+      applyCfg();
+      panel();
+    }
+  };
+  $$("[data-t]").forEach(b => b.onclick = () => { tab = b.dataset.t; panel(); });
 }
-document.getElementById("lockBtn")?.addEventListener("click",()=>{const S=document.getElementById("side");S.hidden=false;S.classList.remove("min");document.body.classList.add("padr");panel()});
+
+// Init Firebase (best effort)
+try {
+  const app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  fbReady = true;
+  onAuthStateChanged(auth, u => {
+    if (u) { user = u; sessionStorage.setItem("sf_creator_ok", "1"); }
+  });
+} catch (err) {
+  console.warn("Firebase non dispo, auth locale uniquement", err);
+  auth = null;
+}
+
+$("#lockBtn")?.addEventListener("click", () => {
+  const S = $("#side");
+  S.hidden = false;
+  S.classList.remove("min");
+  document.body.classList.add("padr");
+  if (user || sessionStorage.getItem("sf_creator_ok") === "1") panel();
+  else panelLogin();
+});
+
 applyCfg();
 </script>
+
 </body>
 </html>
