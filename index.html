@@ -175,29 +175,32 @@ footer{background:var(--card);border-top:1px solid var(--bd);text-align:center;p
 </div>
 
 <h2 class="t" id="cv">📄 Créer mon CV</h2>
-<p class="sub">Choisissez un modèle + un profil type (remplit automatiquement) → ajustez → CV pro. <b>100 % privé</b> (uniquement sur votre appareil).</p>
+<p class="sub">CV professionnels qui attirent l'œil des recruteurs. <b>100 % privé</b> (stocké uniquement sur votre appareil).</p>
+<button class="btn g" id="cvToggle" style="width:100%;max-width:420px;margin-bottom:1rem">📄 Ouvrir le créateur de CV</button>
+<div id="cvPanel" hidden>
 <div class="panel" style="margin-bottom:1rem">
-  <label style="font-weight:700">1. Modèle de CV</label>
+  <label style="font-weight:700">Modèle de CV</label>
   <div class="chips" id="cvModels">
-    <button class="chip on" data-model="classic">📄 Classique</button>
+    <button class="chip on" data-model="pro">👔 Pro (barre latérale)</button>
+    <button class="chip" data-model="elegant">✨ Élégant</button>
     <button class="chip" data-model="modern">🎨 Moderne</button>
-    <button class="chip" data-model="sidebar">📑 Barre latérale</button>
-    <button class="chip" data-model="minimal">✨ Minimal</button>
+    <button class="chip" data-model="minimal">🖤 Minimal</button>
+    <button class="chip" data-model="classic">📄 Classique</button>
   </div>
-  <label style="font-weight:700;margin-top:.9rem;display:block">2. Profil type (remplit le formulaire en 1 clic)</label>
+  <label style="font-weight:700;margin-top:.9rem;display:block">Profil type (remplit en 1 clic)</label>
   <div class="chips" id="cvPresets">
     <button class="chip" data-preset="aide">🤝 Aide à domicile</button>
     <button class="chip" data-preset="restau">🍽️ Restauration</button>
-    <button class="chip" data-preset="vente">🛒 Vente / Commerce</button>
-    <button class="chip" data-preset="logistique">📦 Logistique / Manutention</button>
+    <button class="chip" data-preset="vente">🛒 Vente</button>
+    <button class="chip" data-preset="logistique">📦 Logistique</button>
     <button class="chip" data-preset="proprete">🧹 Propreté</button>
     <button class="chip" data-preset="admin">📋 Administratif</button>
-    <button class="chip" data-preset="vide">↺ Formulaire vide</button>
+    <button class="chip" data-preset="vide">↺ Vide</button>
   </div>
 </div>
 <div class="two">
   <div class="panel">
-    <h3>1. Identité</h3>
+    <h3>Identité</h3>
     <div class="two2">
       <div><label>Prénom</label><input id="cvFirst" class="field" placeholder="Marie" maxlength="40"></div>
       <div><label>Nom</label><input id="cvLast" class="field" placeholder="Dupont" maxlength="40"></div>
@@ -207,48 +210,42 @@ footer{background:var(--card);border-top:1px solid var(--bd);text-align:center;p
       <div><label>Téléphone</label><input id="cvTel" class="field" placeholder="06 12 34 56 78" maxlength="20"></div>
     </div>
     <div class="two2">
-      <div><label>Ville</label><input id="cvCity" class="field" placeholder="Toulouse" maxlength="60"></div>
+      <div><label>Adresse / Ville</label><input id="cvCity" class="field" placeholder="Toulouse" maxlength="80"></div>
       <div><label>Âge (optionnel)</label><input id="cvAge" class="field" type="number" min="16" max="80" placeholder="28"></div>
     </div>
-    <label>Titre du poste visé</label>
+    <label>Titre / objectif</label>
     <select id="cvTitle" class="field">
-      <option value="">— Choisir ou écrire —</option>
+      <option value="">— Choisir —</option>
       <option>Aide à domicile / Auxiliaire de vie</option>
       <option>Agent d'entretien / Propreté</option>
       <option>Serveur / Serveuse</option>
       <option>Employé polyvalent de restauration</option>
       <option>Commis de cuisine / Cuisinier</option>
       <option>Vendeur / Vendeuse</option>
-      <option>Équipier polyvalent (grande distribution)</option>
       <option>Manutentionnaire / Magasinier</option>
       <option>Préparateur de commandes</option>
       <option>Agent de sécurité</option>
-      <option>Agent d'accueil / Hôte d'accueil</option>
+      <option>Agent d'accueil</option>
       <option>Aide-soignant / Aide-soignante</option>
-      <option>Agent administratif / Secrétaire</option>
-      <option>Jardinier / Ouvrier espaces verts</option>
-      <option>Chauffeur livreur / Coursier</option>
-      <option>Agent de service hospitalier (ASH)</option>
-      <option>Employé de libre-service</option>
-      <option>Autre (préciser ci-dessous)</option>
+      <option>Agent administratif</option>
+      <option>Jardinier / Espaces verts</option>
+      <option>Chauffeur / Livreur</option>
+      <option>Autre</option>
     </select>
-    <label>Ou titre personnalisé</label><input id="cvTitleCustom" class="field" placeholder="Ex : Recherche un CDI en logistique" maxlength="100">
+    <input id="cvTitleCustom" class="field" placeholder="Ou titre personnalisé…" maxlength="100">
+    <label>Phrase de profil (2-3 lignes)</label>
+    <textarea id="cvProfile" class="field" rows="2" placeholder="Motivé(e), ponctuel(le) et à l'écoute…"></textarea>
 
-    <h3 style="margin-top:1.2rem">2. Profil (2-3 phrases)</h3>
-    <textarea id="cvProfile" class="field" rows="3" placeholder="Motivé(e), ponctuel(le) et à l'écoute. Je recherche un poste stable où je pourrai mettre mon sérieux et mon sens du service au profit d'une équipe."></textarea>
-
-    <h3 style="margin-top:1.2rem">3. Expériences</h3>
-    <p class="sub">Ajoutez jusqu'à 4 expériences (les plus récentes en premier)</p>
+    <h3 style="margin-top:1rem">Expériences</h3>
     <div id="cvExps"></div>
-    <button class="btn l" id="cvAddExp" style="margin-top:.4rem">+ Ajouter une expérience</button>
+    <button class="btn l" id="cvAddExp" style="margin-top:.3rem">+ Expérience</button>
 
-    <h3 style="margin-top:1.2rem">4. Formations</h3>
+    <h3 style="margin-top:1rem">Formations</h3>
     <div id="cvForms"></div>
-    <button class="btn l" id="cvAddForm" style="margin-top:.4rem">+ Ajouter une formation</button>
+    <button class="btn l" id="cvAddForm" style="margin-top:.3rem">+ Formation</button>
 
-    <h3 style="margin-top:1.2rem">5. Compétences & divers</h3>
-    <label>Compétences (cochez)</label>
-    <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin:.4rem 0 .8rem" id="cvSkillChecks">
+    <h3 style="margin-top:1rem">Compétences & divers</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin:.3rem 0 .6rem" id="cvSkillChecks">
       <label class="ck"><input type="checkbox" value="Ponctualité"> Ponctualité</label>
       <label class="ck"><input type="checkbox" value="Travail en équipe"> Travail en équipe</label>
       <label class="ck"><input type="checkbox" value="Sens du service"> Sens du service</label>
@@ -257,38 +254,37 @@ footer{background:var(--card);border-top:1px solid var(--bd);text-align:center;p
       <label class="ck"><input type="checkbox" value="Polyvalence"> Polyvalence</label>
       <label class="ck"><input type="checkbox" value="Gestion du stress"> Gestion du stress</label>
       <label class="ck"><input type="checkbox" value="Permis B"> Permis B</label>
-      <label class="ck"><input type="checkbox" value="Informatique (Word, Excel)"> Informatique</label>
-      <label class="ck"><input type="checkbox" value="Anglais niveau scolaire"> Anglais</label>
+      <label class="ck"><input type="checkbox" value="Informatique"> Informatique</label>
+      <label class="ck"><input type="checkbox" value="Anglais"> Anglais</label>
     </div>
-    <label>Autres compétences</label><input id="cvSkillsExtra" class="field" placeholder="Ex : CACES, HACCP, langue des signes…" maxlength="150">
-    <label>Langues</label>
+    <input id="cvSkillsExtra" class="field" placeholder="Autres compétences…" maxlength="150">
     <select id="cvLang" class="field">
       <option value="Français (langue maternelle)">Français (langue maternelle)</option>
       <option value="Français + Anglais notions">Français + Anglais notions</option>
       <option value="Français + Anglais intermédiaire">Français + Anglais intermédiaire</option>
       <option value="Français + Espagnol">Français + Espagnol</option>
       <option value="Français + Arabe">Français + Arabe</option>
-      <option value="Autre">Autre (préciser dans compétences)</option>
     </select>
-    <label>Centres d'intérêt (optionnel)</label><input id="cvInterests" class="field" placeholder="Sport, lecture, bénévolat, cuisine…" maxlength="120">
+    <input id="cvInterests" class="field" placeholder="Centres d'intérêt (optionnel)" maxlength="120">
 
-    <div class="row" style="margin-top:1.2rem">
-      <button class="btn g" id="cvGen" style="flex:1">✨ Générer le CV</button>
-      <button class="btn l" id="cvSave">💾 Sauvegarder</button>
+    <div class="row" style="margin-top:1rem">
+      <button class="btn g" id="cvGen" style="flex:1">✨ Générer</button>
+      <button class="btn l" id="cvSave">💾 Sauver</button>
       <button class="btn l" id="cvLoad">📂 Charger</button>
     </div>
-    <p class="sub" id="cvMsg" style="margin-top:.5rem"></p>
+    <p class="sub" id="cvMsg" style="margin-top:.4rem"></p>
   </div>
   <div class="panel">
-    <h3>Aperçu en direct</h3>
-    <div id="cvPreview" style="background:#fff;color:#111;border:1px solid #ddd;border-radius:8px;padding:0;min-height:400px;font-size:.9rem;line-height:1.45;overflow:hidden">
-      <p style="color:#888;text-align:center;margin:4rem 1rem">Choisissez un modèle et remplissez le formulaire → le CV apparaît ici.</p>
+    <h3>Aperçu</h3>
+    <div id="cvPreview" style="background:#fff;color:#111;border:1px solid #ddd;border-radius:8px;min-height:380px;overflow:hidden;font-size:.88rem">
+      <p style="color:#888;text-align:center;margin:5rem 1rem">Ouvrez un modèle et remplissez → le CV apparaît ici.</p>
     </div>
-    <div class="row" style="margin-top:.8rem">
+    <div class="row" style="margin-top:.7rem">
       <button class="btn" id="cvPrint" style="flex:1">🖨️ Imprimer / PDF</button>
       <button class="btn l" id="cvDl">⬇️ Télécharger</button>
     </div>
   </div>
+</div>
 </div>
 
 <h2 class="t" id="benevolat">🙋 Bénévolat, dons & partage</h2>
@@ -958,7 +954,7 @@ document.getElementById("aiSug")?.addEventListener("click", e => {
 setTimeout(() => aiAdd("Bonjour 👋 Je connais des adresses précises dans les grandes villes.\nEssayez par exemple :\n• « Où se soigner à Toulouse »\n• « Où manger à Lyon »\n• « Hébergement à Marseille »", "bot"), 500);
 
 /* ===== GÉNÉRATEUR DE CV PRO (modèles + formulaire intelligent) ===== */
-let cvModel = "classic";
+let cvModel = "pro";
 let expCount = 0, formCount = 0;
 
 function cvAddExp(data={}){
@@ -1002,6 +998,18 @@ document.getElementById("cvAddExp")?.addEventListener("click", () => cvAddExp())
 document.getElementById("cvAddForm")?.addEventListener("click", () => cvAddForm());
 // Start with one empty of each
 setTimeout(() => { cvAddExp(); cvAddForm(); }, 300);
+
+// Toggle ouvrir / fermer le créateur de CV
+const cvToggle = document.getElementById("cvToggle");
+const cvPanel = document.getElementById("cvPanel");
+if(cvToggle && cvPanel){
+  cvToggle.onclick = () => {
+    const open = cvPanel.hidden;
+    cvPanel.hidden = !open;
+    cvToggle.textContent = open ? "▲ Fermer le créateur de CV" : "📄 Ouvrir le créateur de CV";
+    if(open) setTimeout(cvBuild, 100);
+  };
+}
 
 document.getElementById("cvModels")?.addEventListener("click", e => {
   const b = e.target.closest("[data-model]");
@@ -1120,77 +1128,126 @@ function cvGetData(){
 
 function cvBuild(){
   const d = cvGetData();
-  const name = [d.first, d.last].filter(Boolean).join(" ") || "Prénom Nom";
-  const contact = [d.email, d.tel, d.city, d.age ? d.age+" ans" : ""].filter(Boolean).join("  ·  ");
+  const name = [d.first, d.last].filter(Boolean).join(" ").toUpperCase() || "PRÉNOM NOM";
+  const title = d.title || "Curriculum Vitae";
+  const contactLines = [d.city, d.tel, d.email, d.age ? d.age+" ans" : ""].filter(Boolean);
   let html = "";
 
-  if(cvModel === "classic"){
-    html = `<div style="font-family:Georgia,serif;color:#1a1a1a;padding:1.5rem 1.8rem;max-width:700px;margin:0 auto">
-      <div style="text-align:center;border-bottom:2px solid #1a1a1a;padding-bottom:1rem;margin-bottom:1.2rem">
-        <h1 style="margin:0;font-size:1.7rem;letter-spacing:.03em">${esc(name)}</h1>
-        <p style="margin:.35rem 0 0;font-size:1.05rem;color:#333">${esc(d.title)}</p>
-        <p style="margin:.4rem 0 0;font-size:.85rem;color:#555">${esc(contact)}</p>
+  // ========== PRO (style PDF : barre latérale sombre + photo) ==========
+  if(cvModel === "pro"){
+    html = `<div style="font-family:'Segoe UI',system-ui,sans-serif;display:flex;max-width:800px;margin:0 auto;min-height:500px;background:#fff;color:#1a1a1a">
+      <div style="width:32%;background:#2c3e50;color:#ecf0f1;padding:1.5rem 1.1rem">
+        <div style="width:90px;height:90px;border-radius:50%;background:#34495e;margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;font-size:2rem;border:3px solid #fff">👤</div>
+        <h2 style="font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;opacity:.7;margin:1.2rem 0 .4rem;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:.3rem">Informations</h2>
+        <p style="font-size:.8rem;line-height:1.65;margin:0">${contactLines.map(esc).join("<br>")}</p>
+        ${d.skills.length ? `<h2 style="font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;opacity:.7;margin:1.3rem 0 .4rem;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:.3rem">Qualités</h2>
+        <ul style="margin:0;padding-left:1rem;font-size:.8rem;line-height:1.7">${d.skills.map(s=>"<li>"+esc(s)+"</li>").join("")}</ul>` : ""}
+        <h2 style="font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;opacity:.7;margin:1.3rem 0 .4rem;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:.3rem">Langues</h2>
+        <p style="font-size:.8rem;margin:0">${esc(d.lang)}</p>
+        ${d.interests ? `<h2 style="font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;opacity:.7;margin:1.3rem 0 .4rem;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:.3rem">Loisirs</h2>
+        <p style="font-size:.8rem;margin:0">${esc(d.interests)}</p>` : ""}
       </div>
-      ${d.profile ? `<p style="font-style:italic;margin:0 0 1.2rem;color:#333">${esc(d.profile)}</p>` : ""}
-      ${d.exps.length ? `<h2 style="font-size:1rem;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #ccc;padding-bottom:.25rem;margin:1.3rem 0 .6rem">Expérience professionnelle</h2>
-        ${d.exps.map(e => `<div style="margin-bottom:.7rem"><b>${esc(e.poste)}</b>${e.emp ? " — "+esc(e.emp) : ""} <span style="float:right;color:#666;font-size:.85rem">${esc(e.deb)}${e.fin ? " – "+esc(e.fin) : ""}</span><div style="clear:both"></div>${e.miss ? `<div style="color:#444;font-size:.9rem;margin-top:.15rem">${esc(e.miss)}</div>` : ""}</div>`).join("")}` : ""}
-      ${d.forms.length ? `<h2 style="font-size:1rem;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #ccc;padding-bottom:.25rem;margin:1.3rem 0 .6rem">Formation</h2>
-        ${d.forms.map(f => `<div style="margin-bottom:.45rem"><b>${esc(f.dipl)}</b>${f.etab ? " — "+esc(f.etab) : ""} <span style="float:right;color:#666;font-size:.85rem">${esc(f.an)}</span><div style="clear:both"></div></div>`).join("")}` : ""}
-      ${d.skills.length ? `<h2 style="font-size:1rem;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #ccc;padding-bottom:.25rem;margin:1.3rem 0 .6rem">Compétences</h2><p style="margin:0">${d.skills.map(s=>esc(s)).join(" · ")}</p>` : ""}
-      <p style="margin:.8rem 0 0;font-size:.9rem"><b>Langues :</b> ${esc(d.lang)}</p>
-      ${d.interests ? `<p style="margin:.4rem 0 0;font-size:.9rem"><b>Centres d'intérêt :</b> ${esc(d.interests)}</p>` : ""}
-    </div>`;
-  } else if(cvModel === "modern"){
-    html = `<div style="font-family:system-ui,sans-serif;color:#111;padding:0;max-width:700px;margin:0 auto">
-      <div style="background:linear-gradient(135deg,#0f4c81,#1e3a5f);color:#fff;padding:1.5rem 1.8rem">
-        <h1 style="margin:0;font-size:1.7rem">${esc(name)}</h1>
-        <p style="margin:.3rem 0 0;opacity:.95;font-size:1.05rem">${esc(d.title)}</p>
-        <p style="margin:.5rem 0 0;font-size:.85rem;opacity:.85">${esc(contact)}</p>
-      </div>
-      <div style="padding:1.3rem 1.8rem">
-        ${d.profile ? `<p style="margin:0 0 1.1rem;color:#333;line-height:1.5">${esc(d.profile)}</p>` : ""}
-        ${d.exps.length ? `<h2 style="font-size:.95rem;color:#0f4c81;text-transform:uppercase;letter-spacing:.06em;margin:1.1rem 0 .5rem">Expériences</h2>
-          ${d.exps.map(e => `<div style="margin-bottom:.75rem;padding-left:.7rem;border-left:3px solid #0f4c81"><b>${esc(e.poste)}</b> ${e.emp ? "· "+esc(e.emp) : ""}<br><span style="font-size:.82rem;color:#666">${esc(e.deb)}${e.fin ? " – "+esc(e.fin) : ""}</span>${e.miss ? `<div style="font-size:.9rem;margin-top:.2rem;color:#333">${esc(e.miss)}</div>` : ""}</div>`).join("")}` : ""}
-        ${d.forms.length ? `<h2 style="font-size:.95rem;color:#0f4c81;text-transform:uppercase;letter-spacing:.06em;margin:1.1rem 0 .5rem">Formations</h2>
-          ${d.forms.map(f => `<div style="margin-bottom:.4rem"><b>${esc(f.dipl)}</b>${f.etab ? " · "+esc(f.etab) : ""} <span style="color:#666;font-size:.85rem">(${esc(f.an)})</span></div>`).join("")}` : ""}
-        ${d.skills.length ? `<h2 style="font-size:.95rem;color:#0f4c81;text-transform:uppercase;letter-spacing:.06em;margin:1.1rem 0 .5rem">Compétences</h2>
-          <div>${d.skills.map(s=>`<span style="display:inline-block;background:#e8f0fe;color:#0f4c81;padding:.2rem .55rem;border-radius:4px;margin:.15rem .25rem .15rem 0;font-size:.82rem">${esc(s)}</span>`).join("")}</div>` : ""}
-        <p style="margin:.9rem 0 0;font-size:.9rem"><b>Langues :</b> ${esc(d.lang)}</p>
-        ${d.interests ? `<p style="margin:.3rem 0 0;font-size:.9rem"><b>Centres d'intérêt :</b> ${esc(d.interests)}</p>` : ""}
+      <div style="width:68%;padding:1.6rem 1.5rem">
+        <h1 style="margin:0;font-size:1.7rem;font-weight:700;letter-spacing:.04em;color:#2c3e50">${esc(name)}</h1>
+        <p style="margin:.35rem 0 1.2rem;font-size:1rem;color:#7f8c8d;font-weight:500">${esc(title)}</p>
+        ${d.profile ? `<p style="margin:0 0 1.2rem;font-size:.9rem;line-height:1.55;color:#34495e">${esc(d.profile)}</p>` : ""}
+        ${d.forms.length ? `<h2 style="font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:#2c3e50;border-bottom:2px solid #ecf0f1;padding-bottom:.3rem;margin:1.1rem 0 .6rem">Scolarité / Formations</h2>
+        ${d.forms.map(f=>`<div style="margin-bottom:.55rem"><b style="color:#2c3e50">${esc(f.dipl)}</b>${f.etab?" — "+esc(f.etab):""}<span style="float:right;font-size:.82rem;color:#7f8c8d">${esc(f.an)}</span><div style="clear:both"></div></div>`).join("")}` : ""}
+        ${d.exps.length ? `<h2 style="font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:#2c3e50;border-bottom:2px solid #ecf0f1;padding-bottom:.3rem;margin:1.2rem 0 .6rem">Expériences professionnelles</h2>
+        ${d.exps.map(e=>`<div style="margin-bottom:.7rem"><b style="color:#2c3e50">${esc(e.poste)}</b>${e.emp?" — "+esc(e.emp):""}<span style="float:right;font-size:.82rem;color:#7f8c8d">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span><div style="clear:both"></div>${e.miss?`<div style="font-size:.85rem;color:#555;margin-top:.15rem">${esc(e.miss)}</div>`:""}</div>`).join("")}` : ""}
       </div>
     </div>`;
-  } else if(cvModel === "sidebar"){
-    html = `<div style="font-family:system-ui,sans-serif;color:#111;display:flex;max-width:750px;margin:0 auto;min-height:420px">
-      <div style="width:34%;background:#1e293b;color:#f1f5f9;padding:1.4rem 1.1rem">
-        <h1 style="margin:0;font-size:1.35rem;line-height:1.25">${esc(name)}</h1>
-        <p style="margin:.4rem 0 .8rem;font-size:.9rem;opacity:.9">${esc(d.title)}</p>
-        <p style="font-size:.8rem;line-height:1.6;opacity:.85">${esc(contact).replace(/ · /g,"<br>")}</p>
-        ${d.skills.length ? `<h3 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.07em;margin:1.3rem 0 .4rem;opacity:.7">Compétences</h3><div style="font-size:.82rem;line-height:1.7">${d.skills.map(s=>"• "+esc(s)).join("<br>")}</div>` : ""}
-        <h3 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.07em;margin:1.2rem 0 .3rem;opacity:.7">Langues</h3>
-        <p style="font-size:.82rem;margin:0">${esc(d.lang)}</p>
-        ${d.interests ? `<h3 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.07em;margin:1.2rem 0 .3rem;opacity:.7">Intérêts</h3><p style="font-size:.82rem;margin:0">${esc(d.interests)}</p>` : ""}
+  }
+
+  // ========== ÉLÉGANT (clair, typo soignée, inspiré PDF) ==========
+  else if(cvModel === "elegant"){
+    html = `<div style="font-family:Georgia,'Times New Roman',serif;max-width:780px;margin:0 auto;background:#fff;color:#1a1a1a;padding:0">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:1.6rem 1.8rem 1rem;border-bottom:3px solid #1a1a1a">
+        <div>
+          <h1 style="margin:0;font-size:1.85rem;font-weight:700;letter-spacing:.06em">${esc(name)}</h1>
+          <p style="margin:.4rem 0 0;font-size:1rem;color:#444;font-style:italic">${esc(title)}</p>
+        </div>
+        <div style="width:85px;height:85px;border-radius:6px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:1.8rem;border:1px solid #ddd">👤</div>
       </div>
-      <div style="width:66%;padding:1.4rem 1.3rem">
-        ${d.profile ? `<p style="margin:0 0 1rem;color:#334155;font-size:.92rem;line-height:1.5">${esc(d.profile)}</p>` : ""}
-        ${d.exps.length ? `<h2 style="font-size:.9rem;color:#0f4c81;text-transform:uppercase;letter-spacing:.06em;margin:0 0 .5rem;border-bottom:2px solid #e2e8f0;padding-bottom:.3rem">Expérience</h2>
-          ${d.exps.map(e => `<div style="margin-bottom:.7rem"><b style="color:#0f172a">${esc(e.poste)}</b><br><span style="font-size:.85rem;color:#64748b">${esc(e.emp)} · ${esc(e.deb)}${e.fin ? " – "+esc(e.fin) : ""}</span>${e.miss ? `<div style="font-size:.88rem;margin-top:.15rem;color:#334155">${esc(e.miss)}</div>` : ""}</div>`).join("")}` : ""}
-        ${d.forms.length ? `<h2 style="font-size:.9rem;color:#0f4c81;text-transform:uppercase;letter-spacing:.06em;margin:1rem 0 .5rem;border-bottom:2px solid #e2e8f0;padding-bottom:.3rem">Formation</h2>
-          ${d.forms.map(f => `<div style="margin-bottom:.4rem"><b>${esc(f.dipl)}</b><br><span style="font-size:.85rem;color:#64748b">${esc(f.etab)} ${f.an ? "· "+esc(f.an) : ""}</span></div>`).join("")}` : ""}
+      <div style="display:flex">
+        <div style="width:34%;padding:1.2rem 1.3rem;background:#fafafa;border-right:1px solid #eee">
+          <h2 style="font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#666;margin:0 0 .5rem">Coordonnées</h2>
+          <p style="font-size:.82rem;line-height:1.7;margin:0 0 1rem">${contactLines.map(esc).join("<br>")}</p>
+          ${d.skills.length ? `<h2 style="font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#666;margin:0 0 .4rem">Qualités</h2>
+          <ul style="margin:0 0 1rem;padding-left:1.1rem;font-size:.82rem;line-height:1.65">${d.skills.map(s=>"<li>"+esc(s)+"</li>").join("")}</ul>` : ""}
+          <h2 style="font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#666;margin:0 0 .3rem">Langues</h2>
+          <p style="font-size:.82rem;margin:0 0 1rem">${esc(d.lang)}</p>
+          ${d.interests ? `<h2 style="font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#666;margin:0 0 .3rem">Loisirs</h2><p style="font-size:.82rem;margin:0">${esc(d.interests)}</p>` : ""}
+        </div>
+        <div style="width:66%;padding:1.2rem 1.4rem">
+          ${d.profile ? `<p style="margin:0 0 1rem;font-size:.9rem;line-height:1.55;color:#333">${esc(d.profile)}</p>` : ""}
+          ${d.forms.length ? `<h2 style="font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:#1a1a1a;border-bottom:1px solid #ccc;padding-bottom:.25rem;margin:0 0 .55rem">Scolarité</h2>
+          ${d.forms.map(f=>`<div style="margin-bottom:.5rem"><b>${esc(f.dipl)}</b>${f.etab?" — "+esc(f.etab):""}<span style="float:right;font-size:.8rem;color:#777">${esc(f.an)}</span><div style="clear:both"></div></div>`).join("")}` : ""}
+          ${d.exps.length ? `<h2 style="font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:#1a1a1a;border-bottom:1px solid #ccc;padding-bottom:.25rem;margin:1rem 0 .55rem">Expériences professionnelles</h2>
+          ${d.exps.map(e=>`<div style="margin-bottom:.6rem"><b>${esc(e.poste)}</b>${e.emp?" — "+esc(e.emp):""}<span style="float:right;font-size:.8rem;color:#777">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span><div style="clear:both"></div>${e.miss?`<div style="font-size:.85rem;color:#555;margin-top:.12rem">${esc(e.miss)}</div>`:""}</div>`).join("")}` : ""}
+        </div>
       </div>
     </div>`;
-  } else { // minimal
-    html = `<div style="font-family:system-ui,sans-serif;color:#222;padding:1.6rem 1.8rem;max-width:680px;margin:0 auto">
-      <h1 style="margin:0;font-size:1.6rem;font-weight:700">${esc(name)}</h1>
-      <p style="margin:.25rem 0 0;font-size:1rem;color:#555">${esc(d.title)}</p>
-      <p style="margin:.4rem 0 1.1rem;font-size:.85rem;color:#777">${esc(contact)}</p>
-      ${d.profile ? `<p style="margin:0 0 1.2rem;line-height:1.55">${esc(d.profile)}</p>` : ""}
-      ${d.exps.length ? `<h2 style="font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#888;margin:1.2rem 0 .5rem">Expérience</h2>
-        ${d.exps.map(e => `<div style="margin-bottom:.65rem;display:flex;justify-content:space-between;gap:1rem"><div><b>${esc(e.poste)}</b>${e.emp ? ", "+esc(e.emp) : ""}${e.miss ? `<div style="font-size:.9rem;color:#444;margin-top:.1rem">${esc(e.miss)}</div>` : ""}</div><span style="font-size:.85rem;color:#888;white-space:nowrap">${esc(e.deb)}${e.fin ? " – "+esc(e.fin) : ""}</span></div>`).join("")}` : ""}
-      ${d.forms.length ? `<h2 style="font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#888;margin:1.2rem 0 .5rem">Formation</h2>
-        ${d.forms.map(f => `<div style="margin-bottom:.4rem;display:flex;justify-content:space-between"><div><b>${esc(f.dipl)}</b>${f.etab ? ", "+esc(f.etab) : ""}</div><span style="font-size:.85rem;color:#888">${esc(f.an)}</span></div>`).join("")}` : ""}
-      ${d.skills.length ? `<h2 style="font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#888;margin:1.2rem 0 .4rem">Compétences</h2><p style="margin:0;font-size:.92rem">${d.skills.map(s=>esc(s)).join("  ·  ")}</p>` : ""}
-      <p style="margin:.9rem 0 0;font-size:.9rem"><b>Langues</b> — ${esc(d.lang)}</p>
-      ${d.interests ? `<p style="margin:.3rem 0 0;font-size:.9rem"><b>Intérêts</b> — ${esc(d.interests)}</p>` : ""}
+  }
+
+  // ========== MODERNE ==========
+  else if(cvModel === "modern"){
+    html = `<div style="font-family:system-ui,sans-serif;max-width:760px;margin:0 auto;background:#fff">
+      <div style="background:linear-gradient(135deg,#1e3a5f,#0f4c81);color:#fff;padding:1.5rem 1.7rem;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <h1 style="margin:0;font-size:1.65rem;font-weight:700">${esc(name)}</h1>
+          <p style="margin:.3rem 0 0;opacity:.92;font-size:1rem">${esc(title)}</p>
+          <p style="margin:.45rem 0 0;font-size:.82rem;opacity:.8">${contactLines.map(esc).join(" · ")}</p>
+        </div>
+        <div style="width:78px;height:78px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:1.7rem;border:2px solid rgba(255,255,255,.5)">👤</div>
+      </div>
+      <div style="padding:1.3rem 1.7rem">
+        ${d.profile ? `<p style="margin:0 0 1rem;color:#334155;line-height:1.5;font-size:.9rem">${esc(d.profile)}</p>` : ""}
+        ${d.exps.length ? `<h2 style="font-size:.85rem;color:#0f4c81;text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .45rem">Expériences</h2>
+        ${d.exps.map(e=>`<div style="margin-bottom:.65rem;padding-left:.65rem;border-left:3px solid #0f4c81"><b>${esc(e.poste)}</b> ${e.emp?"· "+esc(e.emp):""}<br><span style="font-size:.8rem;color:#64748b">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span>${e.miss?`<div style="font-size:.85rem;margin-top:.15rem;color:#334155">${esc(e.miss)}</div>`:""}</div>`).join("")}` : ""}
+        ${d.forms.length ? `<h2 style="font-size:.85rem;color:#0f4c81;text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .45rem">Formations</h2>
+        ${d.forms.map(f=>`<div style="margin-bottom:.4rem"><b>${esc(f.dipl)}</b>${f.etab?" · "+esc(f.etab):""} <span style="color:#64748b;font-size:.82rem">(${esc(f.an)})</span></div>`).join("")}` : ""}
+        ${d.skills.length ? `<h2 style="font-size:.85rem;color:#0f4c81;text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .4rem">Compétences</h2>
+        <div>${d.skills.map(s=>`<span style="display:inline-block;background:#e8f0fe;color:#0f4c81;padding:.18rem .5rem;border-radius:4px;margin:.12rem .2rem .12rem 0;font-size:.8rem">${esc(s)}</span>`).join("")}</div>` : ""}
+        <p style="margin:.8rem 0 0;font-size:.85rem"><b>Langues :</b> ${esc(d.lang)}</p>
+        ${d.interests ? `<p style="margin:.25rem 0 0;font-size:.85rem"><b>Loisirs :</b> ${esc(d.interests)}</p>` : ""}
+      </div>
+    </div>`;
+  }
+
+  // ========== MINIMAL ==========
+  else if(cvModel === "minimal"){
+    html = `<div style="font-family:system-ui,sans-serif;color:#111;padding:1.7rem 1.9rem;max-width:700px;margin:0 auto;background:#fff">
+      <h1 style="margin:0;font-size:1.55rem;font-weight:700;letter-spacing:.03em">${esc(name)}</h1>
+      <p style="margin:.25rem 0 0;font-size:.98rem;color:#555">${esc(title)}</p>
+      <p style="margin:.35rem 0 1rem;font-size:.82rem;color:#888">${contactLines.map(esc).join("  ·  ")}</p>
+      ${d.profile ? `<p style="margin:0 0 1.1rem;line-height:1.55;font-size:.9rem">${esc(d.profile)}</p>` : ""}
+      ${d.exps.length ? `<h2 style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#999;margin:1.1rem 0 .4rem">Expérience</h2>
+      ${d.exps.map(e=>`<div style="margin-bottom:.55rem;display:flex;justify-content:space-between;gap:1rem"><div><b>${esc(e.poste)}</b>${e.emp?", "+esc(e.emp):""}${e.miss?`<div style="font-size:.85rem;color:#444;margin-top:.1rem">${esc(e.miss)}</div>`:""}</div><span style="font-size:.8rem;color:#999;white-space:nowrap">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span></div>`).join("")}` : ""}
+      ${d.forms.length ? `<h2 style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#999;margin:1.1rem 0 .4rem">Formation</h2>
+      ${d.forms.map(f=>`<div style="margin-bottom:.35rem;display:flex;justify-content:space-between"><div><b>${esc(f.dipl)}</b>${f.etab?", "+esc(f.etab):""}</div><span style="font-size:.8rem;color:#999">${esc(f.an)}</span></div>`).join("")}` : ""}
+      ${d.skills.length ? `<h2 style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#999;margin:1.1rem 0 .35rem">Compétences</h2><p style="margin:0;font-size:.88rem">${d.skills.map(s=>esc(s)).join("  ·  ")}</p>` : ""}
+      <p style="margin:.75rem 0 0;font-size:.85rem"><b>Langues</b> — ${esc(d.lang)}</p>
+      ${d.interests ? `<p style="margin:.2rem 0 0;font-size:.85rem"><b>Loisirs</b> — ${esc(d.interests)}</p>` : ""}
+    </div>`;
+  }
+
+  // ========== CLASSIQUE ==========
+  else {
+    html = `<div style="font-family:Georgia,serif;color:#1a1a1a;padding:1.5rem 1.8rem;max-width:700px;margin:0 auto;background:#fff">
+      <div style="text-align:center;border-bottom:2px solid #1a1a1a;padding-bottom:.9rem;margin-bottom:1.1rem">
+        <h1 style="margin:0;font-size:1.65rem;letter-spacing:.04em">${esc(name)}</h1>
+        <p style="margin:.3rem 0 0;font-size:1rem;color:#333">${esc(title)}</p>
+        <p style="margin:.35rem 0 0;font-size:.82rem;color:#555">${contactLines.map(esc).join(" · ")}</p>
+      </div>
+      ${d.profile ? `<p style="font-style:italic;margin:0 0 1rem;color:#333;font-size:.9rem">${esc(d.profile)}</p>` : ""}
+      ${d.exps.length ? `<h2 style="font-size:.9rem;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #ccc;padding-bottom:.25rem;margin:1.1rem 0 .5rem">Expérience professionnelle</h2>
+      ${d.exps.map(e=>`<div style="margin-bottom:.6rem"><b>${esc(e.poste)}</b>${e.emp?" — "+esc(e.emp):""} <span style="float:right;color:#666;font-size:.82rem">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span><div style="clear:both"></div>${e.miss?`<div style="color:#444;font-size:.88rem;margin-top:.12rem">${esc(e.miss)}</div>`:""}</div>`).join("")}` : ""}
+      ${d.forms.length ? `<h2 style="font-size:.9rem;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #ccc;padding-bottom:.25rem;margin:1.1rem 0 .5rem">Formation</h2>
+      ${d.forms.map(f=>`<div style="margin-bottom:.4rem"><b>${esc(f.dipl)}</b>${f.etab?" — "+esc(f.etab):""} <span style="float:right;color:#666;font-size:.82rem">${esc(f.an)}</span><div style="clear:both"></div></div>`).join("")}` : ""}
+      ${d.skills.length ? `<h2 style="font-size:.9rem;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #ccc;padding-bottom:.25rem;margin:1.1rem 0 .5rem">Compétences</h2><p style="margin:0;font-size:.9rem">${d.skills.map(s=>esc(s)).join(" · ")}</p>` : ""}
+      <p style="margin:.7rem 0 0;font-size:.88rem"><b>Langues :</b> ${esc(d.lang)}</p>
+      ${d.interests ? `<p style="margin:.3rem 0 0;font-size:.88rem"><b>Loisirs :</b> ${esc(d.interests)}</p>` : ""}
     </div>`;
   }
 
