@@ -618,9 +618,12 @@ import {getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged} from "htt
 import {getFirestore,doc,setDoc,getDoc,onSnapshot,increment} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* ① COLLE ICI TA CONFIG FIREBASE */
-const FIREBASE_CONFIG={apiKey:"COLLE_ICI",authDomain:"COLLE_ICI",projectId:"COLLE_ICI",appId:"COLLE_ICI"};
-const READY=FIREBASE_CONFIG.apiKey!=="COLLE_ICI";
-let auth,db;if(READY){const app=initializeApp(FIREBASE_CONFIG);auth=getAuth(app);db=getFirestore(app)}
+const FIREBASE_CONFIG={apiKey: "AIzaSyAuSi-FAgMH-nRACrLvJy5_m8TYDKIIJzo",
+  authDomain: "jamais-seul-1559b.firebaseapp.com",
+  projectId: "jamais-seul-1559b",
+  storageBucket: "jamais-seul-1559b.firebasestorage.app",
+  messagingSenderId: "152897763801",
+  appId: "1:152897763801:web:924fd688b73117d91d81c8"}
 
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const e=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
