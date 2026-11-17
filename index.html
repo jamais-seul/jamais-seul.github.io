@@ -81,6 +81,20 @@ label.ck.done span{text-decoration:line-through;opacity:.6}
 .tools input[type=search]{flex:1;min-width:200px;padding:.6rem .9rem;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--text);font-family:inherit}
 footer{background:var(--card);border-top:1px solid var(--bd);text-align:center;padding:2rem 1rem;font-size:.85rem;color:var(--muted);margin-top:2rem}
 @media(max-width:600px){#map{height:380px}.logo{font-size:1rem}}
+
+/* Espace créateur */
+#lockBtn{position:fixed;left:14px;bottom:18px;z-index:9999;width:48px;height:48px;border-radius:50%;border:0;background:var(--navy,#0f4c81);color:#fff;font-size:1.35rem;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center}
+#lockBtn:hover{transform:scale(1.06)}
+#side{position:fixed;top:0;right:0;width:min(380px,100vw);height:100vh;background:var(--card,#fff);border-left:1px solid var(--bd,#e2e8f0);z-index:10000;display:flex;flex-direction:column;box-shadow:-8px 0 24px rgba(0,0,0,.12);overflow:hidden}
+#side[hidden]{display:none!important}
+#side.min{width:48px}
+#side .sh{display:flex;justify-content:space-between;align-items:center;padding:.85rem 1rem;border-bottom:1px solid var(--bd,#e2e8f0);font-weight:700;gap:.5rem}
+#side .sb{padding:1rem;overflow-y:auto;flex:1}
+#side .sf{padding:.8rem 1rem;border-top:1px solid var(--bd,#e2e8f0);display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+#sArrow{position:absolute;left:-14px;top:50%;transform:translateY(-50%);width:28px;height:48px;border:1px solid var(--bd,#e2e8f0);background:var(--card,#fff);border-radius:8px 0 0 8px;cursor:pointer;font-size:.85rem}
+body.padr{padding-right:min(380px,100vw)}
+@media(max-width:700px){body.padr{padding-right:0}#side{width:100vw}}
+
 </style>
 </head>
 <body>
@@ -318,6 +332,10 @@ footer{background:var(--card);border-top:1px solid var(--bd);text-align:center;p
 <p class="sub" style="margin-top:1rem">Favoris et lieux ajoutés : stockés uniquement sur votre appareil.</p></div>
 </div>
 </main>
+
+
+<button id="lockBtn" type="button" aria-label="Espace créateur" title="Espace créateur">🔒</button>
+<aside id="side" hidden></aside>
 
 <footer><strong>Solidarité France</strong> — portail citoyen libre et gratuit. Informations indicatives : seuls les organismes officiels font foi.<br>Données : © contributeurs OpenStreetMap • Communes : geo.api.gouv.fr<br>Urgences : 15 • 17 • 18 • 112 • 115</footer>
 
@@ -1514,7 +1532,21 @@ document.getElementById("cvPrint")?.addEventListener("click", () => {
   w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>CV</title>
 <style>@page{size:A4;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff;height:100%}
 body{font-family:system-ui,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-body>div{min-height:100vh}img{max-width:100%;height:auto}</style></head><body>${html}
+body>div{min-height:100vh}img{max-width:100%;height:auto}
+/* Espace créateur */
+#lockBtn{position:fixed;left:14px;bottom:18px;z-index:9999;width:48px;height:48px;border-radius:50%;border:0;background:var(--navy,#0f4c81);color:#fff;font-size:1.35rem;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center}
+#lockBtn:hover{transform:scale(1.06)}
+#side{position:fixed;top:0;right:0;width:min(380px,100vw);height:100vh;background:var(--card,#fff);border-left:1px solid var(--bd,#e2e8f0);z-index:10000;display:flex;flex-direction:column;box-shadow:-8px 0 24px rgba(0,0,0,.12);overflow:hidden}
+#side[hidden]{display:none!important}
+#side.min{width:48px}
+#side .sh{display:flex;justify-content:space-between;align-items:center;padding:.85rem 1rem;border-bottom:1px solid var(--bd,#e2e8f0);font-weight:700;gap:.5rem}
+#side .sb{padding:1rem;overflow-y:auto;flex:1}
+#side .sf{padding:.8rem 1rem;border-top:1px solid var(--bd,#e2e8f0);display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+#sArrow{position:absolute;left:-14px;top:50%;transform:translateY(-50%);width:28px;height:48px;border:1px solid var(--bd,#e2e8f0);background:var(--card,#fff);border-radius:8px 0 0 8px;cursor:pointer;font-size:.85rem}
+body.padr{padding-right:min(380px,100vw)}
+@media(max-width:700px){body.padr{padding-right:0}#side{width:100vw}}
+
+</style></head><body>${html}
 <script>window.onload=function(){setTimeout(function(){window.print()},200)}<\/script></body></html>`);
   w.document.close();
 });
