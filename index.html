@@ -1179,8 +1179,40 @@ const CV_ICONS = {
   phone: `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:6px;flex-shrink:0"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1.1-.2 1.2.4 2.5.6 3.8.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.6.6 3.8.1.4 0 .8-.3 1.1L6.6 10.8z"/></svg>`,
   mail: `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:6px;flex-shrink:0"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>`,
   pin: `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:6px;flex-shrink:0"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5c-1.4 0-2.5-1.1-2.5-2.5S10.6 6.5 12 6.5s2.5 1.1 2.5 2.5S13.4 11.5 12 11.5z"/></svg>`,
-  user: `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:6px;flex-shrink:0"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.2c-3.3 0-9.8 1.6-9.8 4.9v2.7h19.6v-2.7c0-3.3-6.5-4.9-9.8-4.9z"/></svg>`
+  user: `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:6px;flex-shrink:0"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.2c-3.3 0-9.8 1.6-9.8 4.9v2.7h19.6v-2.7c0-3.3-6.5-4.9-9.8-4.9z"/></svg>`,
+  // Logos métiers (emoji pro + lisibles à l'impression)
+  job: {
+    "aide": "🤝", "domicile": "🤝", "auxiliaire": "🤝", "soignant": "🩺", "santé": "🩺",
+    "serveur": "🍽️", "serveuse": "🍽️", "restaurant": "🍽️", "cuisine": "👨‍🍳", "cuisinier": "👨‍🍳", "commis": "👨‍🍳",
+    "vendeur": "🛒", "vendeuse": "🛒", "commerce": "🛒", "caisse": "🛒",
+    "manutention": "📦", "magasinier": "📦", "logistique": "📦", "préparateur": "📦", "commandes": "📦",
+    "entretien": "🧹", "propreté": "🧹", "nettoyage": "🧹",
+    "sécurité": "🛡️", "agent de sécurité": "🛡️",
+    "accueil": "🛎️", "administratif": "📋", "secrétaire": "📋", "bureau": "📋",
+    "jardin": "🌿", "espaces verts": "🌿",
+    "chauffeur": "🚚", "livreur": "🚚", "coursier": "🛵",
+    "communication": "📣", "marketing": "📈", "commercial": "💼",
+    "informatique": "💻", "développeur": "💻", "electric": "⚡", "électricien": "⚡",
+    "default": "💼"
+  }
 };
+function cvJobIcon(title){
+  const t = (title||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  const map = CV_ICONS.job;
+  for(const k of Object.keys(map)){
+    if(k !== "default" && t.includes(k.normalize("NFD").replace(/[\u0300-\u036f]/g,""))) return map[k];
+  }
+  return map.default;
+}
+function cvContactInline(d){
+  const parts = [];
+  if(d.tel) parts.push(`<span style="display:inline-flex;align-items:center;gap:4px;margin:0 .6rem .25rem 0">${CV_ICONS.phone}${esc(d.tel)}</span>`);
+  if(d.email) parts.push(`<span style="display:inline-flex;align-items:center;gap:4px;margin:0 .6rem .25rem 0;word-break:break-all">${CV_ICONS.mail}${esc(d.email)}</span>`);
+  if(d.city) parts.push(`<span style="display:inline-flex;align-items:center;gap:4px;margin:0 .6rem .25rem 0">${CV_ICONS.pin}${esc(d.city)}</span>`);
+  if(d.age) parts.push(`<span style="display:inline-flex;align-items:center;gap:4px;margin:0 .6rem .25rem 0">${CV_ICONS.user}${esc(d.age)} ans</span>`);
+  return parts.join("");
+}
+
 function cvContactBlock(d, color){
   const lines = [];
   if(d.tel) lines.push(`<div style="display:flex;align-items:flex-start;margin:.25rem 0;word-break:break-word">${CV_ICONS.phone}<span>${esc(d.tel)}</span></div>`);
@@ -1212,7 +1244,7 @@ function cvBuildSidebar(d, name, title, contactLines, bg, accent){
     </div>
     <div style="width:66%;padding:1.7rem 1.5rem;min-height:100vh;box-sizing:border-box">
       <h1 style="margin:0;font-size:1.65rem;font-weight:700;color:${bg};letter-spacing:.02em;word-break:break-word">${esc(name)}</h1>
-      <p style="margin:.35rem 0 1.1rem;font-size:1.02rem;color:${accent};font-weight:600;opacity:.95">${esc(title)}</p>
+      <p style="margin:.35rem 0 1.1rem;font-size:1.02rem;color:${accent};font-weight:600;opacity:.95"><span style="margin-right:.35rem">${cvJobIcon(title)}</span>${esc(title)}</p>
       ${d.profile?`<p style="margin:0 0 1.15rem;font-size:.9rem;line-height:1.55;color:#334155;border-left:3px solid ${bg};padding-left:.75rem">${esc(d.profile)}</p>`:""}
       ${d.exps.length?`<h2 style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:${bg};border-bottom:2px solid ${bg}22;padding-bottom:.3rem;margin:1.15rem 0 .55rem">Expériences professionnelles</h2>${d.exps.map(e=>`<div style="margin-bottom:.7rem"><div style="display:flex;justify-content:space-between;gap:.5rem;flex-wrap:wrap"><b style="color:${bg}">${esc(e.poste)}</b><span style="font-size:.8rem;color:#64748b;white-space:nowrap">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span></div>${e.emp?`<div style="font-size:.85rem;color:#64748b;margin-top:.1rem">${esc(e.emp)}</div>`:""}${e.miss?`<div style="font-size:.84rem;color:#475569;margin-top:.15rem;line-height:1.4">${esc(e.miss)}</div>`:""}</div>`).join("")}`:""}
       ${d.forms.length?`<h2 style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:${bg};border-bottom:2px solid ${bg}22;padding-bottom:.3rem;margin:1.15rem 0 .55rem">Formations</h2>${d.forms.map(f=>`<div style="margin-bottom:.45rem;display:flex;justify-content:space-between;gap:.5rem"><div><b style="color:${bg}">${esc(f.dipl)}</b>${f.etab?`<div style="font-size:.84rem;color:#64748b">${esc(f.etab)}</div>`:""}</div><span style="font-size:.8rem;color:#64748b;white-space:nowrap">${esc(f.an)}</span></div>`).join("")}`:""}
@@ -1238,7 +1270,7 @@ function cvBuild(){
       <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid ${c};padding-bottom:1rem;margin-bottom:1.2rem">
         <div style="min-width:0">
           <h1 style="margin:0;font-size:1.7rem;color:${c};word-break:break-word">${esc(name)}</h1>
-          <p style="margin:.35rem 0 0;font-size:1rem;font-style:italic;color:#555">${esc(title)}</p>
+          <p style="margin:.35rem 0 0;font-size:1rem;font-style:italic;color:#555"><span style="margin-right:.3rem">${cvJobIcon(title)}</span>${esc(title)}</p>
         </div>
         ${d.photo?`<img src="${d.photo}" style="width:82px;height:82px;border-radius:8px;object-fit:cover;border:1px solid #ddd;flex-shrink:0">`:`<div style="width:82px;height:82px;border-radius:8px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0">👤</div>`}
       </div>
@@ -1267,7 +1299,7 @@ function cvBuild(){
       <div style="background:${c};color:#fff;padding:2rem 1.6rem 1.4rem;text-align:center">
         ${d.photo?`<img src="${d.photo}" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid #fff;margin-bottom:.7rem">`:`<div style="width:88px;height:88px;border-radius:50%;background:rgba(255,255,255,.2);margin:0 auto .7rem;display:flex;align-items:center;justify-content:center;font-size:1.8rem;border:3px solid rgba(255,255,255,.5)">👤</div>`}
         <h1 style="margin:0;font-size:1.6rem;letter-spacing:.04em;word-break:break-word">${esc(name)}</h1>
-        <p style="margin:.35rem 0 0;opacity:.95;font-size:1.05rem">${esc(title)}</p>
+        <p style="margin:.35rem 0 0;opacity:.95;font-size:1.05rem"><span style="margin-right:.3rem">${cvJobIcon(title)}</span>${esc(title)}</p>
         <div style="margin:.55rem 0 0;font-size:.82rem;opacity:.9;display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem 1.1rem">${d.tel?`<span>${CV_ICONS.phone}${esc(d.tel)}</span>`:""}${d.email?`<span style="word-break:break-all">${CV_ICONS.mail}${esc(d.email)}</span>`:""}${d.city?`<span>${CV_ICONS.pin}${esc(d.city)}</span>`:""}</div>
       </div>
       <div style="padding:1.3rem 1.6rem">
@@ -1294,7 +1326,7 @@ function cvBuild(){
         ${d.photo?`<img src="${d.photo}" style="width:72px;height:72px;border-radius:50%;object-fit:cover">`:`<div style="width:72px;height:72px;border-radius:50%;background:${c};color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">👤</div>`}
         <div style="min-width:0">
           <h1 style="margin:0;font-size:1.4rem;color:${c};word-break:break-word">${esc(name)}</h1>
-          <p style="margin:.2rem 0 0;color:#64748b">${esc(title)}</p>
+          <p style="margin:.2rem 0 0;color:#64748b"><span style="margin-right:.3rem">${cvJobIcon(title)}</span>${esc(title)}</p>
           <p style="margin:.3rem 0 0;font-size:.8rem;color:#94a3b8;word-break:break-word">${contactLines.map(esc).join(" · ")}</p>
         </div>
       </div>
@@ -1317,9 +1349,10 @@ function cvBuild(){
       <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:1.6rem 1.8rem 1rem;border-bottom:3px solid #1a1a1a">
         <div>
           <h1 style="margin:0;font-size:1.85rem;font-weight:700;letter-spacing:.06em">${esc(name)}</h1>
-          <p style="margin:.4rem 0 0;font-size:1rem;color:#444;font-style:italic">${esc(title)}</p>
+          <p style="margin:.4rem 0 0;font-size:1rem;color:#444;font-style:italic"><span style="margin-right:.35rem">${cvJobIcon(title)}</span>${esc(title)}</p>
+          <div style="margin:.45rem 0 0;font-size:.82rem;color:#555">${cvContactInline(d)}</div>
         </div>
-        <div style="width:85px;height:85px;border-radius:6px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:1.8rem;border:1px solid #ddd">👤</div>
+        ${d.photo?`<img src="${d.photo}" style="width:85px;height:85px;border-radius:6px;object-fit:cover;border:1px solid #ddd">`:`<div style="width:85px;height:85px;border-radius:6px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:1.8rem;border:1px solid #ddd">👤</div>`}
       </div>
       <div style="display:flex">
         <div style="width:34%;padding:1.2rem 1.3rem;background:#fafafa;border-right:1px solid #eee">
@@ -1345,13 +1378,13 @@ function cvBuild(){
   // ========== MODERNE ==========
   else if(cvModel === "modern"){
     html = `<div style="font-family:system-ui,sans-serif;max-width:760px;margin:0 auto;background:#fff">
-      <div style="background:linear-gradient(135deg,#1e3a5f,#0f4c81);color:#fff;padding:1.5rem 1.7rem;display:flex;justify-content:space-between;align-items:center">
-        <div>
-          <h1 style="margin:0;font-size:1.65rem;font-weight:700">${esc(name)}</h1>
-          <p style="margin:.3rem 0 0;opacity:.92;font-size:1rem">${esc(title)}</p>
-          <p style="margin:.45rem 0 0;font-size:.82rem;opacity:.8">${contactLines.map(esc).join(" · ")}</p>
+      <div style="background:linear-gradient(135deg,${getCvColor()},#0f4c81);color:#fff;padding:1.5rem 1.7rem;display:flex;justify-content:space-between;align-items:center;gap:1rem">
+        <div style="min-width:0">
+          <h1 style="margin:0;font-size:1.65rem;font-weight:700;word-break:break-word">${esc(name)}</h1>
+          <p style="margin:.3rem 0 0;opacity:.95;font-size:1.05rem"><span style="margin-right:.35rem">${cvJobIcon(title)}</span>${esc(title)}</p>
+          <div style="margin:.45rem 0 0;font-size:.82rem;opacity:.9">${cvContactInline(d)}</div>
         </div>
-        <div style="width:78px;height:78px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:1.7rem;border:2px solid rgba(255,255,255,.5)">👤</div>
+        ${d.photo?`<img src="${d.photo}" style="width:78px;height:78px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.6);flex-shrink:0">`:`<div style="width:78px;height:78px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:1.7rem;border:2px solid rgba(255,255,255,.5);flex-shrink:0">👤</div>`}
       </div>
       <div style="padding:1.3rem 1.7rem">
         ${d.profile ? `<p style="margin:0 0 1rem;color:#334155;line-height:1.5;font-size:.9rem">${esc(d.profile)}</p>` : ""}
@@ -1371,8 +1404,8 @@ function cvBuild(){
   else if(cvModel === "minimal"){
     html = `<div style="font-family:system-ui,sans-serif;color:#111;padding:1.7rem 1.9rem;max-width:700px;margin:0 auto;background:#fff">
       <h1 style="margin:0;font-size:1.55rem;font-weight:700;letter-spacing:.03em">${esc(name)}</h1>
-      <p style="margin:.25rem 0 0;font-size:.98rem;color:#555">${esc(title)}</p>
-      <p style="margin:.35rem 0 1rem;font-size:.82rem;color:#888">${contactLines.map(esc).join("  ·  ")}</p>
+      <p style="margin:.25rem 0 0;font-size:.98rem;color:#555"><span style="margin-right:.3rem">${cvJobIcon(title)}</span>${esc(title)}</p>
+      <div style="margin:.4rem 0 1rem;font-size:.82rem;color:#666">${cvContactInline(d)}</div>
       ${d.profile ? `<p style="margin:0 0 1.1rem;line-height:1.55;font-size:.9rem">${esc(d.profile)}</p>` : ""}
       ${d.exps.length ? `<h2 style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#999;margin:1.1rem 0 .4rem">Expérience</h2>
       ${d.exps.map(e=>`<div style="margin-bottom:.55rem;display:flex;justify-content:space-between;gap:1rem"><div><b>${esc(e.poste)}</b>${e.emp?", "+esc(e.emp):""}${e.miss?`<div style="font-size:.85rem;color:#444;margin-top:.1rem">${esc(e.miss)}</div>`:""}</div><span style="font-size:.8rem;color:#999;white-space:nowrap">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span></div>`).join("")}` : ""}
@@ -1391,7 +1424,7 @@ function cvBuild(){
       <div style="background:linear-gradient(125deg,${c} 0%,#db2777 45%,#f59e0b 100%);color:#fff;padding:1.7rem 1.6rem;display:flex;justify-content:space-between;align-items:center;gap:1rem">
         <div style="min-width:0;flex:1">
           <h1 style="margin:0;font-size:1.6rem;font-weight:700;word-break:break-word">${esc(name)}</h1>
-          <p style="margin:.3rem 0 0;opacity:.95;font-size:1.05rem">${esc(title)}</p>
+          <p style="margin:.3rem 0 0;opacity:.95;font-size:1.05rem"><span style="margin-right:.3rem">${cvJobIcon(title)}</span>${esc(title)}</p>
           <div style="margin:.5rem 0 0;font-size:.82rem;opacity:.9;display:flex;flex-wrap:wrap;gap:.5rem 1rem">${d.tel?`<span>${CV_ICONS.phone}${esc(d.tel)}</span>`:""}${d.email?`<span style="word-break:break-all">${CV_ICONS.mail}${esc(d.email)}</span>`:""}${d.city?`<span>${CV_ICONS.pin}${esc(d.city)}</span>`:""}</div>
         </div>
         ${d.photo?`<img src="${d.photo}" style="width:82px;height:82px;border-radius:50%;object-fit:cover;border:3px solid #fff;flex-shrink:0">`:`<div style="width:82px;height:82px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:1.7rem;flex-shrink:0;border:2px solid rgba(255,255,255,.5)">👤</div>`}
@@ -1434,8 +1467,8 @@ function cvBuild(){
     html = `<div style="font-family:Georgia,serif;color:#1a1a1a;padding:1.5rem 1.8rem;max-width:700px;margin:0 auto;background:#fff">
       <div style="text-align:center;border-bottom:2px solid #1a1a1a;padding-bottom:.9rem;margin-bottom:1.1rem">
         <h1 style="margin:0;font-size:1.65rem;letter-spacing:.04em">${esc(name)}</h1>
-        <p style="margin:.3rem 0 0;font-size:1rem;color:#333">${esc(title)}</p>
-        <p style="margin:.35rem 0 0;font-size:.82rem;color:#555">${contactLines.map(esc).join(" · ")}</p>
+        <p style="margin:.3rem 0 0;font-size:1rem;color:#333"><span style="margin-right:.3rem">${cvJobIcon(title)}</span>${esc(title)}</p>
+        <div style="margin:.4rem 0 0;font-size:.82rem;color:#555;display:flex;flex-wrap:wrap;justify-content:center;gap:.3rem .8rem">${cvContactInline(d)}</div>
       </div>
       ${d.profile ? `<p style="font-style:italic;margin:0 0 1rem;color:#333;font-size:.9rem">${esc(d.profile)}</p>` : ""}
       ${d.exps.length ? `<h2 style="font-size:.9rem;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #ccc;padding-bottom:.25rem;margin:1.1rem 0 .5rem">Expérience professionnelle</h2>
