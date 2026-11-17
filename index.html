@@ -175,14 +175,24 @@ footer{background:var(--card);border-top:1px solid var(--bd);text-align:center;p
 </div>
 
 <h2 class="t" id="cv">📄 Créer mon CV</h2>
-<p class="sub">Choisissez un modèle, remplissez (beaucoup de listes déroulantes) → CV pro généré en 1 clic. <b>100 % privé</b> : tout reste sur votre appareil.</p>
+<p class="sub">Choisissez un modèle + un profil type (remplit automatiquement) → ajustez → CV pro. <b>100 % privé</b> (uniquement sur votre appareil).</p>
 <div class="panel" style="margin-bottom:1rem">
-  <label style="font-weight:700">Modèle de CV</label>
+  <label style="font-weight:700">1. Modèle de CV</label>
   <div class="chips" id="cvModels">
     <button class="chip on" data-model="classic">📄 Classique</button>
     <button class="chip" data-model="modern">🎨 Moderne</button>
     <button class="chip" data-model="sidebar">📑 Barre latérale</button>
     <button class="chip" data-model="minimal">✨ Minimal</button>
+  </div>
+  <label style="font-weight:700;margin-top:.9rem;display:block">2. Profil type (remplit le formulaire en 1 clic)</label>
+  <div class="chips" id="cvPresets">
+    <button class="chip" data-preset="aide">🤝 Aide à domicile</button>
+    <button class="chip" data-preset="restau">🍽️ Restauration</button>
+    <button class="chip" data-preset="vente">🛒 Vente / Commerce</button>
+    <button class="chip" data-preset="logistique">📦 Logistique / Manutention</button>
+    <button class="chip" data-preset="proprete">🧹 Propreté</button>
+    <button class="chip" data-preset="admin">📋 Administratif</button>
+    <button class="chip" data-preset="vide">↺ Formulaire vide</button>
   </div>
 </div>
 <div class="two">
@@ -207,16 +217,20 @@ footer{background:var(--card);border-top:1px solid var(--bd);text-align:center;p
       <option>Agent d'entretien / Propreté</option>
       <option>Serveur / Serveuse</option>
       <option>Employé polyvalent de restauration</option>
+      <option>Commis de cuisine / Cuisinier</option>
       <option>Vendeur / Vendeuse</option>
+      <option>Équipier polyvalent (grande distribution)</option>
       <option>Manutentionnaire / Magasinier</option>
+      <option>Préparateur de commandes</option>
       <option>Agent de sécurité</option>
+      <option>Agent d'accueil / Hôte d'accueil</option>
       <option>Aide-soignant / Aide-soignante</option>
-      <option>Agent administratif</option>
-      <option>Jardinier / Espaces verts</option>
-      <option>Cuisinier / Commis de cuisine</option>
-      <option>Chauffeur / Livreur</option>
-      <option>Agent d'accueil</option>
-      <option>Autre (préciser dans le profil)</option>
+      <option>Agent administratif / Secrétaire</option>
+      <option>Jardinier / Ouvrier espaces verts</option>
+      <option>Chauffeur livreur / Coursier</option>
+      <option>Agent de service hospitalier (ASH)</option>
+      <option>Employé de libre-service</option>
+      <option>Autre (préciser ci-dessous)</option>
     </select>
     <label>Ou titre personnalisé</label><input id="cvTitleCustom" class="field" placeholder="Ex : Recherche un CDI en logistique" maxlength="100">
 
@@ -816,6 +830,31 @@ const AI_PLACES = {
     "santé": [{n:"PASS – CHU de Nice", a:"30 Voie Romaine / Hôpital Pasteur, 06001 Nice", t:"04 92 03 77 77", w:"https://www.chu-nice.fr"}],
     "alimentaire": [{n:"Restos du Cœur Nice", a:"Plusieurs centres", t:"", w:"https://www.restosducoeur.org/pres-de-chez-vous/"}],
     "hébergement": [{n:"115 Alpes-Maritimes", a:"Appel gratuit 24h/24", t:"115", w:""}]
+  },
+  "grenoble": {
+    "santé": [{n:"PASS – CHU Grenoble Alpes", a:"Boulevard de la Chantourne, 38700 La Tronche", t:"04 76 76 75 75", w:"https://www.chu-grenoble.fr"}],
+    "alimentaire": [{n:"Restos du Cœur Grenoble", a:"Plusieurs centres", t:"", w:"https://www.restosducoeur.org/pres-de-chez-vous/"}],
+    "hébergement": [{n:"115 Isère", a:"Appel gratuit 24h/24", t:"115", w:""}]
+  },
+  "dijon": {
+    "santé": [{n:"PASS – CHU Dijon Bourgogne", a:"14 Rue Paul Gaffarel, 21000 Dijon", t:"03 80 29 30 31", w:"https://www.chu-dijon.fr"}],
+    "alimentaire": [{n:"Restos du Cœur Dijon", a:"Plusieurs centres", t:"", w:"https://www.restosducoeur.org/pres-de-chez-vous/"}],
+    "hébergement": [{n:"115 Côte-d'Or", a:"Appel gratuit 24h/24", t:"115", w:""}]
+  },
+  "rouen": {
+    "santé": [{n:"PASS – CHU de Rouen", a:"1 Rue de Germont, 76031 Rouen", t:"02 32 88 89 90", w:"https://www.chu-rouen.fr"}],
+    "alimentaire": [{n:"Restos du Cœur Rouen", a:"Plusieurs centres", t:"", w:"https://www.restosducoeur.org/pres-de-chez-vous/"}],
+    "hébergement": [{n:"115 Seine-Maritime", a:"Appel gratuit 24h/24", t:"115", w:""}]
+  },
+  "clermont-ferrand": {
+    "santé": [{n:"PASS – CHU Clermont-Ferrand", a:"58 Rue Montalembert, 63000 Clermont-Ferrand", t:"04 73 75 75 75", w:"https://www.chu-clermontferrand.fr"}],
+    "alimentaire": [{n:"Restos du Cœur Clermont-Ferrand", a:"Plusieurs centres", t:"", w:"https://www.restosducoeur.org/pres-de-chez-vous/"}],
+    "hébergement": [{n:"115 Puy-de-Dôme", a:"Appel gratuit 24h/24", t:"115", w:""}]
+  },
+  "angers": {
+    "santé": [{n:"PASS – CHU d'Angers", a:"4 Rue Larrey, 49933 Angers", t:"02 41 35 36 37", w:"https://www.chu-angers.fr"}],
+    "alimentaire": [{n:"Restos du Cœur Angers", a:"Plusieurs centres", t:"", w:"https://www.restosducoeur.org/pres-de-chez-vous/"}],
+    "hébergement": [{n:"115 Maine-et-Loire", a:"Appel gratuit 24h/24", t:"115", w:""}]
   }
 };
 
@@ -852,6 +891,11 @@ function aiReply(q){
   if(!city && nq.includes("montpellier")) city = "montpellier";
   if(!city && nq.includes("rennes")) city = "rennes";
   if(!city && nq.includes("nice")) city = "nice";
+  if(!city && nq.includes("grenoble")) city = "grenoble";
+  if(!city && nq.includes("dijon")) city = "dijon";
+  if(!city && nq.includes("rouen")) city = "rouen";
+  if(!city && (nq.includes("clermont") || nq.includes("clermont ferrand"))) city = "clermont-ferrand";
+  if(!city && nq.includes("angers")) city = "angers";
 
   let need = null;
   if(/soign|soin|sant|medecin|hopital|pass|mutuelle|medicament|se soigner|me soigner/.test(nq)) need = "santé";
@@ -966,6 +1010,79 @@ document.getElementById("cvModels")?.addEventListener("click", e => {
   b.classList.add("on");
   cvModel = b.dataset.model;
   cvBuild();
+});
+
+/* Profils types – remplissage ultra-rapide */
+const CV_PRESETS = {
+  aide: {
+    title: "Aide à domicile / Auxiliaire de vie",
+    profile: "Personne de confiance, à l'écoute et respectueuse. J'aime accompagner les personnes âgées ou en situation de handicap dans leur quotidien, avec patience et bienveillance. Je recherche un poste stable en aide à domicile.",
+    skills: ["Ponctualité","Sens du service","Travail en équipe","Rigueur","Autonomie","Gestion du stress"],
+    exp: [{poste:"Aide à domicile", emp:"Association / Particuliers", deb:"2021", fin:"Actuel", miss:"Aide à la toilette, courses, repas, compagnie, ménage léger"}],
+    form: [{dipl:"Diplôme d'État d'Accompagnant Éducatif et Social (DEAES) ou équivalent", an:"2020", etab:""}]
+  },
+  restau: {
+    title: "Employé polyvalent de restauration",
+    profile: "Dynamique, souriant(e) et résistant(e) au stress. Habitué(e) au travail en équipe et aux horaires variables. Je souhaite mettre mon sens du service au profit d'un établissement de restauration.",
+    skills: ["Ponctualité","Travail en équipe","Sens du service","Polyvalence","Gestion du stress","Rigueur"],
+    exp: [{poste:"Serveur / Polyvalent", emp:"Restaurant", deb:"2022", fin:"Actuel", miss:"Prise de commandes, service en salle, encaissement, mise en place"}],
+    form: [{dipl:"CAP Cuisine ou CSR", an:"2021", etab:""}]
+  },
+  vente: {
+    title: "Vendeur / Vendeuse",
+    profile: "Motivé(e) par le contact client et la vente. Organisé(e), présentable et force de proposition. Je recherche un poste dans le commerce ou la grande distribution.",
+    skills: ["Sens du service","Travail en équipe","Ponctualité","Polyvalence","Autonomie"],
+    exp: [{poste:"Vendeur / Employé de libre-service", emp:"Commerce / Grande surface", deb:"2021", fin:"Actuel", miss:"Conseil client, mise en rayon, encaissement, gestion des stocks"}],
+    form: [{dipl:"Bac pro Commerce ou équivalent", an:"2020", etab:""}]
+  },
+  logistique: {
+    title: "Manutentionnaire / Magasinier",
+    profile: "Rigoureux, endurant et respectueux des consignes de sécurité. Habitué au travail en entrepôt et à la préparation de commandes. Permis B apprécié.",
+    skills: ["Rigueur","Ponctualité","Autonomie","Polyvalence","Permis B","Travail en équipe"],
+    exp: [{poste:"Manutentionnaire / Préparateur de commandes", emp:"Entrepôt / Logistique", deb:"2021", fin:"Actuel", miss:"Préparation de commandes, chargement/déchargement, inventaire"}],
+    form: [{dipl:"CAP ou formation logistique", an:"2020", etab:""}]
+  },
+  proprete: {
+    title: "Agent d'entretien / Propreté",
+    profile: "Sérieux, discret et efficace. Je maîtrise les techniques de nettoyage et le respect des protocoles d'hygiène. Disponible pour des horaires en journée ou en soirée.",
+    skills: ["Rigueur","Ponctualité","Autonomie","Polyvalence","Sens du service"],
+    exp: [{poste:"Agent d'entretien", emp:"Entreprise de propreté / Collectivité", deb:"2021", fin:"Actuel", miss:"Nettoyage des locaux, respect des protocoles, gestion des produits"}],
+    form: [{dipl:"CQP / Formation propreté ou équivalent", an:"", etab:""}]
+  },
+  admin: {
+    title: "Agent administratif",
+    profile: "Organisé(e), à l'aise avec l'informatique (Word, Excel) et le contact téléphonique. Rigoureux dans le traitement des dossiers et le respect des délais.",
+    skills: ["Rigueur","Ponctualité","Informatique (Word, Excel)","Autonomie","Travail en équipe","Sens du service"],
+    exp: [{poste:"Agent administratif / Accueil", emp:"Mairie / Association / Entreprise", deb:"2021", fin:"Actuel", miss:"Accueil physique et téléphonique, saisie, classement, suivi de dossiers"}],
+    form: [{dipl:"Bac pro / BTS Support à l'action managériale ou équivalent", an:"2020", etab:""}]
+  },
+  vide: { title:"", profile:"", skills:[], exp:[], form:[] }
+};
+
+document.getElementById("cvPresets")?.addEventListener("click", e => {
+  const b = e.target.closest("[data-preset]");
+  if(!b) return;
+  const p = CV_PRESETS[b.dataset.preset];
+  if(!p) return;
+  document.getElementById("cvTitle").value = p.title || "";
+  document.getElementById("cvTitleCustom").value = "";
+  document.getElementById("cvProfile").value = p.profile || "";
+  document.querySelectorAll("#cvSkillChecks input").forEach(c => { c.checked = (p.skills||[]).includes(c.value); });
+  document.getElementById("cvExps").innerHTML = "";
+  document.getElementById("cvForms").innerHTML = "";
+  expCount = 0; formCount = 0;
+  (p.exp||[]).forEach(x => cvAddExp(x));
+  (p.form||[]).forEach(x => cvAddForm(x));
+  if(!(p.exp||[]).length) cvAddExp();
+  if(!(p.form||[]).length) cvAddForm();
+  cvBuild();
+  document.getElementById("cvMsg").textContent = p.title ? "✅ Profil « "+p.title+" » appliqué. Modifiez ce que vous voulez puis générez." : "Formulaire réinitialisé.";
+});
+
+/* Aperçu en direct (dès qu'on change un champ) */
+document.getElementById("cv")?.addEventListener("input", () => {
+  clearTimeout(window._cvT);
+  window._cvT = setTimeout(cvBuild, 400);
 });
 
 function cvGetData(){
