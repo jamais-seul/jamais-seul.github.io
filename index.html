@@ -599,14 +599,24 @@ import {getFirestore,doc,setDoc,getDoc,onSnapshot,increment} from "https://www.g
 /* ① COLLE ICI TA CONFIG FIREBASE */
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyAuSi-FAgMH-nRACrLvJy5_m8TYDKIIJzo",
-  authDomain: "://firebaseapp.com",
+  authDomain: "jamais-seul-1559b.firebaseapp.com",
   projectId: "jamais-seul-1559b",
   storageBucket: "jamais-seul-1559b.firebasestorage.app",
   messagingSenderId: "152897763801",
   appId: "1:152897763801:web:924fd688b73117d91d81c8"
 };
-const READY=FIREBASE_CONFIG.apiKey!=="COLLE_ICI";
-let auth,db;if(READY){const app=initializeApp(FIREBASE_CONFIG);auth=getAuth(app);db=getFirestore(app)}
+let READY = FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey !== "COLLE_ICI" && FIREBASE_CONFIG.authDomain && !FIREBASE_CONFIG.authDomain.startsWith("://");
+let auth, db;
+if (READY) {
+  try {
+    const app = initializeApp(FIREBASE_CONFIG);
+    auth = getAuth(app);
+    db = getFirestore(app);
+  } catch (err) {
+    console.error("Firebase init error:", err);
+    READY = false;
+  }
+}
 
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const e=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
