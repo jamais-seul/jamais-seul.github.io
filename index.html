@@ -138,9 +138,12 @@ footer{background:var(--card);border-top:1px solid var(--bd);text-align:center;p
 <div class="grid" id="quick"></div>
 
 <h2 class="t" id="ressources">📞 Numéros utiles & sites officiels</h2>
-<p class="sub">Numéros d'urgence gratuits et sites officiels pour faire valoir vos droits. Tout est classé par thème.</p>
+<p class="sub">Numéros d'urgence gratuits et sites officiels. Cliquez pour afficher.</p>
+<button class="btn l" id="resToggle" style="margin-bottom:.8rem">▶ Afficher les numéros & sites</button>
+<div id="resBody" hidden>
 <div class="chips" id="rtabs"></div>
 <div class="grid" id="rgrid"></div>
+</div>
 
 <h2 class="t" id="simulateur">🧭 Simulateur & démarches</h2>
 <p class="sub">Indiquez votre besoin et votre situation pour obtenir des pistes concrètes, puis suivez la checklist des démarches importantes.</p>
@@ -679,6 +682,13 @@ function renderQuick(){
   if(!S.c){$("#quick").innerHTML="";return}
   $("#presub").textContent="Ouvre la recherche Google Maps pour "+S.c.nom+" (adresses et horaires à jour).";
   $("#quick").innerHTML=QUICK.map(function(q){return'<a class="res" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q[1]+" "+S.c.nom)+'" target="_blank" rel="noopener"><b>'+q[0]+" "+esc(q[1])+"</b><span>Près de "+esc(S.c.nom)+"</span></a>"}).join("")+'<a class="res" href="https://soliguide.fr" target="_blank" rel="noopener"><b>🧭 Soliguide</b><span>Annuaire national des services sociaux</span></a>'}
+document.getElementById("resToggle")?.addEventListener("click", function(){
+  const b = document.getElementById("resBody");
+  if(!b) return;
+  const open = b.hidden;
+  b.hidden = !open;
+  this.textContent = open ? "▼ Masquer les numéros & sites" : "▶ Afficher les numéros & sites";
+});
 function renderRes(){
   $("#rtabs").innerHTML=Object.keys(R).map(function(t){return'<button class="chip'+(t===rtab?" on":"")+'" data-a="rtab" data-v="'+esc(t)+'">'+esc(t)+"</button>"}).join("");
   $("#rgrid").innerHTML=R[rtab].map(function(r){var tel=r[2].indexOf("tel:")===0;return'<a class="res'+(tel?" tel":"")+'" href="'+r[2]+'"'+(tel?"":' target="_blank" rel="noopener"')+"><b>"+(tel?"📞 ":"🌐 ")+esc(r[0])+"</b><span>"+esc(r[1])+"</span></a>"}).join("")}
@@ -1164,30 +1174,48 @@ function getCvColor(){
   const el = document.getElementById("cvAccentColor");
   return (el && el.value) || localStorage.getItem("sf_cv_color") || "#2c3e50";
 }
+/* Petites icônes SVG pour téléphone / mail / lieu */
+const CV_ICONS = {
+  phone: `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:6px;flex-shrink:0"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1.1-.2 1.2.4 2.5.6 3.8.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.6.6 3.8.1.4 0 .8-.3 1.1L6.6 10.8z"/></svg>`,
+  mail: `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:6px;flex-shrink:0"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>`,
+  pin: `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:6px;flex-shrink:0"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5c-1.4 0-2.5-1.1-2.5-2.5S10.6 6.5 12 6.5s2.5 1.1 2.5 2.5S13.4 11.5 12 11.5z"/></svg>`,
+  user: `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:6px;flex-shrink:0"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.2c-3.3 0-9.8 1.6-9.8 4.9v2.7h19.6v-2.7c0-3.3-6.5-4.9-9.8-4.9z"/></svg>`
+};
+function cvContactBlock(d, color){
+  const lines = [];
+  if(d.tel) lines.push(`<div style="display:flex;align-items:flex-start;margin:.25rem 0;word-break:break-word">${CV_ICONS.phone}<span>${esc(d.tel)}</span></div>`);
+  if(d.email) lines.push(`<div style="display:flex;align-items:flex-start;margin:.25rem 0;word-break:break-word;overflow-wrap:anywhere">${CV_ICONS.mail}<span>${esc(d.email)}</span></div>`);
+  if(d.city) lines.push(`<div style="display:flex;align-items:flex-start;margin:.25rem 0;word-break:break-word">${CV_ICONS.pin}<span>${esc(d.city)}</span></div>`);
+  if(d.age) lines.push(`<div style="display:flex;align-items:flex-start;margin:.25rem 0">${CV_ICONS.user}<span>${esc(d.age)} ans</span></div>`);
+  return lines.join("") || "";
+}
+function cvSkillPills(skills, bg, fg){
+  if(!skills||!skills.length) return "";
+  return `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:.3rem">${skills.map(s=>`<span style="background:${bg};color:${fg};padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:500">${esc(s)}</span>`).join("")}</div>`;
+}
 function cvBuildSidebar(d, name, title, contactLines, bg, accent){
   bg = bg || getCvColor();
-  // derive a lighter accent from bg if not provided
   accent = accent || bg;
   const photo = d.photo
-    ? `<img src="${d.photo}" alt="" style="width:90px;height:90px;border-radius:50%;object-fit:cover;margin:0 auto 1rem;display:block;border:3px solid #fff">`
-    : `<div style="width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.15);margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;font-size:2rem;border:3px solid #fff">👤</div>`;
+    ? `<img src="${d.photo}" alt="" style="width:100px;height:100px;border-radius:50%;object-fit:cover;margin:0 auto 1.1rem;display:block;border:3px solid rgba(255,255,255,.9);box-shadow:0 2px 12px rgba(0,0,0,.15)">`
+    : `<div style="width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.18);margin:0 auto 1.1rem;display:flex;align-items:center;justify-content:center;font-size:2.2rem;border:3px solid rgba(255,255,255,.5)">👤</div>`;
   return `<div style="font-family:'Segoe UI',system-ui,sans-serif;display:flex;max-width:800px;margin:0 auto;min-height:100vh;background:#fff;color:#1a1a1a;align-items:stretch">
-    <div style="width:32%;background:${bg};color:#f8fafc;padding:1.5rem 1.1rem;min-height:100vh;box-sizing:border-box">
+    <div style="width:34%;background:${bg};color:#f8fafc;padding:1.6rem 1.15rem;min-height:100vh;box-sizing:border-box">
       ${photo}
-      <h2 style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;opacity:.75;margin:1.1rem 0 .35rem;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:.25rem">Informations</h2>
-      <p style="font-size:.78rem;line-height:1.65;margin:0;word-break:break-word;overflow-wrap:anywhere">${contactLines.map(esc).join("<br>")}</p>
-      ${d.skills.length?`<h2 style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;opacity:.75;margin:1.2rem 0 .35rem;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:.25rem">Qualités</h2><ul style="margin:0;padding-left:1rem;font-size:.78rem;line-height:1.65">${d.skills.map(s=>"<li>"+esc(s)+"</li>").join("")}</ul>`:""}
-      ${d.certs&&d.certs.length?`<h2 style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;opacity:.75;margin:1.2rem 0 .35rem;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:.25rem">Certifications</h2><ul style="margin:0;padding-left:1rem;font-size:.76rem;line-height:1.6">${d.certs.map(s=>"<li>"+esc(s)+"</li>").join("")}</ul>`:""}
-      <h2 style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;opacity:.75;margin:1.2rem 0 .35rem;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:.25rem">Langues</h2>
-      <p style="font-size:.78rem;margin:0">${esc(d.lang)}</p>
-      ${d.interests?`<h2 style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;opacity:.75;margin:1.2rem 0 .35rem;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:.25rem">Loisirs</h2><p style="font-size:.78rem;margin:0">${esc(d.interests)}</p>`:""}
+      <h2 style="font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;opacity:.7;margin:0 0 .5rem">Contact</h2>
+      <div style="font-size:.8rem;line-height:1.5;margin-bottom:1.2rem">${cvContactBlock(d, '#fff')}</div>
+      ${d.skills.length?`<h2 style="font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;opacity:.7;margin:0 0 .45rem">Compétences</h2>${cvSkillPills(d.skills,'rgba(255,255,255,.18)','#fff')}<div style="margin-bottom:1.1rem"></div>`:""}
+      ${d.certs&&d.certs.length?`<h2 style="font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;opacity:.7;margin:1rem 0 .35rem">Certifications</h2><ul style="margin:0;padding-left:1rem;font-size:.76rem;line-height:1.6">${d.certs.map(s=>"<li>"+esc(s)+"</li>").join("")}</ul>`:""}
+      <h2 style="font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;opacity:.7;margin:1.1rem 0 .35rem">Langues</h2>
+      <p style="font-size:.8rem;margin:0">${esc(d.lang)}</p>
+      ${d.interests?`<h2 style="font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;opacity:.7;margin:1.1rem 0 .35rem">Centres d'intérêt</h2><p style="font-size:.8rem;margin:0">${esc(d.interests)}</p>`:""}
     </div>
-    <div style="width:68%;padding:1.5rem 1.4rem;min-height:100vh;box-sizing:border-box">
-      <h1 style="margin:0;font-size:1.55rem;font-weight:700;color:${bg};word-break:break-word">${esc(name)}</h1>
-      <p style="margin:.3rem 0 1rem;font-size:.98rem;color:${accent};font-weight:600;opacity:.9">${esc(title)}</p>
-      ${d.profile?`<p style="margin:0 0 1rem;font-size:.88rem;line-height:1.5;color:#334155">${esc(d.profile)}</p>`:""}
-      ${d.forms.length?`<h2 style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:${bg};border-bottom:2px solid #e2e8f0;padding-bottom:.25rem;margin:1rem 0 .5rem">Scolarité / Formations</h2>${d.forms.map(f=>`<div style="margin-bottom:.45rem"><b style="color:${bg}">${esc(f.dipl)}</b>${f.etab?" — "+esc(f.etab):""}<span style="float:right;font-size:.8rem;color:#64748b">${esc(f.an)}</span><div style="clear:both"></div></div>`).join("")}`:""}
-      ${d.exps.length?`<h2 style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:${bg};border-bottom:2px solid #e2e8f0;padding-bottom:.25rem;margin:1.1rem 0 .5rem">Expériences professionnelles</h2>${d.exps.map(e=>`<div style="margin-bottom:.6rem"><b style="color:${bg}">${esc(e.poste)}</b>${e.emp?" — "+esc(e.emp):""}<span style="float:right;font-size:.8rem;color:#64748b">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span><div style="clear:both"></div>${e.miss?`<div style="font-size:.84rem;color:#475569;margin-top:.12rem">${esc(e.miss)}</div>`:""}</div>`).join("")}`:""}
+    <div style="width:66%;padding:1.7rem 1.5rem;min-height:100vh;box-sizing:border-box">
+      <h1 style="margin:0;font-size:1.65rem;font-weight:700;color:${bg};letter-spacing:.02em;word-break:break-word">${esc(name)}</h1>
+      <p style="margin:.35rem 0 1.1rem;font-size:1.02rem;color:${accent};font-weight:600;opacity:.95">${esc(title)}</p>
+      ${d.profile?`<p style="margin:0 0 1.15rem;font-size:.9rem;line-height:1.55;color:#334155;border-left:3px solid ${bg};padding-left:.75rem">${esc(d.profile)}</p>`:""}
+      ${d.exps.length?`<h2 style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:${bg};border-bottom:2px solid ${bg}22;padding-bottom:.3rem;margin:1.15rem 0 .55rem">Expériences professionnelles</h2>${d.exps.map(e=>`<div style="margin-bottom:.7rem"><div style="display:flex;justify-content:space-between;gap:.5rem;flex-wrap:wrap"><b style="color:${bg}">${esc(e.poste)}</b><span style="font-size:.8rem;color:#64748b;white-space:nowrap">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span></div>${e.emp?`<div style="font-size:.85rem;color:#64748b;margin-top:.1rem">${esc(e.emp)}</div>`:""}${e.miss?`<div style="font-size:.84rem;color:#475569;margin-top:.15rem;line-height:1.4">${esc(e.miss)}</div>`:""}</div>`).join("")}`:""}
+      ${d.forms.length?`<h2 style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:${bg};border-bottom:2px solid ${bg}22;padding-bottom:.3rem;margin:1.15rem 0 .55rem">Formations</h2>${d.forms.map(f=>`<div style="margin-bottom:.45rem;display:flex;justify-content:space-between;gap:.5rem"><div><b style="color:${bg}">${esc(f.dipl)}</b>${f.etab?`<div style="font-size:.84rem;color:#64748b">${esc(f.etab)}</div>`:""}</div><span style="font-size:.8rem;color:#64748b;white-space:nowrap">${esc(f.an)}</span></div>`).join("")}`:""}
     </div>
   </div>`;
 }
@@ -1217,8 +1245,8 @@ function cvBuild(){
       <div style="display:flex;gap:1.5rem">
         <div style="width:36%">
           <h2 style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:${c};margin:0 0 .4rem">Coordonnées</h2>
-          <p style="font-size:.82rem;line-height:1.7;margin:0 0 1rem;word-break:break-word">${contactLines.map(esc).join("<br>")}</p>
-          ${d.skills.length?`<h2 style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:${c};margin:0 0 .35rem">Qualités</h2><ul style="margin:0 0 1rem;padding-left:1.1rem;font-size:.82rem">${d.skills.map(s=>"<li>"+esc(s)+"</li>").join("")}</ul>`:""}
+          <div style="font-size:.82rem;margin:0 0 1rem;color:#334155">${cvContactBlock(d,c)}</div>
+          ${d.skills.length?`<h2 style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:${c};margin:0 0 .35rem">Compétences</h2>${cvSkillPills(d.skills,c+"18",c)}<div style="margin-bottom:1rem"></div>`:""}
           ${d.certs&&d.certs.length?`<h2 style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:${c};margin:0 0 .35rem">Certifications</h2><ul style="margin:0 0 1rem;padding-left:1.1rem;font-size:.8rem">${d.certs.map(s=>"<li>"+esc(s)+"</li>").join("")}</ul>`:""}
           <h2 style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:${c};margin:0 0 .3rem">Langues</h2>
           <p style="font-size:.82rem;margin:0 0 1rem">${esc(d.lang)}</p>
@@ -1240,7 +1268,7 @@ function cvBuild(){
         ${d.photo?`<img src="${d.photo}" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid #fff;margin-bottom:.7rem">`:`<div style="width:88px;height:88px;border-radius:50%;background:rgba(255,255,255,.2);margin:0 auto .7rem;display:flex;align-items:center;justify-content:center;font-size:1.8rem;border:3px solid rgba(255,255,255,.5)">👤</div>`}
         <h1 style="margin:0;font-size:1.6rem;letter-spacing:.04em;word-break:break-word">${esc(name)}</h1>
         <p style="margin:.35rem 0 0;opacity:.95;font-size:1.05rem">${esc(title)}</p>
-        <p style="margin:.5rem 0 0;font-size:.82rem;opacity:.85;word-break:break-word">${contactLines.map(esc).join(" · ")}</p>
+        <div style="margin:.55rem 0 0;font-size:.82rem;opacity:.9;display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem 1.1rem">${d.tel?`<span>${CV_ICONS.phone}${esc(d.tel)}</span>`:""}${d.email?`<span style="word-break:break-all">${CV_ICONS.mail}${esc(d.email)}</span>`:""}${d.city?`<span>${CV_ICONS.pin}${esc(d.city)}</span>`:""}</div>
       </div>
       <div style="padding:1.3rem 1.6rem">
         ${d.profile?`<p style="margin:0 0 1rem;line-height:1.55;color:#334155;text-align:center;font-size:.9rem">${esc(d.profile)}</p>`:""}
@@ -1251,7 +1279,7 @@ function cvBuild(){
           <div style="flex:1;min-width:180px">
             ${d.forms.length?`<h2 style="font-size:.8rem;color:${c};text-transform:uppercase;letter-spacing:.08em;border-bottom:2px solid ${c}22;padding-bottom:.3rem;margin:0 0 .5rem">Formations</h2>${d.forms.map(f=>`<div style="margin-bottom:.4rem"><b>${esc(f.dipl)}</b><br><span style="font-size:.8rem;color:#64748b">${esc(f.an)}</span></div>`).join("")}`:""}
             ${d.certs&&d.certs.length?`<h2 style="font-size:.8rem;color:${c};text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .35rem">Certifications</h2><p style="font-size:.84rem;margin:0">${d.certs.map(esc).join(" · ")}</p>`:""}
-            ${d.skills.length?`<h2 style="font-size:.8rem;color:${c};text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .35rem">Compétences</h2><p style="font-size:.84rem;margin:0">${d.skills.map(esc).join(" · ")}</p>`:""}
+            ${d.skills.length?`<h2 style="font-size:.8rem;color:${c};text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .35rem">Compétences</h2>${cvSkillPills(d.skills,c+"20",c)}`:""}
             <p style="margin:.8rem 0 0;font-size:.84rem"><b>Langues :</b> ${esc(d.lang)}</p>
           </div>
         </div>
