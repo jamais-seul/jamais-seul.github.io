@@ -181,16 +181,23 @@ footer{background:var(--card);border-top:1px solid var(--bd);text-align:center;p
 <div class="panel" style="margin-bottom:1rem">
   <label style="font-weight:700">Modèle de CV</label>
   <div class="chips" id="cvModels">
-    <button class="chip on" data-model="pro">👔 Pro sombre</button>
-    <button class="chip" data-model="problue">💼 Pro bleu</button>
-    <button class="chip" data-model="progreen">🌿 Pro vert</button>
+    <button class="chip on" data-model="pro">👔 Pro (barre latérale)</button>
     <button class="chip" data-model="elegant">✨ Élégant</button>
     <button class="chip" data-model="modern">🎨 Moderne</button>
     <button class="chip" data-model="gradient">🌈 Dégradé</button>
-    <button class="chip" data-model="coral">🧡 Corail</button>
     <button class="chip" data-model="minimal">🖤 Minimal</button>
     <button class="chip" data-model="classic">📄 Classique</button>
     <button class="chip" data-model="timeline">⏳ Timeline</button>
+    <button class="chip" data-model="double">📰 Deux colonnes</button>
+    <button class="chip" data-model="banner">🖼️ Bannière</button>
+    <button class="chip" data-model="card">🃏 Cartes</button>
+  </div>
+  <div id="cvColorRow" style="margin-top:.7rem;display:flex;flex-wrap:wrap;gap:.6rem;align-items:center">
+    <label style="font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:.5rem">
+      Couleur de la barre / thème du CV
+      <input type="color" id="cvAccentColor" value="#2c3e50" style="width:44px;height:32px;border:1px solid var(--bd);border-radius:8px;padding:0;cursor:pointer">
+    </label>
+    <span class="sub" style="margin:0">Change la couleur du modèle choisi (perso)</span>
   </div>
   <label style="font-weight:700;margin-top:.9rem;display:block">Profil type (remplit en 1 clic)</label>
   <div class="chips" id="cvPresets">
@@ -1037,6 +1044,12 @@ document.getElementById("cvModels")?.addEventListener("click", e => {
   cvModel = b.dataset.model;
   cvBuild();
 });
+const cvCol = document.getElementById("cvAccentColor");
+if(cvCol){
+  const saved = localStorage.getItem("sf_cv_color");
+  if(saved) cvCol.value = saved;
+  cvCol.oninput = () => { localStorage.setItem("sf_cv_color", cvCol.value); cvBuild(); };
+}
 
 /* Profils types – remplissage ultra-rapide */
 const CV_PRESETS = {
@@ -1147,12 +1160,19 @@ function cvGetData(){
 }
 
 
+function getCvColor(){
+  const el = document.getElementById("cvAccentColor");
+  return (el && el.value) || localStorage.getItem("sf_cv_color") || "#2c3e50";
+}
 function cvBuildSidebar(d, name, title, contactLines, bg, accent){
+  bg = bg || getCvColor();
+  // derive a lighter accent from bg if not provided
+  accent = accent || bg;
   const photo = d.photo
     ? `<img src="${d.photo}" alt="" style="width:90px;height:90px;border-radius:50%;object-fit:cover;margin:0 auto 1rem;display:block;border:3px solid #fff">`
     : `<div style="width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.15);margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;font-size:2rem;border:3px solid #fff">👤</div>`;
-  return `<div style="font-family:'Segoe UI',system-ui,sans-serif;display:flex;max-width:800px;margin:0 auto;min-height:500px;background:#fff;color:#1a1a1a">
-    <div style="width:32%;background:${bg};color:#f8fafc;padding:1.5rem 1.1rem">
+  return `<div style="font-family:'Segoe UI',system-ui,sans-serif;display:flex;max-width:800px;margin:0 auto;min-height:100vh;background:#fff;color:#1a1a1a;align-items:stretch">
+    <div style="width:32%;background:${bg};color:#f8fafc;padding:1.5rem 1.1rem;min-height:100vh;box-sizing:border-box">
       ${photo}
       <h2 style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;opacity:.75;margin:1.1rem 0 .35rem;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:.25rem">Informations</h2>
       <p style="font-size:.78rem;line-height:1.65;margin:0;word-break:break-word;overflow-wrap:anywhere">${contactLines.map(esc).join("<br>")}</p>
@@ -1162,9 +1182,9 @@ function cvBuildSidebar(d, name, title, contactLines, bg, accent){
       <p style="font-size:.78rem;margin:0">${esc(d.lang)}</p>
       ${d.interests?`<h2 style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;opacity:.75;margin:1.2rem 0 .35rem;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:.25rem">Loisirs</h2><p style="font-size:.78rem;margin:0">${esc(d.interests)}</p>`:""}
     </div>
-    <div style="width:68%;padding:1.5rem 1.4rem">
+    <div style="width:68%;padding:1.5rem 1.4rem;min-height:100vh;box-sizing:border-box">
       <h1 style="margin:0;font-size:1.55rem;font-weight:700;color:${bg};word-break:break-word">${esc(name)}</h1>
-      <p style="margin:.3rem 0 1rem;font-size:.98rem;color:${accent};font-weight:600">${esc(title)}</p>
+      <p style="margin:.3rem 0 1rem;font-size:.98rem;color:${accent};font-weight:600;opacity:.9">${esc(title)}</p>
       ${d.profile?`<p style="margin:0 0 1rem;font-size:.88rem;line-height:1.5;color:#334155">${esc(d.profile)}</p>`:""}
       ${d.forms.length?`<h2 style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:${bg};border-bottom:2px solid #e2e8f0;padding-bottom:.25rem;margin:1rem 0 .5rem">Scolarité / Formations</h2>${d.forms.map(f=>`<div style="margin-bottom:.45rem"><b style="color:${bg}">${esc(f.dipl)}</b>${f.etab?" — "+esc(f.etab):""}<span style="float:right;font-size:.8rem;color:#64748b">${esc(f.an)}</span><div style="clear:both"></div></div>`).join("")}`:""}
       ${d.exps.length?`<h2 style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:${bg};border-bottom:2px solid #e2e8f0;padding-bottom:.25rem;margin:1.1rem 0 .5rem">Expériences professionnelles</h2>${d.exps.map(e=>`<div style="margin-bottom:.6rem"><b style="color:${bg}">${esc(e.poste)}</b>${e.emp?" — "+esc(e.emp):""}<span style="float:right;font-size:.8rem;color:#64748b">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span><div style="clear:both"></div>${e.miss?`<div style="font-size:.84rem;color:#475569;margin-top:.12rem">${esc(e.miss)}</div>`:""}</div>`).join("")}`:""}
@@ -1181,84 +1201,85 @@ function cvBuild(){
 
   // ========== PRO (style PDF : barre latérale sombre + photo) ==========
   if(cvModel === "pro"){
-    html = `<div style="font-family:'Segoe UI',system-ui,sans-serif;display:flex;max-width:800px;margin:0 auto;min-height:500px;background:#fff;color:#1a1a1a">
-      <div style="width:32%;background:#2c3e50;color:#ecf0f1;padding:1.5rem 1.1rem">
-        ${d.photo?`<img src="${d.photo}" alt="" style="width:90px;height:90px;border-radius:50%;object-fit:cover;margin:0 auto 1rem;display:block;border:3px solid #fff">`:`<div style="width:90px;height:90px;border-radius:50%;background:#34495e;margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;font-size:2rem;border:3px solid #fff">👤</div>`}
-        <h2 style="font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;opacity:.7;margin:1.2rem 0 .4rem;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:.3rem">Informations</h2>
-        <p style="font-size:.78rem;line-height:1.65;margin:0;word-break:break-word;overflow-wrap:anywhere">${contactLines.map(esc).join("<br>")}</p>
-        ${d.skills.length ? `<h2 style="font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;opacity:.7;margin:1.3rem 0 .4rem;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:.3rem">Qualités</h2>
-        <ul style="margin:0;padding-left:1rem;font-size:.8rem;line-height:1.7">${d.skills.map(s=>"<li>"+esc(s)+"</li>").join("")}</ul>` : ""}
-        ${d.certs&&d.certs.length ? `<h2 style="font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;opacity:.7;margin:1.3rem 0 .4rem;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:.3rem">Certifications</h2>
-        <ul style="margin:0;padding-left:1rem;font-size:.78rem;line-height:1.65">${d.certs.map(s=>"<li>"+esc(s)+"</li>").join("")}</ul>` : ""}
-        <h2 style="font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;opacity:.7;margin:1.3rem 0 .4rem;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:.3rem">Langues</h2>
-        <p style="font-size:.8rem;margin:0">${esc(d.lang)}</p>
-        ${d.interests ? `<h2 style="font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;opacity:.7;margin:1.3rem 0 .4rem;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:.3rem">Loisirs</h2>
-        <p style="font-size:.8rem;margin:0">${esc(d.interests)}</p>` : ""}
+    html = cvBuildSidebar(d, name, title, contactLines, getCvColor(), getCvColor());
+  }
+  // ========== DOUBLE COLONNES (style fiche) ==========
+  else if(cvModel === "double"){
+    const c = getCvColor();
+    html = `<div style="font-family:Georgia,serif;max-width:780px;margin:0 auto;background:#fff;min-height:100vh;padding:1.5rem 1.6rem;box-sizing:border-box">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid ${c};padding-bottom:1rem;margin-bottom:1.2rem">
+        <div style="min-width:0">
+          <h1 style="margin:0;font-size:1.7rem;color:${c};word-break:break-word">${esc(name)}</h1>
+          <p style="margin:.35rem 0 0;font-size:1rem;font-style:italic;color:#555">${esc(title)}</p>
+        </div>
+        ${d.photo?`<img src="${d.photo}" style="width:82px;height:82px;border-radius:8px;object-fit:cover;border:1px solid #ddd;flex-shrink:0">`:`<div style="width:82px;height:82px;border-radius:8px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0">👤</div>`}
       </div>
-      <div style="width:68%;padding:1.6rem 1.5rem">
-        <h1 style="margin:0;font-size:1.7rem;font-weight:700;letter-spacing:.04em;color:#2c3e50">${esc(name)}</h1>
-        <p style="margin:.35rem 0 1.2rem;font-size:1rem;color:#7f8c8d;font-weight:500">${esc(title)}</p>
-        ${d.profile ? `<p style="margin:0 0 1.2rem;font-size:.9rem;line-height:1.55;color:#34495e">${esc(d.profile)}</p>` : ""}
-        ${d.forms.length ? `<h2 style="font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:#2c3e50;border-bottom:2px solid #ecf0f1;padding-bottom:.3rem;margin:1.1rem 0 .6rem">Scolarité / Formations</h2>
-        ${d.forms.map(f=>`<div style="margin-bottom:.55rem"><b style="color:#2c3e50">${esc(f.dipl)}</b>${f.etab?" — "+esc(f.etab):""}<span style="float:right;font-size:.82rem;color:#7f8c8d">${esc(f.an)}</span><div style="clear:both"></div></div>`).join("")}` : ""}
-        ${d.exps.length ? `<h2 style="font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:#2c3e50;border-bottom:2px solid #ecf0f1;padding-bottom:.3rem;margin:1.2rem 0 .6rem">Expériences professionnelles</h2>
-        ${d.exps.map(e=>`<div style="margin-bottom:.7rem"><b style="color:#2c3e50">${esc(e.poste)}</b>${e.emp?" — "+esc(e.emp):""}<span style="float:right;font-size:.82rem;color:#7f8c8d">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span><div style="clear:both"></div>${e.miss?`<div style="font-size:.85rem;color:#555;margin-top:.15rem">${esc(e.miss)}</div>`:""}</div>`).join("")}` : ""}
+      <div style="display:flex;gap:1.5rem">
+        <div style="width:36%">
+          <h2 style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:${c};margin:0 0 .4rem">Coordonnées</h2>
+          <p style="font-size:.82rem;line-height:1.7;margin:0 0 1rem;word-break:break-word">${contactLines.map(esc).join("<br>")}</p>
+          ${d.skills.length?`<h2 style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:${c};margin:0 0 .35rem">Qualités</h2><ul style="margin:0 0 1rem;padding-left:1.1rem;font-size:.82rem">${d.skills.map(s=>"<li>"+esc(s)+"</li>").join("")}</ul>`:""}
+          ${d.certs&&d.certs.length?`<h2 style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:${c};margin:0 0 .35rem">Certifications</h2><ul style="margin:0 0 1rem;padding-left:1.1rem;font-size:.8rem">${d.certs.map(s=>"<li>"+esc(s)+"</li>").join("")}</ul>`:""}
+          <h2 style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:${c};margin:0 0 .3rem">Langues</h2>
+          <p style="font-size:.82rem;margin:0 0 1rem">${esc(d.lang)}</p>
+          ${d.interests?`<h2 style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:${c};margin:0 0 .3rem">Loisirs</h2><p style="font-size:.82rem;margin:0">${esc(d.interests)}</p>`:""}
+        </div>
+        <div style="width:64%;border-left:1px solid #e2e8f0;padding-left:1.3rem">
+          ${d.profile?`<p style="margin:0 0 1rem;font-size:.9rem;line-height:1.5;color:#333">${esc(d.profile)}</p>`:""}
+          ${d.forms.length?`<h2 style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:${c};border-bottom:1px solid #ddd;padding-bottom:.25rem;margin:0 0 .5rem">Scolarité</h2>${d.forms.map(f=>`<div style="margin-bottom:.45rem"><b>${esc(f.dipl)}</b>${f.etab?" — "+esc(f.etab):""}<span style="float:right;font-size:.8rem;color:#777">${esc(f.an)}</span><div style="clear:both"></div></div>`).join("")}`:""}
+          ${d.exps.length?`<h2 style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:${c};border-bottom:1px solid #ddd;padding-bottom:.25rem;margin:1rem 0 .5rem">Expériences</h2>${d.exps.map(e=>`<div style="margin-bottom:.55rem"><b>${esc(e.poste)}</b>${e.emp?" — "+esc(e.emp):""}<span style="float:right;font-size:.8rem;color:#777">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span><div style="clear:both"></div>${e.miss?`<div style="font-size:.85rem;color:#555;margin-top:.1rem">${esc(e.miss)}</div>`:""}</div>`).join("")}`:""}
+        </div>
       </div>
     </div>`;
   }
-
-
-  // ========== PRO BLEU ==========
-  else if(cvModel === "problue"){
-    html = cvBuildSidebar(d, name, title, contactLines, "#1e3a5f", "#3b82f6");
-  }
-  // ========== PRO VERT ==========
-  else if(cvModel === "progreen"){
-    html = cvBuildSidebar(d, name, title, contactLines, "#14532d", "#22c55e");
-  }
-  // ========== DÉGRADÉ ==========
-  else if(cvModel === "gradient"){
-    html = `<div style="font-family:system-ui,sans-serif;max-width:760px;margin:0 auto;background:#fff">
-      <div style="background:linear-gradient(120deg,#7c3aed,#db2777,#f59e0b);color:#fff;padding:1.6rem 1.7rem;display:flex;justify-content:space-between;align-items:center">
-        <div style="min-width:0;flex:1">
-          <h1 style="margin:0;font-size:1.6rem;font-weight:700;word-break:break-word">${esc(name)}</h1>
-          <p style="margin:.3rem 0 0;opacity:.95">${esc(title)}</p>
-          <p style="margin:.4rem 0 0;font-size:.8rem;opacity:.85;word-break:break-word">${contactLines.map(esc).join(" · ")}</p>
-        </div>
-        ${d.photo?`<img src="${d.photo}" style="width:78px;height:78px;border-radius:50%;object-fit:cover;border:2px solid #fff;flex-shrink:0">`:`<div style="width:78px;height:78px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0">👤</div>`}
+  // ========== BANNIÈRE ==========
+  else if(cvModel === "banner"){
+    const c = getCvColor();
+    html = `<div style="font-family:system-ui,sans-serif;max-width:760px;margin:0 auto;background:#fff;min-height:100vh">
+      <div style="background:${c};color:#fff;padding:2rem 1.6rem 1.4rem;text-align:center">
+        ${d.photo?`<img src="${d.photo}" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid #fff;margin-bottom:.7rem">`:`<div style="width:88px;height:88px;border-radius:50%;background:rgba(255,255,255,.2);margin:0 auto .7rem;display:flex;align-items:center;justify-content:center;font-size:1.8rem;border:3px solid rgba(255,255,255,.5)">👤</div>`}
+        <h1 style="margin:0;font-size:1.6rem;letter-spacing:.04em;word-break:break-word">${esc(name)}</h1>
+        <p style="margin:.35rem 0 0;opacity:.95;font-size:1.05rem">${esc(title)}</p>
+        <p style="margin:.5rem 0 0;font-size:.82rem;opacity:.85;word-break:break-word">${contactLines.map(esc).join(" · ")}</p>
       </div>
       <div style="padding:1.3rem 1.6rem">
-        ${d.profile?`<p style="margin:0 0 1rem;line-height:1.5;color:#334155">${esc(d.profile)}</p>`:""}
-        ${d.exps.length?`<h2 style="font-size:.82rem;color:#7c3aed;text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .4rem">Expériences</h2>${d.exps.map(e=>`<div style="margin-bottom:.55rem"><b>${esc(e.poste)}</b>${e.emp?" · "+esc(e.emp):""}<br><span style="font-size:.8rem;color:#64748b">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span>${e.miss?`<div style="font-size:.85rem;color:#475569">${esc(e.miss)}</div>`:""}</div>`).join("")}`:""}
-        ${d.forms.length?`<h2 style="font-size:.82rem;color:#7c3aed;text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .4rem">Formations</h2>${d.forms.map(f=>`<div style="margin-bottom:.35rem"><b>${esc(f.dipl)}</b>${f.etab?" · "+esc(f.etab):""} <span style="color:#64748b;font-size:.8rem">(${esc(f.an)})</span></div>`).join("")}`:""}
-        ${d.certs&&d.certs.length?`<h2 style="font-size:.82rem;color:#7c3aed;text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .4rem">Certifications</h2><ul style="margin:0;padding-left:1.1rem">${d.certs.map(c=>"<li>"+esc(c)+"</li>").join("")}</ul>`:""}
-        ${d.skills.length?`<h2 style="font-size:.82rem;color:#7c3aed;text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .35rem">Compétences</h2><div>${d.skills.map(s=>`<span style="display:inline-block;background:linear-gradient(120deg,#ede9fe,#fce7f3);color:#6b21a8;padding:.15rem .45rem;border-radius:4px;margin:.1rem .15rem;font-size:.78rem">${esc(s)}</span>`).join("")}</div>`:""}
-        <p style="margin:.7rem 0 0;font-size:.85rem"><b>Langues :</b> ${esc(d.lang)}</p>
+        ${d.profile?`<p style="margin:0 0 1rem;line-height:1.55;color:#334155;text-align:center;font-size:.9rem">${esc(d.profile)}</p>`:""}
+        <div style="display:flex;gap:1.4rem;flex-wrap:wrap">
+          <div style="flex:1;min-width:200px">
+            ${d.exps.length?`<h2 style="font-size:.8rem;color:${c};text-transform:uppercase;letter-spacing:.08em;border-bottom:2px solid ${c}22;padding-bottom:.3rem;margin:0 0 .5rem">Expériences</h2>${d.exps.map(e=>`<div style="margin-bottom:.55rem"><b>${esc(e.poste)}</b><br><span style="font-size:.8rem;color:#64748b">${esc(e.emp)} · ${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span>${e.miss?`<div style="font-size:.84rem;color:#475569">${esc(e.miss)}</div>`:""}</div>`).join("")}`:""}
+          </div>
+          <div style="flex:1;min-width:180px">
+            ${d.forms.length?`<h2 style="font-size:.8rem;color:${c};text-transform:uppercase;letter-spacing:.08em;border-bottom:2px solid ${c}22;padding-bottom:.3rem;margin:0 0 .5rem">Formations</h2>${d.forms.map(f=>`<div style="margin-bottom:.4rem"><b>${esc(f.dipl)}</b><br><span style="font-size:.8rem;color:#64748b">${esc(f.an)}</span></div>`).join("")}`:""}
+            ${d.certs&&d.certs.length?`<h2 style="font-size:.8rem;color:${c};text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .35rem">Certifications</h2><p style="font-size:.84rem;margin:0">${d.certs.map(esc).join(" · ")}</p>`:""}
+            ${d.skills.length?`<h2 style="font-size:.8rem;color:${c};text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .35rem">Compétences</h2><p style="font-size:.84rem;margin:0">${d.skills.map(esc).join(" · ")}</p>`:""}
+            <p style="margin:.8rem 0 0;font-size:.84rem"><b>Langues :</b> ${esc(d.lang)}</p>
+          </div>
+        </div>
       </div>
     </div>`;
   }
-  // ========== CORAIL ==========
-  else if(cvModel === "coral"){
-    html = cvBuildSidebar(d, name, title, contactLines, "#9f1239", "#fb7185");
-  }
-  // ========== TIMELINE ==========
-  else if(cvModel === "timeline"){
-    html = `<div style="font-family:system-ui,sans-serif;max-width:720px;margin:0 auto;background:#fff;padding:1.5rem 1.6rem">
-      <div style="text-align:center;margin-bottom:1.2rem">
-        ${d.photo?`<img src="${d.photo}" style="width:86px;height:86px;border-radius:50%;object-fit:cover;border:3px solid #0f4c81">`:`<div style="width:86px;height:86px;border-radius:50%;background:#e2e8f0;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:1.8rem">👤</div>`}
-        <h1 style="margin:.6rem 0 0;font-size:1.55rem;color:#0f172a;word-break:break-word">${esc(name)}</h1>
-        <p style="margin:.25rem 0;color:#475569">${esc(title)}</p>
-        <p style="margin:0;font-size:.8rem;color:#64748b;word-break:break-word">${contactLines.map(esc).join(" · ")}</p>
+  // ========== CARTES ==========
+  else if(cvModel === "card"){
+    const c = getCvColor();
+    html = `<div style="font-family:system-ui,sans-serif;max-width:760px;margin:0 auto;background:#f8fafc;min-height:100vh;padding:1.2rem;box-sizing:border-box">
+      <div style="background:#fff;border-radius:12px;padding:1.3rem 1.4rem;margin-bottom:.9rem;box-shadow:0 2px 8px rgba(0,0,0,.06);display:flex;gap:1.2rem;align-items:center">
+        ${d.photo?`<img src="${d.photo}" style="width:72px;height:72px;border-radius:50%;object-fit:cover">`:`<div style="width:72px;height:72px;border-radius:50%;background:${c};color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">👤</div>`}
+        <div style="min-width:0">
+          <h1 style="margin:0;font-size:1.4rem;color:${c};word-break:break-word">${esc(name)}</h1>
+          <p style="margin:.2rem 0 0;color:#64748b">${esc(title)}</p>
+          <p style="margin:.3rem 0 0;font-size:.8rem;color:#94a3b8;word-break:break-word">${contactLines.map(esc).join(" · ")}</p>
+        </div>
       </div>
-      ${d.profile?`<p style="text-align:center;color:#334155;margin:0 0 1.2rem;font-size:.9rem">${esc(d.profile)}</p>`:""}
-      ${d.exps.length?`<h2 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:#0f4c81;margin:0 0 .6rem">Parcours</h2>
-      <div style="border-left:3px solid #cbd5e1;padding-left:1rem;margin-left:.3rem">
-        ${d.exps.map(e=>`<div style="margin-bottom:.8rem;position:relative"><span style="position:absolute;left:-1.35rem;top:.2rem;width:10px;height:10px;border-radius:50%;background:#0f4c81"></span><b>${esc(e.poste)}</b>${e.emp?" — "+esc(e.emp):""}<br><span style="font-size:.8rem;color:#64748b">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span>${e.miss?`<div style="font-size:.85rem;color:#475569;margin-top:.15rem">${esc(e.miss)}</div>`:""}</div>`).join("")}
-      </div>`:""}
-      ${d.forms.length?`<h2 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:#0f4c81;margin:1rem 0 .4rem">Formations</h2>${d.forms.map(f=>`<div style="margin-bottom:.35rem"><b>${esc(f.dipl)}</b> <span style="color:#64748b;font-size:.8rem">${esc(f.an)}</span></div>`).join("")}`:""}
-      ${d.certs&&d.certs.length?`<h2 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:#0f4c81;margin:1rem 0 .3rem">Certifications</h2><p style="margin:0;font-size:.85rem">${d.certs.map(esc).join(" · ")}</p>`:""}
-      ${d.skills.length?`<h2 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:#0f4c81;margin:1rem 0 .3rem">Compétences</h2><p style="margin:0;font-size:.85rem">${d.skills.map(esc).join(" · ")}</p>`:""}
-      <p style="margin:.7rem 0 0;font-size:.85rem"><b>Langues :</b> ${esc(d.lang)}</p>
+      ${d.profile?`<div style="background:#fff;border-radius:12px;padding:1rem 1.2rem;margin-bottom:.9rem;box-shadow:0 2px 8px rgba(0,0,0,.06)"><p style="margin:0;font-size:.9rem;line-height:1.5;color:#334155">${esc(d.profile)}</p></div>`:""}
+      ${d.exps.length?`<div style="background:#fff;border-radius:12px;padding:1rem 1.2rem;margin-bottom:.9rem;box-shadow:0 2px 8px rgba(0,0,0,.06)"><h2 style="margin:0 0 .6rem;font-size:.85rem;color:${c};text-transform:uppercase;letter-spacing:.06em">Expériences</h2>${d.exps.map(e=>`<div style="margin-bottom:.5rem;padding-bottom:.5rem;border-bottom:1px solid #f1f5f9"><b>${esc(e.poste)}</b> <span style="color:#94a3b8;font-size:.8rem">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span>${e.emp?`<div style="font-size:.85rem;color:#64748b">${esc(e.emp)}</div>`:""}${e.miss?`<div style="font-size:.84rem;color:#475569">${esc(e.miss)}</div>`:""}</div>`).join("")}</div>`:""}
+      <div style="display:flex;gap:.9rem;flex-wrap:wrap">
+        ${d.forms.length?`<div style="background:#fff;border-radius:12px;padding:1rem 1.2rem;flex:1;min-width:180px;box-shadow:0 2px 8px rgba(0,0,0,.06)"><h2 style="margin:0 0 .5rem;font-size:.85rem;color:${c};text-transform:uppercase">Formations</h2>${d.forms.map(f=>`<div style="margin-bottom:.35rem;font-size:.88rem"><b>${esc(f.dipl)}</b> <span style="color:#94a3b8">${esc(f.an)}</span></div>`).join("")}</div>`:""}
+        <div style="background:#fff;border-radius:12px;padding:1rem 1.2rem;flex:1;min-width:160px;box-shadow:0 2px 8px rgba(0,0,0,.06)">
+          ${d.skills.length?`<h2 style="margin:0 0 .4rem;font-size:.85rem;color:${c};text-transform:uppercase">Compétences</h2><p style="margin:0 0 .7rem;font-size:.85rem">${d.skills.map(esc).join(" · ")}</p>`:""}
+          ${d.certs&&d.certs.length?`<h2 style="margin:0 0 .35rem;font-size:.85rem;color:${c};text-transform:uppercase">Certifications</h2><p style="margin:0 0 .7rem;font-size:.84rem">${d.certs.map(esc).join(" · ")}</p>`:""}
+          <p style="margin:0;font-size:.85rem"><b>Langues :</b> ${esc(d.lang)}</p>
+        </div>
+      </div>
     </div>`;
   }
 
@@ -1406,10 +1427,11 @@ document.getElementById("cvPrint")?.addEventListener("click", () => {
   const w = window.open("", "_blank");
   w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>CV</title>
 <style>
-@page{size:A4;margin:10mm}
+@page{size:A4;margin:0}
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;background:#fff}
+html,body{margin:0;padding:0;background:#fff;height:100%}
 body{font-family:system-ui,-apple-system,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body>div{min-height:100vh}
 img{max-width:100%;height:auto}
 </style></head><body>${html}
 <script>window.onload=function(){setTimeout(function(){window.print()},200)}<\/script></body></html>`);
