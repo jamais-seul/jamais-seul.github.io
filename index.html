@@ -387,8 +387,10 @@ function norm(s){return String(s==null?"":s).toLowerCase().normalize("NFD").repl
 function dist(a,b,c,d){var r=Math.PI/180,x=Math.sin((c-a)*r/2),y=Math.sin((d-b)*r/2),h=x*x+Math.cos(a*r)*Math.cos(c*r)*y*y;return Math.round(12742*Math.atan2(Math.sqrt(h),Math.sqrt(1-h))*10)/10}
 var SYN={repas:"aliment manger epicerie colis resto",douche:"hygiene bain laverie",emploi:"insertion travail chantier",etudiant:"crous fage etudiants",vetements:"vestiaire boutique emmaus seconde main"};
 
-var S={c:null,cat:"Tout",show:60,live:{},sug:[],busy:false,pending:false,kw:""};
-var REFITEMS=REFS.map(function(r,i){return{id:"r"+(i+1),src:"ref",n:r[0],c:r[1],la:r[2],ln:r[3],k:r[4],d:r[5],web:r[6],q:r[0]+" "+r[1],a:"",h:"",tel:"",o:""}}).concat(genRefs());
+var S={c:null,cat:"Tout",show:36,live:{},sug:[],busy:false,pending:false,kw:""};
+var NATIONAL=REFS.map(function(r,i){return{id:"r"+(i+1),src:"ref",n:r[0],c:r[1],la:r[2],ln:r[3],k:r[4],d:r[5],web:r[6],q:r[0]+" "+r[1],a:"",h:"",tel:"",o:""}});
+var GENERATED=genRefs(); // synthetic city markers – shown only when a city is selected
+var REFITEMS=NATIONAL; // start clean
 var custom=ld("sf_custom_v8",[]),favs=ld("sf_favs_v8",{}),checks=ld("sf_checks_v8",[]),rtab="Numéros";
 var loaded=[],map=null,layer=null,pin=null,markers={},byId={},tm=null,tmv=null,clustered=false;
 var EP=["https://overpass-api.de/api/interpreter","https://overpass.kumi.systems/api/interpreter","https://maps.mail.ru/osm/tools/overpass/api/interpreter"];
@@ -474,7 +476,10 @@ function pick(c){
   renderQuick();renderAll();$("#carte").scrollIntoView({behavior:"smooth"})}
 
 /* ---------- Données affichées ---------- */
-function items(){return REFITEMS.concat(custom,Object.keys(S.live).map(function(k){return S.live[k]}))}
+function items(){
+  var base = S.c ? NATIONAL.concat(GENERATED) : NATIONAL;
+  return base.concat(custom, Object.keys(S.live).map(function(k){return S.live[k]}));
+}
 function refPt(){if(map&&map.getZoom()>=9){var c=map.getCenter();return{la:c.lat,ln:c.lng}}return S.c?{la:S.c.la,ln:S.c.ln}:null}
 function list(){
   var rp=refPt(),words=norm(S.kw).split(/\s+/).filter(Boolean);
@@ -661,6 +666,14 @@ h2.t{margin-top:2.8rem;padding-bottom:.4rem;border-bottom:2px solid var(--bd)}
 .card{transition:transform .15s,box-shadow .15s}
 .card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,23,42,.12)}
 body.dark .card:hover{box-shadow:0 8px 20px rgba(0,0,0,.4)}
+/* Compact mode for many results */
+body.compact .card{padding:.75rem .9rem;gap:.45rem}
+body.compact .card h3{font-size:.95rem;margin:.25rem 0}
+body.compact .card p{font-size:.82rem;margin-bottom:.1rem}
+body.compact .card .row .btn{padding:.4rem .6rem;font-size:.8rem}
+body.compact .grid{gap:.7rem}
+/* Make category headers stickier / clearer */
+.cathead{position:sticky;top:60px;background:var(--bg);z-index:5;padding:.6rem 0 .4rem;margin-top:1.2rem!important}
 .kpi{transition:transform .15s}
 .kpi:hover{transform:translateY(-2px)}
 .hero p{font-size:1.05rem}
@@ -708,18 +721,18 @@ const e=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt
 const SECS={carte:"🗺️ Carte",pres:"🔎 Près de chez vous",ressources:"📞 Numéros & sites",simulateur:"🧭 Simulateur",benevolat:"🙋 Bénévolat"};
 const DEF={
   primary:"#0f4c81",accent:"#2563eb",font:"system-ui",size:16,
+  bg:"#f1f5f9",card:"#ffffff",text:"#0f172a",muted:"#475569",bd:"#cbd5e1",
   title:"",subtitle:"",
   calm:true,maintenance:false,
   mmsg:"Le site est en maintenance. Retour très bientôt !",
   urgBar:true,
   order:Object.keys(SECS),hidden:[],
-  // Contenu éditable
   heroTitle:"",heroText:"",
   calmMessages:["Demander de l'aide est un acte de courage, pas de faiblesse.","Chaque petit pas compte. Vous avez déjà fait le premier en venant ici.","Il existe des personnes bienveillantes près de chez vous.","Vous méritez d'être soutenu(e), sans jugement.","Respirez. On avance ensemble, à votre rythme."],
   footerText:"Solidarité France — portail citoyen libre et gratuit. Informations indicatives : seuls les organismes officiels font foi.",
   mapWarn:"Les lieux « Repère » ont une position approximative (centre-ville) : ils signalent le type de structure présent dans la ville et renvoient vers le site officiel. Les autres viennent d'OpenStreetMap (données collaboratives, parfois incomplètes ou dépassées). Appelez ou vérifiez avant de vous déplacer.",
-  // Features toggles
-  showKpis:true,showQuick:true,showSimulator:true,showBenevolat:true,showMap:true
+  showKpis:true,showQuick:true,showSimulator:true,showBenevolat:true,showMap:true,
+  compactCards:false
 };
 const FONTS={"system-ui":"Système","Georgia,serif":"Georgia (serif)","'Trebuchet MS',sans-serif":"Trebuchet","Verdana,sans-serif":"Verdana (lisible)","'Courier New',monospace":"Machine à écrire","'Comic Sans MS',cursive":"Arrondie"};
 let cfg={...DEF},user=null,theme=localStorage.getItem("sf_theme")||"0",lang=localStorage.getItem("sf_lang")||"fr",tab="app",first=false;
@@ -731,28 +744,106 @@ const th=i=>i==="0"?["",cfg.primary,cfg.accent,cfg.primary,cfg.primary]:TH[i];
 function applyTheme(){
   const t=th(theme),b=document.body,dark=b.classList.contains("dark");
   const set=(k,v)=>v?b.style.setProperty(k,v):b.style.removeProperty(k);
-  if(dark)b.style.removeProperty("--navy");else set("--navy",t[1]);
-  set("--blue",t[2]);set("--h1",t[3]);set("--h2",t[4]);
-  $$(".sw").forEach(s=>s.classList.toggle("on",s.dataset.i===theme))}
+  // Base theme from palette or creator
+  if(dark){
+    b.style.removeProperty("--navy");
+  } else {
+    set("--navy", t[1] || cfg.primary);
+  }
+  set("--blue", t[2] || cfg.accent);
+  set("--h1", t[3] || cfg.primary);
+  set("--h2", t[4] || cfg.primary);
+  // Full surface colors (creator can override whites / backgrounds)
+  if(!dark){
+    if(cfg.bg) set("--bg", cfg.bg);
+    if(cfg.card) set("--card", cfg.card);
+    if(cfg.text) set("--text", cfg.text);
+    if(cfg.muted) set("--muted", cfg.muted);
+    if(cfg.bd) set("--bd", cfg.bd);
+  } else {
+    // In dark mode keep the dark defaults unless explicitly overridden later
+    ["--bg","--card","--text","--muted","--bd"].forEach(k=>b.style.removeProperty(k));
+  }
+  $$(".sw").forEach(s=>s.classList.toggle("on",s.dataset.i===theme));
+}
 new MutationObserver(applyTheme).observe(document.body,{attributes:true,attributeFilter:["class"]});
 
 /* ③ Langues (textes fixes du site) */
-const T={"Carte":["Map","Mapa","الخريطة"],"Près de chez vous":["Near you","Cerca de ti","بالقرب منك"],"Numéros & sites":["Numbers & sites","Números y webs","أرقام ومواقع"],"Simulateur":["Simulator","Simulador","المحاكي"],"Bénévolat":["Volunteering","Voluntariado","التطوع"],
+const T={
+"Carte":["Map","Mapa","الخريطة"],
+"Près de chez vous":["Near you","Cerca de ti","بالقرب منك"],
+"Numéros & sites":["Numbers & sites","Números y webs","أرقام ومواقع"],
+"Simulateur":["Simulator","Simulador","المحاكي"],
+"Bénévolat":["Volunteering","Voluntariado","التطوع"],
 "Trouvez de l'aide dans n'importe quelle ville de France":["Find help in any city in France","Encuentra ayuda en cualquier ciudad de Francia","ابحث عن المساعدة في أي مدينة في فرنسا"],
-"Chercher":["Search","Buscar","بحث"],"📍 Autour de moi":["📍 Near me","📍 Cerca de mí","📍 بالقرب مني"],"🥫 Manger":["🥫 Food","🥫 Comer","🥫 طعام"],"🚿 Douche":["🚿 Shower","🚿 Ducha","🚿 استحمام"],"💼 Emploi":["💼 Jobs","💼 Empleo","💼 عمل"],"🎓 Étudiant":["🎓 Student","🎓 Estudiante","🎓 طالب"],"👕 Vêtements":["👕 Clothes","👕 Ropa","👕 ملابس"],
-"Lieux référencés":["Places listed","Lugares","أماكن"],"Vos favoris":["Your favourites","Tus favoritos","مفضلتك"],"Gratuit & sans compte":["Free, no account","Gratis, sin cuenta","مجاني بدون حساب"],
-"🗺️ Carte des centres d'aide":["🗺️ Map of help centres","🗺️ Mapa de centros de ayuda","🗺️ خريطة مراكز المساعدة"],"🔄 Chercher dans cette zone":["🔄 Search this area","🔄 Buscar en esta zona","🔄 ابحث في هذه المنطقة"],"🇫🇷 Vue France":["🇫🇷 France view","🇫🇷 Vista Francia","🇫🇷 عرض فرنسا"],
-"Voir plus de résultats":["More results","Más resultados","المزيد"],"+ Lieu":["+ Place","+ Lugar","+ مكان"],"🚨 Gratuit, 24h/24 :":["🚨 Free, 24/7:","🚨 Gratis, 24h:","🚨 مجاني 24/24:"],
-"📞 Numéros utiles & sites officiels":["📞 Useful numbers & official sites","📞 Números útiles y webs oficiales","📞 أرقام مفيدة ومواقع رسمية"],"🧭 Simulateur & démarches":["🧭 Simulator & procedures","🧭 Simulador y trámites","🧭 المحاكي والإجراءات"],
-"🙋 Bénévolat, dons & partage":["🙋 Volunteering, donations & sharing","🙋 Voluntariado y donaciones","🙋 التطوع والتبرعات"],"Que puis-je faire ?":["What can I do?","¿Qué puedo hacer?","ماذا يمكنني أن أفعل؟"],"Afficher mes pistes":["Show my options","Ver mis opciones","اعرض الخيارات"],"✅ Checklist des démarches":["✅ Checklist","✅ Lista de trámites","✅ قائمة المهام"],"Réinitialiser":["Reset","Restablecer","إعادة ضبط"]};
+"Tapez votre ville ou votre code postal : banques alimentaires, magasins solidaires, hébergements, accueils de jour, centres sociaux… autour de vous.":["Type your city or postcode: food banks, solidarity shops, shelters, day centres, social centres… near you.","Escribe tu ciudad o código postal: bancos de alimentos, tiendas solidarias, albergues, centros de día… cerca de ti.","اكتب مدينتك أو الرمز البريدي: بنوك الطعام، المتاجر التضامنية، الملاجئ… بالقرب منك."],
+"Chercher":["Search","Buscar","بحث"],
+"📍 Autour de moi":["📍 Near me","📍 Cerca de mí","📍 بالقرب مني"],
+"🥫 Manger":["🥫 Food","🥫 Comer","🥫 طعام"],
+"🚿 Douche":["🚿 Shower","🚿 Ducha","🚿 استحمام"],
+"💼 Emploi":["💼 Jobs","💼 Empleo","💼 عمل"],
+"🎓 Étudiant":["🎓 Student","🎓 Estudiante","🎓 طالب"],
+"👕 Vêtements":["👕 Clothes","👕 Ropa","👕 ملابس"],
+"Lieux référencés":["Places listed","Lugares listados","أماكن مدرجة"],
+"Communes cherchables":["Searchable towns","Municipios","بلديات قابلة للبحث"],
+"Vos favoris":["Your favourites","Tus favoritos","مفضلتك"],
+"Gratuit & sans compte":["Free, no account","Gratis, sin cuenta","مجاني بدون حساب"],
+"🗺️ Carte des centres d'aide":["🗺️ Map of help centres","🗺️ Mapa de centros de ayuda","🗺️ خريطة مراكز المساعدة"],
+"🔄 Chercher dans cette zone":["🔄 Search this area","🔄 Buscar en esta zona","🔄 ابحث في هذه المنطقة"],
+"🇫🇷 Vue France":["🇫🇷 France view","🇫🇷 Vista Francia","🇫🇷 عرض فرنسا"],
+"Voir plus de résultats":["More results","Más resultados","المزيد من النتائج"],
+"+ Lieu":["+ Place","+ Lugar","+ مكان"],
+"🚨 Gratuit, 24h/24 :":["🚨 Free, 24/7:","🚨 Gratis, 24h:","🚨 مجاني 24/24:"],
+"📞 Numéros utiles & sites officiels":["📞 Useful numbers & official sites","📞 Números útiles y webs oficiales","📞 أرقام مفيدة ومواقع رسمية"],
+"🧭 Simulateur & démarches":["🧭 Simulator & procedures","🧭 Simulador y trámites","🧭 المحاكي والإجراءات"],
+"🙋 Bénévolat, dons & partage":["🙋 Volunteering, donations & sharing","🙋 Voluntariado y donaciones","🙋 التطوع والتبرعات"],
+"Que puis-je faire ?":["What can I do?","¿Qué puedo hacer?","ماذا يمكنني أن أفعل؟"],
+"Afficher mes pistes":["Show my options","Ver mis opciones","اعرض الخيارات"],
+"✅ Checklist des démarches":["✅ Checklist","✅ Lista de trámites","✅ قائمة المهام"],
+"Réinitialiser":["Reset","Restablecer","إعادة ضبط"],
+"Vous n'êtes pas seul(e).":["You are not alone.","No estás solo/a.","أنت لست وحيداً."],
+"Sans compte":["No account","Sin cuenta","بدون حساب"],
+"Sans jugement":["No judgement","Sin juicio","بدون أحكام"],
+"Gratuit":["Free","Gratis","مجاني"],
+"À votre rythme":["At your pace","A tu ritmo","على وتيرتك"],
+"Respirer une minute":["Breathe for a minute","Respirar un minuto","تنفس لدقيقة"],
+"Inspirez…":["Breathe in…","Inhala…","شهيق…"],
+"Expirez…":["Breathe out…","Exhala…","زفير…"],
+"Détails":["Details","Detalles","التفاصيل"],
+"Repère":["Landmark","Referencia","مرجع"],
+"Ajouté par vous":["Added by you","Añadido por ti","أضفته أنت"],
+"Filtrer par mot-clé (ex : repas, douche, Emmaüs)…":["Filter by keyword (e.g. meal, shower, Emmaüs)…","Filtrar por palabra clave…","تصفية حسب الكلمة…"],
+"Charger en déplaçant la carte":["Load while moving the map","Cargar al mover el mapa","تحميل عند تحريك الخريطة"],
+"Ranger par catégorie":["Group by category","Agrupar por categoría","تجميع حسب الفئة"],
+"Par distance / ordre d'origine":["By distance / original order","Por distancia / orden original","حسب المسافة"],
+"Ordre alphabétique":["Alphabetical order","Orden alfabético","ترتيب أبجدي"],
+"Aider à son tour":["Help in turn","Ayudar a tu vez","ساعد بدورك"],
+"Sauvegarde & partage":["Save & share","Guardar y compartir","حفظ ومشاركة"],
+"Exporter (.json)":["Export (.json)","Exportar (.json)","تصدير"],
+"Copier le lien":["Copy link","Copiar enlace","نسخ الرابط"],
+"Imprimer":["Print","Imprimir","طباعة"],
+"Mode sombre / clair":["Dark / light mode","Modo oscuro / claro","الوضع الداكن / الفاتح"]
+};
 const LI={fr:-1,en:0,es:1,ar:2},orig=new WeakMap();
 function applyLang(){
   const i=LI[lang];document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";
   const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;
-  while(n=w.nextNode()){if(n.parentNode.closest("#side,script,style"))continue;
-    if(!orig.has(n)){const k=n.nodeValue.trim();if(!T[k])continue;orig.set(n,[n.nodeValue,k])}
-    const[o,k]=orig.get(n);n.nodeValue=i<0?o:o.replace(k,T[k][i])}
-  $("#city").placeholder=i<0?"Ville ou code postal (ex : Bordeaux, 33000)":["City or postcode (e.g. Bordeaux, 33000)","Ciudad o código postal (ej. Burdeos, 33000)","المدينة أو الرمز البريدي"][i]}
+  while(n=w.nextNode()){
+    if(n.parentNode.closest("#side,script,style,#cBox"))continue;
+    const raw=n.nodeValue;
+    if(!orig.has(n)){
+      const k=raw.trim();
+      if(!T[k])continue;
+      orig.set(n,[raw,k]);
+    }
+    const[o,k]=orig.get(n);
+    n.nodeValue=i<0?o:o.replace(k,T[k][i]);
+  }
+  // Placeholders & dynamic bits
+  const ph=i<0?"Ville ou code postal (ex : Bordeaux, 33000)":["City or postcode (e.g. Bordeaux, 33000)","Ciudad o código postal (ej. Burdeos, 33000)","المدينة أو الرمز البريدي"][i];
+  const city=$("#city");if(city)city.placeholder=ph;
+  const kw=$("#kw");if(kw)kw.placeholder=i<0?"Filtrer par mot-clé (ex : repas, douche, Emmaüs)…":["Filter by keyword (e.g. meal, shower, Emmaüs)…","Filtrar por palabra clave…","تصفية حسب الكلمة…"][i];
+}
 
 /* Barre d'outils visiteurs (langue + couleurs) */
 const tb=document.createElement("div");tb.className="tb";
@@ -776,9 +867,17 @@ $("footer").insertAdjacentHTML("beforeend","<br>Fait avec 💙 pour que personne
 /* ⑤ Cartes rangées par catégorie */
 const ICO={"Alimentaire":"🥫","Magasins solidaires":"🛍️","Aides & accueil social":"🤝","Santé & logement":"🩺","Hygiène & numérique":"🚿","Emploi & insertion":"💼","Étudiants":"🎓"},CAT=Object.keys(ICO);
 let sort=localStorage.getItem("sf_sort")||"cat";
-const sel=document.createElement("select");sel.className="field";sel.style.maxWidth="300px";
-sel.innerHTML='<option value="cat">📂 Ranger par catégorie</option><option value="dist">📏 Par distance / ordre d\'origine</option><option value="az">🔤 Ordre alphabétique</option>';sel.value=sort;
-$("#cards").before(sel);
+const sel=document.createElement("select");sel.className="field";sel.style.maxWidth="260px";
+sel.innerHTML='<option value="cat">📂 Grouper par catégorie</option><option value="dist">📏 Par distance</option><option value="az">🔤 A → Z</option>';sel.value=sort;
+const compactBtn=document.createElement("button");
+compactBtn.className="btn l";
+compactBtn.style.marginLeft="8px";
+compactBtn.textContent=localStorage.getItem("sf_compact")==="1"?"📇 Vue normale":"🗂️ Vue compacte";
+if(localStorage.getItem("sf_compact")==="1")document.body.classList.add("compact");
+compactBtn.onclick=()=>{const on=!document.body.classList.contains("compact");document.body.classList.toggle("compact",on);localStorage.setItem("sf_compact",on?"1":"0");compactBtn.textContent=on?"📇 Vue normale":"🗂️ Vue compacte"};
+const toolsRow=document.createElement("div");toolsRow.style.cssText="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:1rem 0 .6rem";
+toolsRow.append(sel,compactBtn);
+$("#cards").before(toolsRow);
 const ob=new MutationObserver(org);
 function org(){
   ob.disconnect();
@@ -871,11 +970,16 @@ function panel(){
   let h='<div class="tabs">'+TABS.map(t=>'<button class="chip'+(t[0]===tab?" on":"")+'" data-t="'+t[0]+'">'+t[1]+"</button>").join("")+'</div><div class="sb">';
 
   if(tab==="app"){
-    h+='<h3>Couleurs & typographie</h3>';
-    h+='<div class="two2"><label>Couleur principale<input id="cP" type="color" class="field" value="'+c.primary+'"></label><label>Couleur d\'accent<input id="cA" type="color" class="field" value="'+c.accent+'"></label></div>';
+    h+='<h3>Couleurs principales</h3>';
+    h+='<div class="two2"><label>Principale (boutons, titres)<input id="cP" type="color" class="field" value="'+c.primary+'"></label><label>Accent (liens, highlights)<input id="cA" type="color" class="field" value="'+c.accent+'"></label></div>';
+    h+='<h3 style="margin-top:1.2rem">Surfaces (zones « blanches »)</h3>';
+    h+='<div class="two2"><label>Fond de page<input id="cBg" type="color" class="field" value="'+(c.bg||"#f1f5f9")+'"></label><label>Cartes & panneaux<input id="cCard" type="color" class="field" value="'+(c.card||"#ffffff")+'"></label></div>';
+    h+='<div class="two2"><label>Texte principal<input id="cTxt" type="color" class="field" value="'+(c.text||"#0f172a")+'"></label><label>Texte secondaire<input id="cMut" type="color" class="field" value="'+(c.muted||"#475569")+'"></label></div>';
+    h+='<label>Bordures<input id="cBd" type="color" class="field" value="'+(c.bd||"#cbd5e1")+'"></label>';
+    h+='<h3 style="margin-top:1.2rem">Typographie</h3>';
     h+='<label>Police<select id="cF" class="field">'+Object.entries(FONTS).map(([k,v])=>'<option value="'+e(k)+'"'+(k===c.font?" selected":"")+">"+v+"</option>").join("")+'</select></label>';
     h+='<label>Taille du texte : <b id="cSv">'+c.size+'</b> px<input id="cS" type="range" min="13" max="22" value="'+c.size+'" style="width:100%"></label>';
-    h+='<p class="sub">Les visiteurs peuvent aussi choisir parmi 10 thèmes de couleurs via le bouton 🎨 de la barre de navigation.</p>';
+    h+='<p class="sub">Tu choisis n\'importe quelle teinte exacte. Les visiteurs ont aussi 10 thèmes rapides via le bouton 🎨.</p>';
   }
 
   if(tab==="txt"){
@@ -919,7 +1023,7 @@ function panel(){
   $$("[data-t]").forEach(b=>b.onclick=()=>{tab=b.dataset.t;panel()});
 
   const bind=(id,k,t)=>{const el=$("#"+id);if(!el)return;el.oninput=()=>{c[k]=t==="b"?el.checked:t==="n"?+el.value:el.value;if(id==="cS")$("#cSv").textContent=c.size;cfg=c;applyCfg()}};
-  [["cP","primary"],["cA","accent"],["cF","font"],["cS","size","n"],["cHT","heroTitle"],["cHTx","heroText"],["cFoot","footerText"],["cWarn","mapWarn"],["cC","calm","b"],["cM","maintenance","b"],["cMm","mmsg"],["cU","urgBar","b"],["fKpi","showKpis","b"],["fMap","showMap","b"],["fSim","showSimulator","b"],["fBen","showBenevolat","b"]].forEach(a=>bind(a[0],a[1],a[2]));
+  [["cP","primary"],["cA","accent"],["cBg","bg"],["cCard","card"],["cTxt","text"],["cMut","muted"],["cBd","bd"],["cF","font"],["cS","size","n"],["cHT","heroTitle"],["cHTx","heroText"],["cFoot","footerText"],["cWarn","mapWarn"],["cC","calm","b"],["cM","maintenance","b"],["cMm","mmsg"],["cU","urgBar","b"],["fKpi","showKpis","b"],["fMap","showMap","b"],["fSim","showSimulator","b"],["fBen","showBenevolat","b"]].forEach(a=>bind(a[0],a[1],a[2]));
 
   const kindEl=$("#cKind");
   if(kindEl)kindEl.oninput=()=>{c.calmMessages=kindEl.value.split("\n").map(s=>s.trim()).filter(Boolean);cfg=c;applyCfg()};
