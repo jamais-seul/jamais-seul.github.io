@@ -175,33 +175,104 @@ footer{background:var(--card);border-top:1px solid var(--bd);text-align:center;p
 </div>
 
 <h2 class="t" id="cv">📄 Créer mon CV</h2>
-<p class="sub">Remplissez vos infos → un CV clair et professionnel est généré. <b>Tout reste sur votre appareil</b> (personne d'autre n'y a accès). Vous pouvez le télécharger ou l'imprimer.</p>
+<p class="sub">Choisissez un modèle, remplissez (beaucoup de listes déroulantes) → CV pro généré en 1 clic. <b>100 % privé</b> : tout reste sur votre appareil.</p>
+<div class="panel" style="margin-bottom:1rem">
+  <label style="font-weight:700">Modèle de CV</label>
+  <div class="chips" id="cvModels">
+    <button class="chip on" data-model="classic">📄 Classique</button>
+    <button class="chip" data-model="modern">🎨 Moderne</button>
+    <button class="chip" data-model="sidebar">📑 Barre latérale</button>
+    <button class="chip" data-model="minimal">✨ Minimal</button>
+  </div>
+</div>
 <div class="two">
   <div class="panel">
-    <h3>Vos informations</h3>
-    <label>Prénom & Nom</label><input id="cvName" class="field" placeholder="Ex : Marie Dupont" maxlength="80">
-    <label>Email</label><input id="cvEmail" class="field" placeholder="marie@email.com" maxlength="80">
-    <label>Téléphone</label><input id="cvTel" class="field" placeholder="06 12 34 56 78" maxlength="20">
-    <label>Ville</label><input id="cvCity" class="field" placeholder="Bordeaux" maxlength="60">
-    <label>Titre / objectif</label><input id="cvTitle" class="field" placeholder="Ex : Recherche un poste d'aide à domicile" maxlength="120">
-    <label>Expériences (une par ligne)</label><textarea id="cvExp" class="field" rows="4" placeholder="2022-2024 — Serveuse, Café de la Gare&#10;2020-2022 — Aide à domicile, association X"></textarea>
-    <label>Formations (une par ligne)</label><textarea id="cvForm" class="field" rows="3" placeholder="2020 — CAP Cuisine&#10;2018 — Bac pro"></textarea>
-    <label>Compétences (séparées par des virgules)</label><input id="cvSkills" class="field" placeholder="Ponctualité, travail en équipe, permis B, anglais" maxlength="200">
-    <div class="row" style="margin-top:.8rem">
-      <button class="btn g" id="cvGen" style="flex:1">✨ Générer mon CV</button>
+    <h3>1. Identité</h3>
+    <div class="two2">
+      <div><label>Prénom</label><input id="cvFirst" class="field" placeholder="Marie" maxlength="40"></div>
+      <div><label>Nom</label><input id="cvLast" class="field" placeholder="Dupont" maxlength="40"></div>
+    </div>
+    <div class="two2">
+      <div><label>Email</label><input id="cvEmail" class="field" placeholder="marie@email.com" maxlength="80"></div>
+      <div><label>Téléphone</label><input id="cvTel" class="field" placeholder="06 12 34 56 78" maxlength="20"></div>
+    </div>
+    <div class="two2">
+      <div><label>Ville</label><input id="cvCity" class="field" placeholder="Toulouse" maxlength="60"></div>
+      <div><label>Âge (optionnel)</label><input id="cvAge" class="field" type="number" min="16" max="80" placeholder="28"></div>
+    </div>
+    <label>Titre du poste visé</label>
+    <select id="cvTitle" class="field">
+      <option value="">— Choisir ou écrire —</option>
+      <option>Aide à domicile / Auxiliaire de vie</option>
+      <option>Agent d'entretien / Propreté</option>
+      <option>Serveur / Serveuse</option>
+      <option>Employé polyvalent de restauration</option>
+      <option>Vendeur / Vendeuse</option>
+      <option>Manutentionnaire / Magasinier</option>
+      <option>Agent de sécurité</option>
+      <option>Aide-soignant / Aide-soignante</option>
+      <option>Agent administratif</option>
+      <option>Jardinier / Espaces verts</option>
+      <option>Cuisinier / Commis de cuisine</option>
+      <option>Chauffeur / Livreur</option>
+      <option>Agent d'accueil</option>
+      <option>Autre (préciser dans le profil)</option>
+    </select>
+    <label>Ou titre personnalisé</label><input id="cvTitleCustom" class="field" placeholder="Ex : Recherche un CDI en logistique" maxlength="100">
+
+    <h3 style="margin-top:1.2rem">2. Profil (2-3 phrases)</h3>
+    <textarea id="cvProfile" class="field" rows="3" placeholder="Motivé(e), ponctuel(le) et à l'écoute. Je recherche un poste stable où je pourrai mettre mon sérieux et mon sens du service au profit d'une équipe."></textarea>
+
+    <h3 style="margin-top:1.2rem">3. Expériences</h3>
+    <p class="sub">Ajoutez jusqu'à 4 expériences (les plus récentes en premier)</p>
+    <div id="cvExps"></div>
+    <button class="btn l" id="cvAddExp" style="margin-top:.4rem">+ Ajouter une expérience</button>
+
+    <h3 style="margin-top:1.2rem">4. Formations</h3>
+    <div id="cvForms"></div>
+    <button class="btn l" id="cvAddForm" style="margin-top:.4rem">+ Ajouter une formation</button>
+
+    <h3 style="margin-top:1.2rem">5. Compétences & divers</h3>
+    <label>Compétences (cochez)</label>
+    <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin:.4rem 0 .8rem" id="cvSkillChecks">
+      <label class="ck"><input type="checkbox" value="Ponctualité"> Ponctualité</label>
+      <label class="ck"><input type="checkbox" value="Travail en équipe"> Travail en équipe</label>
+      <label class="ck"><input type="checkbox" value="Sens du service"> Sens du service</label>
+      <label class="ck"><input type="checkbox" value="Rigueur"> Rigueur</label>
+      <label class="ck"><input type="checkbox" value="Autonomie"> Autonomie</label>
+      <label class="ck"><input type="checkbox" value="Polyvalence"> Polyvalence</label>
+      <label class="ck"><input type="checkbox" value="Gestion du stress"> Gestion du stress</label>
+      <label class="ck"><input type="checkbox" value="Permis B"> Permis B</label>
+      <label class="ck"><input type="checkbox" value="Informatique (Word, Excel)"> Informatique</label>
+      <label class="ck"><input type="checkbox" value="Anglais niveau scolaire"> Anglais</label>
+    </div>
+    <label>Autres compétences</label><input id="cvSkillsExtra" class="field" placeholder="Ex : CACES, HACCP, langue des signes…" maxlength="150">
+    <label>Langues</label>
+    <select id="cvLang" class="field">
+      <option value="Français (langue maternelle)">Français (langue maternelle)</option>
+      <option value="Français + Anglais notions">Français + Anglais notions</option>
+      <option value="Français + Anglais intermédiaire">Français + Anglais intermédiaire</option>
+      <option value="Français + Espagnol">Français + Espagnol</option>
+      <option value="Français + Arabe">Français + Arabe</option>
+      <option value="Autre">Autre (préciser dans compétences)</option>
+    </select>
+    <label>Centres d'intérêt (optionnel)</label><input id="cvInterests" class="field" placeholder="Sport, lecture, bénévolat, cuisine…" maxlength="120">
+
+    <div class="row" style="margin-top:1.2rem">
+      <button class="btn g" id="cvGen" style="flex:1">✨ Générer le CV</button>
       <button class="btn l" id="cvSave">💾 Sauvegarder</button>
       <button class="btn l" id="cvLoad">📂 Charger</button>
     </div>
     <p class="sub" id="cvMsg" style="margin-top:.5rem"></p>
   </div>
   <div class="panel">
-    <h3>Aperçu du CV</h3>
-    <div id="cvPreview" style="background:#fff;color:#111;border:1px solid #ddd;border-radius:8px;padding:1.2rem;min-height:280px;font-size:.9rem;line-height:1.45">
-      <p style="color:#888;text-align:center;margin-top:3rem">Le CV apparaîtra ici après génération.</p>
+    <h3>Aperçu en direct</h3>
+    <div id="cvPreview" style="background:#fff;color:#111;border:1px solid #ddd;border-radius:8px;padding:0;min-height:400px;font-size:.9rem;line-height:1.45;overflow:hidden">
+      <p style="color:#888;text-align:center;margin:4rem 1rem">Choisissez un modèle et remplissez le formulaire → le CV apparaît ici.</p>
     </div>
     <div class="row" style="margin-top:.8rem">
       <button class="btn" id="cvPrint" style="flex:1">🖨️ Imprimer / PDF</button>
-      <button class="btn l" id="cvDl">⬇️ Télécharger (.html)</button>
+      <button class="btn l" id="cvDl">⬇️ Télécharger</button>
     </div>
   </div>
 </div>
@@ -670,27 +741,145 @@ $("#kw").addEventListener("input",function(){S.kw=this.value;S.show=4;renderAll(
 
 
 
-/* ===== ASSISTANT IA (spécialisé Solidarité France) ===== */
+
+/* ===== ASSISTANT IA (spécialisé Solidarité France – avec adresses réelles) ===== */
+const AI_PLACES = {
+  "toulouse": {
+    "santé": [
+      {n:"PASS – CHU de Toulouse (Hôpital Purpan)", a:"Place du Docteur Baylac, 31059 Toulouse", t:"05 61 77 22 33", w:"https://www.chu-toulouse.fr"},
+      {n:"PASS – Hôpital Rangueil", a:"1 Avenue du Professeur Jean Poulhès, 31400 Toulouse", t:"05 61 32 25 33", w:"https://www.chu-toulouse.fr"}
+    ],
+    "alimentaire": [
+      {n:"Restos du Cœur – Toulouse", a:"Plusieurs centres (voir site)", t:"", w:"https://www.restosducoeur.org/pres-de-chez-vous/"},
+      {n:"Banque Alimentaire de la Haute-Garonne", a:"Toulouse", t:"", w:"https://www.banquealimentaire.org"}
+    ],
+    "hébergement": [{n:"115 Haute-Garonne", a:"Appel gratuit 24h/24", t:"115", w:""}]
+  },
+  "paris": {
+    "santé": [
+      {n:"PASS – Hôpital Saint-Louis", a:"1 Avenue Claude Vellefaux, 75010 Paris", t:"01 42 49 49 49", w:""},
+      {n:"PASS – Hôpital Hôtel-Dieu", a:"1 Parvis Notre-Dame, 75004 Paris", t:"01 42 34 82 34", w:""}
+    ],
+    "alimentaire": [
+      {n:"Restos du Cœur Paris", a:"Centres multiples", t:"", w:"https://www.restosducoeur.org/pres-de-chez-vous/"},
+      {n:"Les Restos du Cœur – siège / orientation", a:"Paris", t:"", w:"https://www.restosducoeur.org"}
+    ],
+    "hébergement": [{n:"115 Paris / Samu Social", a:"Appel gratuit 24h/24", t:"115", w:"https://www.samusocial.paris"}]
+  },
+  "lyon": {
+    "santé": [
+      {n:"PASS – Hospices Civils de Lyon (Hôpital Édouard Herriot)", a:"5 Place d'Arsonval, 69003 Lyon", t:"04 72 11 73 00", w:"https://www.chu-lyon.fr"}
+    ],
+    "alimentaire": [{n:"Restos du Cœur Lyon", a:"Plusieurs centres", t:"", w:"https://www.restosducoeur.org/pres-de-chez-vous/"}],
+    "hébergement": [{n:"115 Rhône", a:"Appel gratuit 24h/24", t:"115", w:""}]
+  },
+  "marseille": {
+    "santé": [
+      {n:"PASS – AP-HM (Hôpital de la Conception)", a:"147 Boulevard Baille, 13005 Marseille", t:"04 91 38 00 00", w:"https://www.ap-hm.fr"}
+    ],
+    "alimentaire": [{n:"Restos du Cœur Marseille", a:"Plusieurs centres", t:"", w:"https://www.restosducoeur.org/pres-de-chez-vous/"}],
+    "hébergement": [{n:"115 Bouches-du-Rhône", a:"Appel gratuit 24h/24", t:"115", w:""}]
+  },
+  "bordeaux": {
+    "santé": [
+      {n:"PASS – CHU de Bordeaux (Groupe hospitalier Pellegrin)", a:"Place Amélie Raba Léon, 33076 Bordeaux", t:"05 56 79 56 79", w:"https://www.chu-bordeaux.fr"}
+    ],
+    "alimentaire": [{n:"Restos du Cœur Bordeaux / Talence", a:"Talence et Bordeaux", t:"", w:"https://www.restosducoeur.org/pres-de-chez-vous/"}],
+    "hébergement": [{n:"115 Gironde", a:"Appel gratuit 24h/24", t:"115", w:""}]
+  },
+  "lille": {
+    "santé": [{n:"PASS – CHU de Lille", a:"Rue Michel Polonovski / Avenue Oscar Lambret, 59000 Lille", t:"03 20 44 59 62", w:"https://www.chu-lille.fr"}],
+    "alimentaire": [{n:"Restos du Cœur Lille", a:"Plusieurs centres", t:"", w:"https://www.restosducoeur.org/pres-de-chez-vous/"}],
+    "hébergement": [{n:"115 Nord", a:"Appel gratuit 24h/24", t:"115", w:""}]
+  },
+  "nantes": {
+    "santé": [{n:"PASS – CHU de Nantes", a:"1 Place Alexis-Ricordeau, 44000 Nantes", t:"02 40 08 33 33", w:"https://www.chu-nantes.fr"}],
+    "alimentaire": [{n:"Restos du Cœur Nantes", a:"Plusieurs centres", t:"", w:"https://www.restosducoeur.org/pres-de-chez-vous/"}],
+    "hébergement": [{n:"115 Loire-Atlantique", a:"Appel gratuit 24h/24", t:"115", w:""}]
+  },
+  "strasbourg": {
+    "santé": [{n:"PASS – Hôpitaux Universitaires de Strasbourg", a:"1 Place de l'Hôpital, 67000 Strasbourg", t:"03 88 11 67 68", w:"https://www.chru-strasbourg.fr"}],
+    "alimentaire": [{n:"Restos du Cœur Strasbourg", a:"Plusieurs centres", t:"", w:"https://www.restosducoeur.org/pres-de-chez-vous/"}],
+    "hébergement": [{n:"115 Bas-Rhin", a:"Appel gratuit 24h/24", t:"115", w:""}]
+  },
+  "montpellier": {
+    "santé": [{n:"PASS – CHU de Montpellier", a:"191 Avenue du Doyen Gaston Giraud, 34295 Montpellier", t:"04 67 33 67 33", w:"https://www.chu-montpellier.fr"}],
+    "alimentaire": [{n:"Restos du Cœur Montpellier", a:"Plusieurs centres", t:"", w:"https://www.restosducoeur.org/pres-de-chez-vous/"}],
+    "hébergement": [{n:"115 Hérault", a:"Appel gratuit 24h/24", t:"115", w:""}]
+  },
+  "rennes": {
+    "santé": [{n:"PASS – CHU de Rennes", a:"2 Rue Henri Le Guilloux, 35033 Rennes", t:"02 99 28 43 21", w:"https://www.chu-rennes.fr"}],
+    "alimentaire": [{n:"Restos du Cœur Rennes", a:"Plusieurs centres", t:"", w:"https://www.restosducoeur.org/pres-de-chez-vous/"}],
+    "hébergement": [{n:"115 Ille-et-Vilaine", a:"Appel gratuit 24h/24", t:"115", w:""}]
+  },
+  "nice": {
+    "santé": [{n:"PASS – CHU de Nice", a:"30 Voie Romaine / Hôpital Pasteur, 06001 Nice", t:"04 92 03 77 77", w:"https://www.chu-nice.fr"}],
+    "alimentaire": [{n:"Restos du Cœur Nice", a:"Plusieurs centres", t:"", w:"https://www.restosducoeur.org/pres-de-chez-vous/"}],
+    "hébergement": [{n:"115 Alpes-Maritimes", a:"Appel gratuit 24h/24", t:"115", w:""}]
+  }
+};
+
 const AI_KB = [
-  {k:["manger","repas","alimentaire","faim","manger gratuit","colis","épicerie","restos"],r:"Pour manger ou faire des courses à petit prix :\n• Appelez ou allez au **CCAS** de votre mairie (orientation vers épicerie solidaire).\n• **Restos du Cœur**, **Secours Populaire**, **Secours Catholique**, **Banques alimentaires**.\n• Utilisez la carte ou la section « Près de chez vous » en haut de cette page.\n• Soliguide.fr liste aussi les distributions de repas."},
-  {k:["dormir","hébergement","115","sdf","rue","nuit","abri"],r:"Hébergement d'urgence :\n• **Appelez le 115** (gratuit, 24h/24) — c'est le numéro officiel.\n• Danger immédiat : **17** ou **112**.\n• Les accueils de jour (douche, courrier) sont visibles sur la carte et sur Soliguide.\n• Le CCAS peut aussi aider pour une domiciliation."},
-  {k:["santé","médecin","mutuelle","c2s","ameli","médicament","pass","soin"],r:"Soins sans mutuelle ou sans avance de frais :\n• **PASS** (Permanence d'Accès aux Soins de Santé) dans les hôpitaux publics.\n• Demandez la **Complémentaire Santé Solidaire (C2S)** sur ameli.fr ou au 3646.\n• Soutien psychologique gratuit : **3114** (24h/24)."},
-  {k:["emploi","travail","job","formation","mission locale","france travail","insertion"],r:"Emploi et insertion :\n• Inscrivez-vous à **France Travail** (ex-Pôle emploi) — tél. 3949.\n• Moins de 26 ans → **Mission Locale** (accompagnement global).\n• Structures d'insertion (SIAE) via la plateforme de l'inclusion.\n• Utilisez les filtres « Emploi & insertion » sur la carte."},
-  {k:["rsa","caf","apl","aide","argent","facture","loyer","budget"],r:"Aides financières :\n• **CAF** : RSA, APL, prime d'activité, aides exceptionnelles.\n• **CCAS** : aides d'urgence, Fonds de Solidarité Logement (FSL).\n• Point Conseil Budget (gratuit) pour les impayés.\n• Simulateur officiel : mesdroitssociaux.gouv.fr"},
-  {k:["domiciliation","adresse","courrier","papier","sans domicile"],r:"Domiciliation postale :\n• Allez au **CCAS** de la mairie de la commune où vous avez un lien (présence, vie quotidienne).\n• C'est un droit. Ils doivent vous domicilier si les conditions sont remplies.\n• Utile pour recevoir du courrier, ouvrir des droits, etc."},
-  {k:["violence","danger","femme","conjugale","enfant","maltraitance"],r:"En cas de danger ou de violences :\n• **Urgence immédiate** : 17 ou 112 (114 par SMS).\n• Violences faites aux femmes : **3919** (gratuit, 24h/24).\n• Enfant en danger : **119**.\n• Vous pouvez aussi aller dans un commissariat ou une association spécialisée."},
-  {k:["douche","hygiène","laverie","bagagerie","accueil de jour"],r:"Hygiène et accueil de jour :\n• Bains-douches, laveries solidaires et accueils de jour sont sur la carte (filtre « Hygiène & numérique »).\n• Soliguide.fr est très complet pour ces services.\n• Croix-Rouge et CCAS orientent aussi."},
-  {k:["étudiant","crous","bourse","agoraé","fac"],r:"Étudiants :\n• **CROUS** : bourses, aides d'urgence, logement, repas à 1 € si éligible.\n• Épiceries solidaires étudiantes (AGORAé / FAGE).\n• Service social du CROUS de votre académie.\n• Filtre « Étudiants » sur la carte."},
-  {k:["cv","curriculum","embauche","recrutement"],r:"Vous pouvez créer un CV directement sur ce site, dans la section **« Mon CV »** plus bas. Tout reste privé sur votre appareil."},
-  {k:["bonjour","salut","hello","aide","help"],r:"Bonjour 👋 Je suis l'assistant de Solidarité France. Je peux vous orienter vers de l'aide alimentaire, un hébergement, la santé, l'emploi, les démarches administratives… Posez votre question ou cliquez sur une suggestion."}
+  {k:["manger","repas","alimentaire","faim","colis","épicerie","restos"],r:"Pour manger ou faire des courses à petit prix :\n• **CCAS** de votre mairie (orientation vers épicerie solidaire)\n• **Restos du Cœur**, **Secours Populaire**, **Secours Catholique**, **Banques alimentaires**\n• Utilisez la carte en haut de cette page ou Soliguide.fr"},
+  {k:["dormir","hébergement","115","sdf","rue","nuit","abri"],r:"Hébergement d'urgence :\n• **Appelez le 115** (gratuit, 24h/24) — numéro officiel\n• Danger immédiat : **17** ou **112**\n• Accueils de jour (douche, courrier) sur la carte et Soliguide"},
+  {k:["santé","médecin","mutuelle","c2s","ameli","médicament","pass","soin","soigner","hôpital"],r:"Soins sans mutuelle :\n• **PASS** (Permanence d'Accès aux Soins) dans les hôpitaux publics\n• **Complémentaire Santé Solidaire (C2S)** sur ameli.fr ou 3646\n• Soutien psy gratuit : **3114**"},
+  {k:["emploi","travail","job","formation","mission locale","france travail"],r:"Emploi :\n• **France Travail** (3949)\n• Moins de 26 ans → **Mission Locale**\n• Filtre « Emploi & insertion » sur la carte"},
+  {k:["rsa","caf","apl","argent","facture","loyer"],r:"Aides financières :\n• **CAF** (RSA, APL, prime d'activité)\n• **CCAS** : aides d'urgence, FSL\n• Simulateur : mesdroitssociaux.gouv.fr"},
+  {k:["domiciliation","adresse","courrier","sans domicile"],r:"Domiciliation postale : allez au **CCAS** de la mairie (droit)."},
+  {k:["violence","danger","femme","conjugale","enfant"],r:"Danger : **17** ou **112** (114 par SMS)\nViolences femmes : **3919**\nEnfant en danger : **119**"},
+  {k:["douche","hygiène","laverie","bagagerie"],r:"Hygiène : filtre « Hygiène & numérique » sur la carte + Soliguide.fr"},
+  {k:["étudiant","crous","bourse"],r:"Étudiants : **CROUS** (bourses, repas à 1€, aides d'urgence) + épiceries AGORAé"},
+  {k:["cv","curriculum"],r:"Créez votre CV dans la section **« Mon CV »** juste en dessous. Tout reste privé sur votre appareil."},
+  {k:["bonjour","salut","hello","aide"],r:"Bonjour 👋 Je suis l'assistant Solidarité France. Demandez-moi où se soigner, manger, dormir dans une ville (ex : « où se soigner à Toulouse »), ou posez une question sur vos droits."}
 ];
 
+function aiNorm(s){return (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9\s]/g," ")}
+
 function aiReply(q){
-  q = (q||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
-  for(const item of AI_KB){
-    if(item.k.some(k => q.includes(k.normalize("NFD").replace(/[\u0300-\u036f]/g,"")))) return item.r;
+  const nq = aiNorm(q);
+  // Detect city + need
+  const cities = Object.keys(AI_PLACES);
+  let city = cities.find(c => nq.includes(c));
+  // Also common variants
+  if(!city && nq.includes("toulous")) city = "toulouse";
+  if(!city && (nq.includes("paris") || nq.includes("idf"))) city = "paris";
+  if(!city && nq.includes("lyon")) city = "lyon";
+  if(!city && nq.includes("marseille")) city = "marseille";
+  if(!city && nq.includes("bordeaux")) city = "bordeaux";
+  if(!city && nq.includes("lille")) city = "lille";
+  if(!city && nq.includes("nantes")) city = "nantes";
+  if(!city && nq.includes("strasbourg")) city = "strasbourg";
+  if(!city && nq.includes("montpellier")) city = "montpellier";
+  if(!city && nq.includes("rennes")) city = "rennes";
+  if(!city && nq.includes("nice")) city = "nice";
+
+  let need = null;
+  if(/soign|soin|sant|medecin|hopital|pass|mutuelle|medicament|se soigner|me soigner/.test(nq)) need = "santé";
+  else if(/manger|repas|aliment|faim|colis|epicerie|restos|nourrir/.test(nq)) need = "alimentaire";
+  else if(/dormir|heberg|115|sdf|rue|nuit|abri|loger/.test(nq)) need = "hébergement";
+
+  if(city && need && AI_PLACES[city][need]){
+    const list = AI_PLACES[city][need];
+    let out = `Voici des adresses utiles à **${city.charAt(0).toUpperCase()+city.slice(1)}** pour « ${need} » :\n\n`;
+    list.forEach(p => {
+      out += `📍 **${p.n}**\n`;
+      if(p.a) out += `   ${p.a}\n`;
+      if(p.t) out += `   📞 ${p.t}\n`;
+      if(p.w) out += `   🌐 ${p.w}\n`;
+      out += "\n";
+    });
+    out += "⚠️ Vérifiez toujours les horaires et conditions sur le site ou par téléphone avant de vous déplacer.\nVous pouvez aussi utiliser la **carte** en haut de cette page pour plus de lieux.";
+    return out;
   }
-  return "Je n'ai pas une réponse précise pour ça. Essayez de reformuler ou utilisez :\n• La **carte** et la recherche par ville\n• Les **numéros utiles** (115, 3919, 3114…)\n• Le **simulateur** plus bas sur la page\n• Soliguide.fr pour un annuaire très complet.";
+
+  if(city && !need){
+    return `Vous cherchez de l'aide à **${city.charAt(0).toUpperCase()+city.slice(1)}**. Précisez votre besoin :\n• « où se soigner à ${city} »\n• « où manger à ${city} »\n• « hébergement à ${city} »\n\nOu utilisez la recherche et la carte en haut de la page.`;
+  }
+
+  for(const item of AI_KB){
+    if(item.k.some(k => nq.includes(aiNorm(k)))) return item.r;
+  }
+  return "Je n'ai pas une réponse exacte. Essayez :\n• Une ville + un besoin (ex : « où se soigner à Toulouse »)\n• La **carte** et la recherche par ville\n• Les numéros : **115** (hébergement), **3919** (violences), **3114** (détresse)\n• Soliguide.fr pour un annuaire très précis";
 }
 
 function aiAdd(msg, who){
@@ -699,7 +888,7 @@ function aiAdd(msg, who){
   const div = document.createElement("div");
   div.style.cssText = who==="user"
     ? "align-self:flex-end;background:var(--navy);color:#fff;padding:.6rem 1rem;border-radius:14px 14px 4px 14px;max-width:85%;font-size:.92rem"
-    : "align-self:flex-start;background:var(--bg);border:1px solid var(--bd);padding:.6rem 1rem;border-radius:14px 14px 14px 4px;max-width:90%;font-size:.92rem;white-space:pre-wrap";
+    : "align-self:flex-start;background:var(--bg);border:1px solid var(--bd);padding:.7rem 1rem;border-radius:14px 14px 14px 4px;max-width:92%;font-size:.92rem;white-space:pre-wrap;line-height:1.5";
   div.innerHTML = msg.replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/\n/g,"<br>");
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
@@ -707,11 +896,11 @@ function aiAdd(msg, who){
 
 function aiSend(){
   const inp = document.getElementById("aiInput");
-  const q = (inp.value||"").trim();
+  const q = (inp?.value||"").trim();
   if(!q) return;
   aiAdd(q, "user");
   inp.value = "";
-  setTimeout(() => aiAdd(aiReply(q), "bot"), 400);
+  setTimeout(() => aiAdd(aiReply(q), "bot"), 350);
 }
 
 document.getElementById("aiSend")?.addEventListener("click", aiSend);
@@ -722,92 +911,234 @@ document.getElementById("aiSug")?.addEventListener("click", e => {
   document.getElementById("aiInput").value = b.dataset.q;
   aiSend();
 });
-// Welcome message
-setTimeout(() => aiAdd("Bonjour 👋 Je suis l'assistant de **Solidarité France**. Posez une question ou choisissez une suggestion ci-dessous.", "bot"), 600);
+setTimeout(() => aiAdd("Bonjour 👋 Je connais des adresses précises dans les grandes villes.\nEssayez par exemple :\n• « Où se soigner à Toulouse »\n• « Où manger à Lyon »\n• « Hébergement à Marseille »", "bot"), 500);
 
-/* ===== GÉNÉRATEUR DE CV (100% local / privé) ===== */
+/* ===== GÉNÉRATEUR DE CV PRO (modèles + formulaire intelligent) ===== */
+let cvModel = "classic";
+let expCount = 0, formCount = 0;
+
+function cvAddExp(data={}){
+  if(expCount >= 4) return;
+  expCount++;
+  const id = expCount;
+  const div = document.createElement("div");
+  div.className = "cv-block";
+  div.style.cssText = "border:1px solid var(--bd);border-radius:8px;padding:.7rem;margin-bottom:.5rem;background:var(--bg)";
+  div.innerHTML = `
+    <div class="two2">
+      <div><label>Poste</label><input class="field cv-poste" value="${esc(data.poste||"")}" placeholder="Ex : Serveuse" maxlength="60"></div>
+      <div><label>Employeur</label><input class="field cv-emp" value="${esc(data.emp||"")}" placeholder="Ex : Café de la Paix" maxlength="60"></div>
+    </div>
+    <div class="two2">
+      <div><label>Début</label><input class="field cv-deb" value="${esc(data.deb||"")}" placeholder="2022" maxlength="10"></div>
+      <div><label>Fin</label><input class="field cv-fin" value="${esc(data.fin||"")}" placeholder="2024 ou Actuel" maxlength="10"></div>
+    </div>
+    <label>Missions (optionnel)</label><input class="field cv-miss" value="${esc(data.miss||"")}" placeholder="Accueil clients, encaissement, service en salle…" maxlength="150">
+    <button type="button" class="btn rd" style="margin-top:.3rem;padding:.25rem .6rem;font-size:.8rem" onclick="this.parentElement.remove()">Supprimer</button>`;
+  document.getElementById("cvExps").appendChild(div);
+}
+
+function cvAddForm(data={}){
+  if(formCount >= 3) return;
+  formCount++;
+  const div = document.createElement("div");
+  div.className = "cv-block";
+  div.style.cssText = "border:1px solid var(--bd);border-radius:8px;padding:.7rem;margin-bottom:.5rem;background:var(--bg)";
+  div.innerHTML = `
+    <div class="two2">
+      <div><label>Diplôme / Formation</label><input class="field cv-dipl" value="${esc(data.dipl||"")}" placeholder="Ex : CAP Cuisine" maxlength="80"></div>
+      <div><label>Année</label><input class="field cv-an" value="${esc(data.an||"")}" placeholder="2020" maxlength="10"></div>
+    </div>
+    <label>Établissement (optionnel)</label><input class="field cv-etab" value="${esc(data.etab||"")}" placeholder="Lycée / CFA / Université" maxlength="80">
+    <button type="button" class="btn rd" style="margin-top:.3rem;padding:.25rem .6rem;font-size:.8rem" onclick="this.parentElement.remove()">Supprimer</button>`;
+  document.getElementById("cvForms").appendChild(div);
+}
+
+document.getElementById("cvAddExp")?.addEventListener("click", () => cvAddExp());
+document.getElementById("cvAddForm")?.addEventListener("click", () => cvAddForm());
+// Start with one empty of each
+setTimeout(() => { cvAddExp(); cvAddForm(); }, 300);
+
+document.getElementById("cvModels")?.addEventListener("click", e => {
+  const b = e.target.closest("[data-model]");
+  if(!b) return;
+  document.querySelectorAll("#cvModels .chip").forEach(c => c.classList.remove("on"));
+  b.classList.add("on");
+  cvModel = b.dataset.model;
+  cvBuild();
+});
+
+function cvGetData(){
+  const titleSel = document.getElementById("cvTitle")?.value || "";
+  const titleCustom = document.getElementById("cvTitleCustom")?.value || "";
+  const skills = [...document.querySelectorAll("#cvSkillChecks input:checked")].map(c => c.value);
+  const extra = (document.getElementById("cvSkillsExtra")?.value || "").split(",").map(s=>s.trim()).filter(Boolean);
+  const exps = [...document.querySelectorAll("#cvExps .cv-block")].map(b => ({
+    poste: b.querySelector(".cv-poste")?.value || "",
+    emp: b.querySelector(".cv-emp")?.value || "",
+    deb: b.querySelector(".cv-deb")?.value || "",
+    fin: b.querySelector(".cv-fin")?.value || "",
+    miss: b.querySelector(".cv-miss")?.value || ""
+  })).filter(x => x.poste || x.emp);
+  const forms = [...document.querySelectorAll("#cvForms .cv-block")].map(b => ({
+    dipl: b.querySelector(".cv-dipl")?.value || "",
+    an: b.querySelector(".cv-an")?.value || "",
+    etab: b.querySelector(".cv-etab")?.value || ""
+  })).filter(x => x.dipl);
+  return {
+    first: document.getElementById("cvFirst")?.value || "",
+    last: document.getElementById("cvLast")?.value || "",
+    email: document.getElementById("cvEmail")?.value || "",
+    tel: document.getElementById("cvTel")?.value || "",
+    city: document.getElementById("cvCity")?.value || "",
+    age: document.getElementById("cvAge")?.value || "",
+    title: titleCustom || titleSel || "Curriculum Vitae",
+    profile: document.getElementById("cvProfile")?.value || "",
+    exps, forms,
+    skills: [...skills, ...extra],
+    lang: document.getElementById("cvLang")?.value || "Français (langue maternelle)",
+    interests: document.getElementById("cvInterests")?.value || ""
+  };
+}
+
 function cvBuild(){
-  const name = (document.getElementById("cvName").value||"").trim() || "Prénom Nom";
-  const email = (document.getElementById("cvEmail").value||"").trim();
-  const tel = (document.getElementById("cvTel").value||"").trim();
-  const city = (document.getElementById("cvCity").value||"").trim();
-  const title = (document.getElementById("cvTitle").value||"").trim() || "Curriculum Vitae";
-  const exp = (document.getElementById("cvExp").value||"").trim().split("\n").filter(Boolean);
-  const form = (document.getElementById("cvForm").value||"").trim().split("\n").filter(Boolean);
-  const skills = (document.getElementById("cvSkills").value||"").trim().split(",").map(s=>s.trim()).filter(Boolean);
+  const d = cvGetData();
+  const name = [d.first, d.last].filter(Boolean).join(" ") || "Prénom Nom";
+  const contact = [d.email, d.tel, d.city, d.age ? d.age+" ans" : ""].filter(Boolean).join("  ·  ");
+  let html = "";
 
-  let html = `<div style="font-family:system-ui,sans-serif;color:#111;max-width:700px;margin:0 auto">
-    <div style="border-bottom:3px solid #0f4c81;padding-bottom:.8rem;margin-bottom:1.2rem">
-      <h1 style="margin:0;font-size:1.6rem;color:#0f4c81">${esc(name)}</h1>
-      <p style="margin:.3rem 0 0;font-size:1.05rem;color:#333">${esc(title)}</p>
-      <p style="margin:.4rem 0 0;font-size:.9rem;color:#555">${[email,tel,city].filter(Boolean).map(esc).join(" · ")}</p>
+  if(cvModel === "classic"){
+    html = `<div style="font-family:Georgia,serif;color:#1a1a1a;padding:1.5rem 1.8rem;max-width:700px;margin:0 auto">
+      <div style="text-align:center;border-bottom:2px solid #1a1a1a;padding-bottom:1rem;margin-bottom:1.2rem">
+        <h1 style="margin:0;font-size:1.7rem;letter-spacing:.03em">${esc(name)}</h1>
+        <p style="margin:.35rem 0 0;font-size:1.05rem;color:#333">${esc(d.title)}</p>
+        <p style="margin:.4rem 0 0;font-size:.85rem;color:#555">${esc(contact)}</p>
+      </div>
+      ${d.profile ? `<p style="font-style:italic;margin:0 0 1.2rem;color:#333">${esc(d.profile)}</p>` : ""}
+      ${d.exps.length ? `<h2 style="font-size:1rem;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #ccc;padding-bottom:.25rem;margin:1.3rem 0 .6rem">Expérience professionnelle</h2>
+        ${d.exps.map(e => `<div style="margin-bottom:.7rem"><b>${esc(e.poste)}</b>${e.emp ? " — "+esc(e.emp) : ""} <span style="float:right;color:#666;font-size:.85rem">${esc(e.deb)}${e.fin ? " – "+esc(e.fin) : ""}</span><div style="clear:both"></div>${e.miss ? `<div style="color:#444;font-size:.9rem;margin-top:.15rem">${esc(e.miss)}</div>` : ""}</div>`).join("")}` : ""}
+      ${d.forms.length ? `<h2 style="font-size:1rem;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #ccc;padding-bottom:.25rem;margin:1.3rem 0 .6rem">Formation</h2>
+        ${d.forms.map(f => `<div style="margin-bottom:.45rem"><b>${esc(f.dipl)}</b>${f.etab ? " — "+esc(f.etab) : ""} <span style="float:right;color:#666;font-size:.85rem">${esc(f.an)}</span><div style="clear:both"></div></div>`).join("")}` : ""}
+      ${d.skills.length ? `<h2 style="font-size:1rem;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #ccc;padding-bottom:.25rem;margin:1.3rem 0 .6rem">Compétences</h2><p style="margin:0">${d.skills.map(s=>esc(s)).join(" · ")}</p>` : ""}
+      <p style="margin:.8rem 0 0;font-size:.9rem"><b>Langues :</b> ${esc(d.lang)}</p>
+      ${d.interests ? `<p style="margin:.4rem 0 0;font-size:.9rem"><b>Centres d'intérêt :</b> ${esc(d.interests)}</p>` : ""}
     </div>`;
-  if(exp.length){
-    html += `<h2 style="font-size:1.05rem;color:#0f4c81;margin:1.2rem 0 .4rem;border-bottom:1px solid #ddd;padding-bottom:.2rem">Expériences</h2><ul style="margin:0;padding-left:1.2rem">`;
-    exp.forEach(l => html += `<li style="margin:.25rem 0">${esc(l)}</li>`);
-    html += `</ul>`;
+  } else if(cvModel === "modern"){
+    html = `<div style="font-family:system-ui,sans-serif;color:#111;padding:0;max-width:700px;margin:0 auto">
+      <div style="background:linear-gradient(135deg,#0f4c81,#1e3a5f);color:#fff;padding:1.5rem 1.8rem">
+        <h1 style="margin:0;font-size:1.7rem">${esc(name)}</h1>
+        <p style="margin:.3rem 0 0;opacity:.95;font-size:1.05rem">${esc(d.title)}</p>
+        <p style="margin:.5rem 0 0;font-size:.85rem;opacity:.85">${esc(contact)}</p>
+      </div>
+      <div style="padding:1.3rem 1.8rem">
+        ${d.profile ? `<p style="margin:0 0 1.1rem;color:#333;line-height:1.5">${esc(d.profile)}</p>` : ""}
+        ${d.exps.length ? `<h2 style="font-size:.95rem;color:#0f4c81;text-transform:uppercase;letter-spacing:.06em;margin:1.1rem 0 .5rem">Expériences</h2>
+          ${d.exps.map(e => `<div style="margin-bottom:.75rem;padding-left:.7rem;border-left:3px solid #0f4c81"><b>${esc(e.poste)}</b> ${e.emp ? "· "+esc(e.emp) : ""}<br><span style="font-size:.82rem;color:#666">${esc(e.deb)}${e.fin ? " – "+esc(e.fin) : ""}</span>${e.miss ? `<div style="font-size:.9rem;margin-top:.2rem;color:#333">${esc(e.miss)}</div>` : ""}</div>`).join("")}` : ""}
+        ${d.forms.length ? `<h2 style="font-size:.95rem;color:#0f4c81;text-transform:uppercase;letter-spacing:.06em;margin:1.1rem 0 .5rem">Formations</h2>
+          ${d.forms.map(f => `<div style="margin-bottom:.4rem"><b>${esc(f.dipl)}</b>${f.etab ? " · "+esc(f.etab) : ""} <span style="color:#666;font-size:.85rem">(${esc(f.an)})</span></div>`).join("")}` : ""}
+        ${d.skills.length ? `<h2 style="font-size:.95rem;color:#0f4c81;text-transform:uppercase;letter-spacing:.06em;margin:1.1rem 0 .5rem">Compétences</h2>
+          <div>${d.skills.map(s=>`<span style="display:inline-block;background:#e8f0fe;color:#0f4c81;padding:.2rem .55rem;border-radius:4px;margin:.15rem .25rem .15rem 0;font-size:.82rem">${esc(s)}</span>`).join("")}</div>` : ""}
+        <p style="margin:.9rem 0 0;font-size:.9rem"><b>Langues :</b> ${esc(d.lang)}</p>
+        ${d.interests ? `<p style="margin:.3rem 0 0;font-size:.9rem"><b>Centres d'intérêt :</b> ${esc(d.interests)}</p>` : ""}
+      </div>
+    </div>`;
+  } else if(cvModel === "sidebar"){
+    html = `<div style="font-family:system-ui,sans-serif;color:#111;display:flex;max-width:750px;margin:0 auto;min-height:420px">
+      <div style="width:34%;background:#1e293b;color:#f1f5f9;padding:1.4rem 1.1rem">
+        <h1 style="margin:0;font-size:1.35rem;line-height:1.25">${esc(name)}</h1>
+        <p style="margin:.4rem 0 .8rem;font-size:.9rem;opacity:.9">${esc(d.title)}</p>
+        <p style="font-size:.8rem;line-height:1.6;opacity:.85">${esc(contact).replace(/ · /g,"<br>")}</p>
+        ${d.skills.length ? `<h3 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.07em;margin:1.3rem 0 .4rem;opacity:.7">Compétences</h3><div style="font-size:.82rem;line-height:1.7">${d.skills.map(s=>"• "+esc(s)).join("<br>")}</div>` : ""}
+        <h3 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.07em;margin:1.2rem 0 .3rem;opacity:.7">Langues</h3>
+        <p style="font-size:.82rem;margin:0">${esc(d.lang)}</p>
+        ${d.interests ? `<h3 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.07em;margin:1.2rem 0 .3rem;opacity:.7">Intérêts</h3><p style="font-size:.82rem;margin:0">${esc(d.interests)}</p>` : ""}
+      </div>
+      <div style="width:66%;padding:1.4rem 1.3rem">
+        ${d.profile ? `<p style="margin:0 0 1rem;color:#334155;font-size:.92rem;line-height:1.5">${esc(d.profile)}</p>` : ""}
+        ${d.exps.length ? `<h2 style="font-size:.9rem;color:#0f4c81;text-transform:uppercase;letter-spacing:.06em;margin:0 0 .5rem;border-bottom:2px solid #e2e8f0;padding-bottom:.3rem">Expérience</h2>
+          ${d.exps.map(e => `<div style="margin-bottom:.7rem"><b style="color:#0f172a">${esc(e.poste)}</b><br><span style="font-size:.85rem;color:#64748b">${esc(e.emp)} · ${esc(e.deb)}${e.fin ? " – "+esc(e.fin) : ""}</span>${e.miss ? `<div style="font-size:.88rem;margin-top:.15rem;color:#334155">${esc(e.miss)}</div>` : ""}</div>`).join("")}` : ""}
+        ${d.forms.length ? `<h2 style="font-size:.9rem;color:#0f4c81;text-transform:uppercase;letter-spacing:.06em;margin:1rem 0 .5rem;border-bottom:2px solid #e2e8f0;padding-bottom:.3rem">Formation</h2>
+          ${d.forms.map(f => `<div style="margin-bottom:.4rem"><b>${esc(f.dipl)}</b><br><span style="font-size:.85rem;color:#64748b">${esc(f.etab)} ${f.an ? "· "+esc(f.an) : ""}</span></div>`).join("")}` : ""}
+      </div>
+    </div>`;
+  } else { // minimal
+    html = `<div style="font-family:system-ui,sans-serif;color:#222;padding:1.6rem 1.8rem;max-width:680px;margin:0 auto">
+      <h1 style="margin:0;font-size:1.6rem;font-weight:700">${esc(name)}</h1>
+      <p style="margin:.25rem 0 0;font-size:1rem;color:#555">${esc(d.title)}</p>
+      <p style="margin:.4rem 0 1.1rem;font-size:.85rem;color:#777">${esc(contact)}</p>
+      ${d.profile ? `<p style="margin:0 0 1.2rem;line-height:1.55">${esc(d.profile)}</p>` : ""}
+      ${d.exps.length ? `<h2 style="font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#888;margin:1.2rem 0 .5rem">Expérience</h2>
+        ${d.exps.map(e => `<div style="margin-bottom:.65rem;display:flex;justify-content:space-between;gap:1rem"><div><b>${esc(e.poste)}</b>${e.emp ? ", "+esc(e.emp) : ""}${e.miss ? `<div style="font-size:.9rem;color:#444;margin-top:.1rem">${esc(e.miss)}</div>` : ""}</div><span style="font-size:.85rem;color:#888;white-space:nowrap">${esc(e.deb)}${e.fin ? " – "+esc(e.fin) : ""}</span></div>`).join("")}` : ""}
+      ${d.forms.length ? `<h2 style="font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#888;margin:1.2rem 0 .5rem">Formation</h2>
+        ${d.forms.map(f => `<div style="margin-bottom:.4rem;display:flex;justify-content:space-between"><div><b>${esc(f.dipl)}</b>${f.etab ? ", "+esc(f.etab) : ""}</div><span style="font-size:.85rem;color:#888">${esc(f.an)}</span></div>`).join("")}` : ""}
+      ${d.skills.length ? `<h2 style="font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#888;margin:1.2rem 0 .4rem">Compétences</h2><p style="margin:0;font-size:.92rem">${d.skills.map(s=>esc(s)).join("  ·  ")}</p>` : ""}
+      <p style="margin:.9rem 0 0;font-size:.9rem"><b>Langues</b> — ${esc(d.lang)}</p>
+      ${d.interests ? `<p style="margin:.3rem 0 0;font-size:.9rem"><b>Intérêts</b> — ${esc(d.interests)}</p>` : ""}
+    </div>`;
   }
-  if(form.length){
-    html += `<h2 style="font-size:1.05rem;color:#0f4c81;margin:1.2rem 0 .4rem;border-bottom:1px solid #ddd;padding-bottom:.2rem">Formations</h2><ul style="margin:0;padding-left:1.2rem">`;
-    form.forEach(l => html += `<li style="margin:.25rem 0">${esc(l)}</li>`);
-    html += `</ul>`;
-  }
-  if(skills.length){
-    html += `<h2 style="font-size:1.05rem;color:#0f4c81;margin:1.2rem 0 .4rem;border-bottom:1px solid #ddd;padding-bottom:.2rem">Compétences</h2>
-    <p style="margin:0">${skills.map(s=>`<span style="display:inline-block;background:#e8f0fe;color:#0f4c81;padding:.2rem .6rem;border-radius:20px;margin:.2rem .3rem .2rem 0;font-size:.85rem">${esc(s)}</span>`).join("")}</p>`;
-  }
-  html += `<p style="margin-top:2rem;font-size:.75rem;color:#999;text-align:center">CV généré sur Solidarité France — données privées (stockées uniquement sur cet appareil)</p></div>`;
-  document.getElementById("cvPreview").innerHTML = html;
+
+  const prev = document.getElementById("cvPreview");
+  if(prev) prev.innerHTML = html;
   return html;
 }
 
 document.getElementById("cvGen")?.addEventListener("click", () => {
   cvBuild();
-  document.getElementById("cvMsg").textContent = "✅ CV généré. Vous pouvez l'imprimer ou le télécharger.";
+  document.getElementById("cvMsg").textContent = "✅ CV généré. Choisissez un autre modèle ou imprimez.";
 });
 
 document.getElementById("cvSave")?.addEventListener("click", () => {
-  const data = {
-    name: document.getElementById("cvName").value,
-    email: document.getElementById("cvEmail").value,
-    tel: document.getElementById("cvTel").value,
-    city: document.getElementById("cvCity").value,
-    title: document.getElementById("cvTitle").value,
-    exp: document.getElementById("cvExp").value,
-    form: document.getElementById("cvForm").value,
-    skills: document.getElementById("cvSkills").value
-  };
-  localStorage.setItem("sf_cv_private", JSON.stringify(data));
-  document.getElementById("cvMsg").textContent = "💾 Sauvegardé uniquement sur cet appareil (personne d'autre n'y a accès).";
+  const data = cvGetData();
+  data.model = cvModel;
+  localStorage.setItem("sf_cv_private_v2", JSON.stringify(data));
+  document.getElementById("cvMsg").textContent = "💾 Sauvegardé uniquement sur cet appareil.";
 });
 
 document.getElementById("cvLoad")?.addEventListener("click", () => {
   try {
-    const data = JSON.parse(localStorage.getItem("sf_cv_private") || "{}");
-    if(!data.name && !data.email){ document.getElementById("cvMsg").textContent = "Aucun CV sauvegardé sur cet appareil."; return; }
-    ["Name","Email","Tel","City","Title","Exp","Form","Skills"].forEach(k => {
-      const el = document.getElementById("cv"+k);
-      if(el) el.value = data[k.toLowerCase()] || "";
-    });
+    const data = JSON.parse(localStorage.getItem("sf_cv_private_v2") || "null");
+    if(!data){ document.getElementById("cvMsg").textContent = "Aucun CV sauvegardé."; return; }
+    if(data.first) document.getElementById("cvFirst").value = data.first;
+    if(data.last) document.getElementById("cvLast").value = data.last;
+    if(data.email) document.getElementById("cvEmail").value = data.email;
+    if(data.tel) document.getElementById("cvTel").value = data.tel;
+    if(data.city) document.getElementById("cvCity").value = data.city;
+    if(data.age) document.getElementById("cvAge").value = data.age;
+    if(data.title) document.getElementById("cvTitleCustom").value = data.title;
+    if(data.profile) document.getElementById("cvProfile").value = data.profile;
+    if(data.lang) document.getElementById("cvLang").value = data.lang;
+    if(data.interests) document.getElementById("cvInterests").value = data.interests;
+    if(data.model){ cvModel = data.model; document.querySelectorAll("#cvModels .chip").forEach(c => c.classList.toggle("on", c.dataset.model===cvModel)); }
+    // Skills
+    document.querySelectorAll("#cvSkillChecks input").forEach(c => { c.checked = (data.skills||[]).includes(c.value); });
+    // Rebuild exps/forms
+    document.getElementById("cvExps").innerHTML = "";
+    document.getElementById("cvForms").innerHTML = "";
+    expCount = 0; formCount = 0;
+    (data.exps||[]).forEach(e => cvAddExp(e));
+    (data.forms||[]).forEach(f => cvAddForm(f));
+    if(!(data.exps||[]).length) cvAddExp();
+    if(!(data.forms||[]).length) cvAddForm();
     cvBuild();
-    document.getElementById("cvMsg").textContent = "📂 CV chargé depuis cet appareil.";
+    document.getElementById("cvMsg").textContent = "📂 CV chargé.";
   } catch(e){ document.getElementById("cvMsg").textContent = "Erreur de chargement."; }
 });
 
 document.getElementById("cvPrint")?.addEventListener("click", () => {
   const html = document.getElementById("cvPreview").innerHTML;
   const w = window.open("", "_blank");
-  w.document.write(`<!DOCTYPE html><html><head><title>CV</title><style>body{font-family:system-ui,sans-serif;padding:2rem;}</style></head><body>${html}<script>window.onload=()=>window.print()<\/script></body></html>`);
+  w.document.write(`<!DOCTYPE html><html><head><title>CV</title><style>@page{margin:12mm}body{margin:0;font-family:system-ui,sans-serif}</style></head><body>${html}<script>window.onload=()=>{window.print()}<\/script></body></html>`);
   w.document.close();
 });
 
 document.getElementById("cvDl")?.addEventListener("click", () => {
-  const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Mon CV</title></head><body>${document.getElementById("cvPreview").innerHTML}</body></html>`;
+  const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Mon CV</title></head><body style="margin:0">${document.getElementById("cvPreview").innerHTML}</body></html>`;
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([html], {type:"text/html"}));
   a.download = "mon-cv.html";
   a.click();
 });
+
 
 if(ld("sf_dark",window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches))document.body.classList.add("dark");
 initMap();renderRes();renderChecks();renderAll();
