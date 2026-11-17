@@ -184,16 +184,16 @@ footer{background:var(--card);border-top:1px solid var(--bd);text-align:center;p
 <div class="panel" style="margin-bottom:1rem">
   <label style="font-weight:700">Modèle de CV</label>
   <div class="chips" id="cvModels">
-    <button class="chip on" data-model="pro">👔 Pro (barre latérale)</button>
+    <button class="chip on" data-model="canva">🌸 Canva crème</button>
+    <button class="chip" data-model="canva2">📷 Canva photo</button>
+    <button class="chip" data-model="pro">👔 Pro (barre)</button>
     <button class="chip" data-model="elegant">✨ Élégant</button>
     <button class="chip" data-model="modern">🎨 Moderne</button>
     <button class="chip" data-model="gradient">🌈 Dégradé</button>
     <button class="chip" data-model="minimal">🖤 Minimal</button>
     <button class="chip" data-model="classic">📄 Classique</button>
     <button class="chip" data-model="timeline">⏳ Timeline</button>
-    <button class="chip" data-model="double">📰 Deux colonnes</button>
     <button class="chip" data-model="banner">🖼️ Bannière</button>
-    <button class="chip" data-model="card">🃏 Cartes</button>
   </div>
   <div id="cvColorRow" style="margin-top:.7rem;display:flex;flex-wrap:wrap;gap:.6rem;align-items:center">
     <label style="font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:.5rem">
@@ -981,7 +981,7 @@ document.getElementById("aiSug")?.addEventListener("click", e => {
 setTimeout(() => aiAdd("Bonjour 👋 Je connais des adresses précises dans les grandes villes.\nEssayez par exemple :\n• « Où se soigner à Toulouse »\n• « Où manger à Lyon »\n• « Hébergement à Marseille »", "bot"), 500);
 
 /* ===== GÉNÉRATEUR DE CV PRO (modèles + formulaire intelligent) ===== */
-let cvModel = "pro";
+let cvModel = "canva";
 let expCount = 0, formCount = 0;
 
 function cvAddExp(data={}){
@@ -1176,10 +1176,10 @@ function getCvColor(){
 }
 /* Petites icônes SVG pour téléphone / mail / lieu */
 const CV_ICONS = {
-  phone: `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:6px;flex-shrink:0"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1.1-.2 1.2.4 2.5.6 3.8.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.6.6 3.8.1.4 0 .8-.3 1.1L6.6 10.8z"/></svg>`,
-  mail: `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:6px;flex-shrink:0"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>`,
-  pin: `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:6px;flex-shrink:0"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5c-1.4 0-2.5-1.1-2.5-2.5S10.6 6.5 12 6.5s2.5 1.1 2.5 2.5S13.4 11.5 12 11.5z"/></svg>`,
-  user: `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:6px;flex-shrink:0"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.2c-3.3 0-9.8 1.6-9.8 4.9v2.7h19.6v-2.7c0-3.3-6.5-4.9-9.8-4.9z"/></svg>`,
+  phone: `<span style="margin-right:8px;font-size:14px;line-height:1">📞</span>`,
+  mail: `<span style="margin-right:8px;font-size:14px;line-height:1">✉️</span>`,
+  pin: `<span style="margin-right:8px;font-size:14px;line-height:1">📍</span>`,
+  user: `<span style="margin-right:8px;font-size:14px;line-height:1">👤</span>`,
   // Logos métiers (emoji pro + lisibles à l'impression)
   job: {
     "aide": "🤝", "domicile": "🤝", "auxiliaire": "🤝", "soignant": "🩺", "santé": "🩺",
@@ -1260,224 +1260,202 @@ function cvBuild(){
   let html = "";
 
   // ========== PRO (style PDF : barre latérale sombre + photo) ==========
-  if(cvModel === "pro"){
+    // ========== CANVA CRÈME (style capture Célia) ==========
+  /*canva*/ if(cvModel === "canva"){
+    const c = getCvColor();
+    const side = "#f3efe6"; // crème chaleureux
+    const ink = "#3d3429";
+    const accent = c;
+    html = `<div style="font-family:'Segoe UI',Georgia,serif;display:flex;max-width:800px;margin:0 auto;min-height:100vh;background:#fffaf5;color:${ink};align-items:stretch">
+      <div style="width:34%;background:${side};padding:1.8rem 1.2rem;min-height:100vh;box-sizing:border-box;position:relative">
+        <div style="text-align:center;margin-bottom:1.4rem">
+          ${d.photo?`<img src="${d.photo}" alt="" style="width:110px;height:110px;border-radius:50%;object-fit:cover;border:4px solid #fff;box-shadow:0 4px 14px rgba(0,0,0,.12)">`:`<div style="width:110px;height:110px;border-radius:50%;background:#e8dfd0;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:2.4rem;border:4px solid #fff;box-shadow:0 4px 14px rgba(0,0,0,.08)">👤</div>`}
+        </div>
+        <div style="font-size:.85rem;line-height:1.7;color:${ink};margin-bottom:1.3rem">
+          ${d.tel?`<div style="display:flex;align-items:center;margin:.35rem 0">${CV_ICONS.phone}<span>${esc(d.tel)}</span></div>`:""}
+          ${d.email?`<div style="display:flex;align-items:center;margin:.35rem 0;word-break:break-all">${CV_ICONS.mail}<span>${esc(d.email)}</span></div>`:""}
+          ${d.city?`<div style="display:flex;align-items:center;margin:.35rem 0">${CV_ICONS.pin}<span>${esc(d.city)}</span></div>`:""}
+          ${d.age?`<div style="display:flex;align-items:center;margin:.35rem 0">${CV_ICONS.user}<span>${esc(d.age)} ans</span></div>`:""}
+        </div>
+        <h2 style="font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:${accent};margin:1.2rem 0 .45rem;font-weight:700">Langues</h2>
+        <p style="margin:0 0 1rem;font-size:.88rem;line-height:1.5">${esc(d.lang)}</p>
+        ${d.interests?`<h2 style="font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:${accent};margin:0 0 .45rem;font-weight:700">Loisirs</h2><p style="margin:0;font-size:.88rem;line-height:1.55">${esc(d.interests).split(/[,/]/).map(s=>s.trim()).filter(Boolean).join("<br>")}</p>`:""}
+        ${d.certs&&d.certs.length?`<h2 style="font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:${accent};margin:1.2rem 0 .45rem;font-weight:700">Certifications</h2><ul style="margin:0;padding-left:1.1rem;font-size:.84rem">${d.certs.map(x=>"<li>"+esc(x)+"</li>").join("")}</ul>`:""}
+      </div>
+      <div style="width:66%;padding:1.8rem 1.6rem;box-sizing:border-box">
+        <h1 style="margin:0;font-size:2rem;font-weight:600;color:${ink};font-family:Georgia,serif;letter-spacing:.02em">${esc(name)}</h1>
+        <p style="margin:.35rem 0 1.2rem;font-size:1.05rem;color:${accent};font-weight:500">${cvJobIcon(title)} ${esc(title)}</p>
+        ${d.profile?`<p style="margin:0 0 1.2rem;font-size:.9rem;line-height:1.55;color:#5c5346">${esc(d.profile)}</p>`:""}
+        ${d.exps.length?`<h2 style="font-size:.9rem;color:${accent};margin:0 0 .6rem;font-weight:700">✦ Expériences</h2>
+        ${d.exps.map(e=>`<div style="margin-bottom:.85rem"><div style="font-weight:700;color:${ink}">${esc(e.poste)}${e.emp?" — "+esc(e.emp):""}</div><div style="font-size:.82rem;color:#8a7e6e;margin:.15rem 0">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</div>${e.miss?`<div style="font-size:.88rem;color:#5c5346;margin-top:.2rem;line-height:1.45">• ${esc(e.miss)}</div>`:""}</div>`).join("")}`:""}
+        ${d.forms.length?`<h2 style="font-size:.9rem;color:${accent};margin:1.1rem 0 .55rem;font-weight:700">✦ Formations</h2>
+        ${d.forms.map(f=>`<div style="margin-bottom:.55rem"><div style="font-weight:700">${esc(f.dipl)}</div><div style="font-size:.84rem;color:#8a7e6e">${esc(f.etab)}${f.etab&&f.an?" · ":""}${esc(f.an)}</div></div>`).join("")}`:""}
+        ${d.skills.length?`<h2 style="font-size:.9rem;color:${accent};margin:1.1rem 0 .5rem;font-weight:700">✦ Compétences</h2>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">${d.skills.map(s=>`<span style="background:#f3efe6;color:${ink};border:1px solid #e0d6c8;padding:5px 12px;border-radius:20px;font-size:.8rem">${esc(s)}</span>`).join("")}</div>`:""}
+      </div>
+    </div>`;
+  }
+  // ========== CANVA PHOTO (style Sacha) ==========
+  else if(cvModel === "canva2"){
+    const c = getCvColor();
+    const ink = "#3d3429";
+    html = `<div style="font-family:'Segoe UI',system-ui,sans-serif;max-width:800px;margin:0 auto;min-height:100vh;background:#faf6f0;color:${ink};padding:1.5rem 1.6rem;box-sizing:border-box">
+      <div style="display:flex;gap:1.3rem;align-items:center;margin-bottom:1.3rem;padding-bottom:1.1rem;border-bottom:2px solid #e8dfd0">
+        ${d.photo?`<img src="${d.photo}" style="width:100px;height:100px;border-radius:12px;object-fit:cover;flex-shrink:0;box-shadow:0 3px 12px rgba(0,0,0,.1)">`:`<div style="width:100px;height:100px;border-radius:12px;background:#e8dfd0;display:flex;align-items:center;justify-content:center;font-size:2.2rem;flex-shrink:0">👤</div>`}
+        <div style="min-width:0">
+          <h1 style="margin:0;font-size:1.75rem;font-weight:700;letter-spacing:.04em;color:${ink}">${esc(name)}</h1>
+          <p style="margin:.3rem 0 0;font-size:1rem;color:${c};font-weight:600;text-transform:uppercase;letter-spacing:.04em">${cvJobIcon(title)} ${esc(title)}</p>
+          ${d.profile?`<p style="margin:.45rem 0 0;font-size:.88rem;line-height:1.45;color:#6b5f52">${esc(d.profile)}</p>`:""}
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:.5rem 1.2rem;margin-bottom:1.2rem;font-size:.85rem;color:#5c5346">
+        ${d.tel?`<span style="display:inline-flex;align-items:center">${CV_ICONS.phone}${esc(d.tel)}</span>`:""}
+        ${d.email?`<span style="display:inline-flex;align-items:center;word-break:break-all">${CV_ICONS.mail}${esc(d.email)}</span>`:""}
+        ${d.city?`<span style="display:inline-flex;align-items:center">${CV_ICONS.pin}${esc(d.city)}</span>`:""}
+      </div>
+      <div style="display:flex;gap:1.5rem;flex-wrap:wrap">
+        <div style="flex:1;min-width:200px">
+          ${d.forms.length?`<h2 style="font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:${c};margin:0 0 .55rem;font-weight:700">Formations</h2>
+          ${d.forms.map(f=>`<div style="margin-bottom:.55rem;padding-left:.7rem;border-left:3px solid ${c}55"><b>${esc(f.dipl)}</b><div style="font-size:.82rem;color:#8a7e6e">${esc(f.etab)} ${esc(f.an)}</div></div>`).join("")}`:""}
+          ${d.skills.length?`<h2 style="font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:${c};margin:1.1rem 0 .45rem;font-weight:700">Compétences</h2>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">${d.skills.map(s=>`<span style="background:#fff;border:1px solid #e0d6c8;color:${ink};padding:4px 11px;border-radius:16px;font-size:.78rem">${esc(s)}</span>`).join("")}</div>`:""}
+          ${d.interests?`<h2 style="font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:${c};margin:1.1rem 0 .45rem;font-weight:700">Centres d'intérêt</h2>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">${d.interests.split(/[,/]/).map(s=>s.trim()).filter(Boolean).map(s=>`<span style="background:#f3efe6;color:${ink};padding:4px 11px;border-radius:16px;font-size:.78rem">${esc(s)}</span>`).join("")}</div>`:""}
+          ${d.certs&&d.certs.length?`<h2 style="font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:${c};margin:1.1rem 0 .4rem;font-weight:700">Certifications</h2><p style="margin:0;font-size:.85rem">${d.certs.map(esc).join(" · ")}</p>`:""}
+          <p style="margin:1rem 0 0;font-size:.85rem"><b>Langues :</b> ${esc(d.lang)}</p>
+        </div>
+        <div style="flex:1.2;min-width:220px">
+          ${d.exps.length?`<h2 style="font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:${c};margin:0 0 .55rem;font-weight:700">Expériences professionnelles</h2>
+          ${d.exps.map(e=>`<div style="margin-bottom:.75rem"><div style="display:flex;justify-content:space-between;gap:.5rem;flex-wrap:wrap"><b>${esc(e.poste)}</b><span style="font-size:.8rem;color:#8a7e6e">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span></div>${e.emp?`<div style="font-size:.84rem;color:#6b5f52">${esc(e.emp)}</div>`:""}${e.miss?`<div style="font-size:.86rem;color:#5c5346;margin-top:.15rem;line-height:1.4">${esc(e.miss)}</div>`:""}</div>`).join("")}`:""}
+        </div>
+      </div>
+    </div>`;
+  }
+  // ========== PRO barre colorée ==========
+  else if(cvModel === "pro"){
     html = cvBuildSidebar(d, name, title, contactLines, getCvColor(), getCvColor());
   }
-  // ========== DOUBLE COLONNES (style fiche) ==========
-  else if(cvModel === "double"){
+  // ========== ÉLÉGANT ==========
+  else if(cvModel === "elegant"){
     const c = getCvColor();
-    html = `<div style="font-family:Georgia,serif;max-width:780px;margin:0 auto;background:#fff;min-height:100vh;padding:1.5rem 1.6rem;box-sizing:border-box">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid ${c};padding-bottom:1rem;margin-bottom:1.2rem">
-        <div style="min-width:0">
-          <h1 style="margin:0;font-size:1.7rem;color:${c};word-break:break-word">${esc(name)}</h1>
-          <p style="margin:.35rem 0 0;font-size:1rem;font-style:italic;color:#555"><span style="margin-right:.3rem">${cvJobIcon(title)}</span>${esc(title)}</p>
+    html = `<div style="font-family:Georgia,serif;max-width:780px;margin:0 auto;background:#fff;min-height:100vh;color:#1a1a1a">
+      <div style="display:flex;justify-content:space-between;padding:1.5rem 1.6rem 1rem;border-bottom:3px solid ${c}">
+        <div>
+          <h1 style="margin:0;font-size:1.8rem">${esc(name)}</h1>
+          <p style="margin:.35rem 0 0;color:${c};font-style:italic">${cvJobIcon(title)} ${esc(title)}</p>
+          <div style="margin:.5rem 0 0;font-size:.85rem">${cvContactInline(d)}</div>
         </div>
-        ${d.photo?`<img src="${d.photo}" style="width:82px;height:82px;border-radius:8px;object-fit:cover;border:1px solid #ddd;flex-shrink:0">`:`<div style="width:82px;height:82px;border-radius:8px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0">👤</div>`}
-      </div>
-      <div style="display:flex;gap:1.5rem">
-        <div style="width:36%">
-          <h2 style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:${c};margin:0 0 .4rem">Coordonnées</h2>
-          <div style="font-size:.82rem;margin:0 0 1rem;color:#334155">${cvContactBlock(d,c)}</div>
-          ${d.skills.length?`<h2 style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:${c};margin:0 0 .35rem">Compétences</h2>${cvSkillPills(d.skills,c+"18",c)}<div style="margin-bottom:1rem"></div>`:""}
-          ${d.certs&&d.certs.length?`<h2 style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:${c};margin:0 0 .35rem">Certifications</h2><ul style="margin:0 0 1rem;padding-left:1.1rem;font-size:.8rem">${d.certs.map(s=>"<li>"+esc(s)+"</li>").join("")}</ul>`:""}
-          <h2 style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:${c};margin:0 0 .3rem">Langues</h2>
-          <p style="font-size:.82rem;margin:0 0 1rem">${esc(d.lang)}</p>
-          ${d.interests?`<h2 style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:${c};margin:0 0 .3rem">Loisirs</h2><p style="font-size:.82rem;margin:0">${esc(d.interests)}</p>`:""}
-        </div>
-        <div style="width:64%;border-left:1px solid #e2e8f0;padding-left:1.3rem">
-          ${d.profile?`<p style="margin:0 0 1rem;font-size:.9rem;line-height:1.5;color:#333">${esc(d.profile)}</p>`:""}
-          ${d.forms.length?`<h2 style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:${c};border-bottom:1px solid #ddd;padding-bottom:.25rem;margin:0 0 .5rem">Scolarité</h2>${d.forms.map(f=>`<div style="margin-bottom:.45rem"><b>${esc(f.dipl)}</b>${f.etab?" — "+esc(f.etab):""}<span style="float:right;font-size:.8rem;color:#777">${esc(f.an)}</span><div style="clear:both"></div></div>`).join("")}`:""}
-          ${d.exps.length?`<h2 style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:${c};border-bottom:1px solid #ddd;padding-bottom:.25rem;margin:1rem 0 .5rem">Expériences</h2>${d.exps.map(e=>`<div style="margin-bottom:.55rem"><b>${esc(e.poste)}</b>${e.emp?" — "+esc(e.emp):""}<span style="float:right;font-size:.8rem;color:#777">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span><div style="clear:both"></div>${e.miss?`<div style="font-size:.85rem;color:#555;margin-top:.1rem">${esc(e.miss)}</div>`:""}</div>`).join("")}`:""}
-        </div>
-      </div>
-    </div>`;
-  }
-  // ========== BANNIÈRE ==========
-  else if(cvModel === "banner"){
-    const c = getCvColor();
-    html = `<div style="font-family:system-ui,sans-serif;max-width:760px;margin:0 auto;background:#fff;min-height:100vh">
-      <div style="background:${c};color:#fff;padding:2rem 1.6rem 1.4rem;text-align:center">
-        ${d.photo?`<img src="${d.photo}" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid #fff;margin-bottom:.7rem">`:`<div style="width:88px;height:88px;border-radius:50%;background:rgba(255,255,255,.2);margin:0 auto .7rem;display:flex;align-items:center;justify-content:center;font-size:1.8rem;border:3px solid rgba(255,255,255,.5)">👤</div>`}
-        <h1 style="margin:0;font-size:1.6rem;letter-spacing:.04em;word-break:break-word">${esc(name)}</h1>
-        <p style="margin:.35rem 0 0;opacity:.95;font-size:1.05rem"><span style="margin-right:.3rem">${cvJobIcon(title)}</span>${esc(title)}</p>
-        <div style="margin:.55rem 0 0;font-size:.82rem;opacity:.9;display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem 1.1rem">${d.tel?`<span>${CV_ICONS.phone}${esc(d.tel)}</span>`:""}${d.email?`<span style="word-break:break-all">${CV_ICONS.mail}${esc(d.email)}</span>`:""}${d.city?`<span>${CV_ICONS.pin}${esc(d.city)}</span>`:""}</div>
+        ${d.photo?`<img src="${d.photo}" style="width:88px;height:88px;border-radius:8px;object-fit:cover">`:`<div style="width:88px;height:88px;border-radius:8px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:1.8rem">👤</div>`}
       </div>
       <div style="padding:1.3rem 1.6rem">
-        ${d.profile?`<p style="margin:0 0 1rem;line-height:1.55;color:#334155;text-align:center;font-size:.9rem">${esc(d.profile)}</p>`:""}
-        <div style="display:flex;gap:1.4rem;flex-wrap:wrap">
-          <div style="flex:1;min-width:200px">
-            ${d.exps.length?`<h2 style="font-size:.8rem;color:${c};text-transform:uppercase;letter-spacing:.08em;border-bottom:2px solid ${c}22;padding-bottom:.3rem;margin:0 0 .5rem">Expériences</h2>${d.exps.map(e=>`<div style="margin-bottom:.55rem"><b>${esc(e.poste)}</b><br><span style="font-size:.8rem;color:#64748b">${esc(e.emp)} · ${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span>${e.miss?`<div style="font-size:.84rem;color:#475569">${esc(e.miss)}</div>`:""}</div>`).join("")}`:""}
-          </div>
-          <div style="flex:1;min-width:180px">
-            ${d.forms.length?`<h2 style="font-size:.8rem;color:${c};text-transform:uppercase;letter-spacing:.08em;border-bottom:2px solid ${c}22;padding-bottom:.3rem;margin:0 0 .5rem">Formations</h2>${d.forms.map(f=>`<div style="margin-bottom:.4rem"><b>${esc(f.dipl)}</b><br><span style="font-size:.8rem;color:#64748b">${esc(f.an)}</span></div>`).join("")}`:""}
-            ${d.certs&&d.certs.length?`<h2 style="font-size:.8rem;color:${c};text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .35rem">Certifications</h2><p style="font-size:.84rem;margin:0">${d.certs.map(esc).join(" · ")}</p>`:""}
-            ${d.skills.length?`<h2 style="font-size:.8rem;color:${c};text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .35rem">Compétences</h2>${cvSkillPills(d.skills,c+"20",c)}`:""}
-            <p style="margin:.8rem 0 0;font-size:.84rem"><b>Langues :</b> ${esc(d.lang)}</p>
-          </div>
-        </div>
+        ${d.profile?`<p style="margin:0 0 1rem;line-height:1.5">${esc(d.profile)}</p>`:""}
+        ${d.exps.length?`<h2 style="font-size:.85rem;color:${c};text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #ddd;padding-bottom:.3rem">Expériences</h2>${d.exps.map(e=>`<div style="margin:.5rem 0"><b>${esc(e.poste)}</b>${e.emp?" — "+esc(e.emp):""} <span style="float:right;font-size:.8rem;color:#777">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span><div style="clear:both"></div>${e.miss?`<div style="font-size:.88rem;color:#555">${esc(e.miss)}</div>`:""}</div>`).join("")}`:""}
+        ${d.forms.length?`<h2 style="font-size:.85rem;color:${c};text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #ddd;padding-bottom:.3rem;margin-top:1rem">Formations</h2>${d.forms.map(f=>`<div style="margin:.4rem 0"><b>${esc(f.dipl)}</b> <span style="color:#777;font-size:.85rem">${esc(f.an)}</span></div>`).join("")}`:""}
+        ${d.skills.length?`<h2 style="font-size:.85rem;color:${c};margin-top:1rem">Compétences</h2>${cvSkillPills(d.skills,c+"22",c)}`:""}
+        <p style="margin:.8rem 0 0;font-size:.88rem"><b>Langues :</b> ${esc(d.lang)}</p>
       </div>
     </div>`;
   }
-  // ========== CARTES ==========
-  else if(cvModel === "card"){
-    const c = getCvColor();
-    html = `<div style="font-family:system-ui,sans-serif;max-width:760px;margin:0 auto;background:#f8fafc;min-height:100vh;padding:1.2rem;box-sizing:border-box">
-      <div style="background:#fff;border-radius:12px;padding:1.3rem 1.4rem;margin-bottom:.9rem;box-shadow:0 2px 8px rgba(0,0,0,.06);display:flex;gap:1.2rem;align-items:center">
-        ${d.photo?`<img src="${d.photo}" style="width:72px;height:72px;border-radius:50%;object-fit:cover">`:`<div style="width:72px;height:72px;border-radius:50%;background:${c};color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">👤</div>`}
-        <div style="min-width:0">
-          <h1 style="margin:0;font-size:1.4rem;color:${c};word-break:break-word">${esc(name)}</h1>
-          <p style="margin:.2rem 0 0;color:#64748b"><span style="margin-right:.3rem">${cvJobIcon(title)}</span>${esc(title)}</p>
-          <p style="margin:.3rem 0 0;font-size:.8rem;color:#94a3b8;word-break:break-word">${contactLines.map(esc).join(" · ")}</p>
-        </div>
-      </div>
-      ${d.profile?`<div style="background:#fff;border-radius:12px;padding:1rem 1.2rem;margin-bottom:.9rem;box-shadow:0 2px 8px rgba(0,0,0,.06)"><p style="margin:0;font-size:.9rem;line-height:1.5;color:#334155">${esc(d.profile)}</p></div>`:""}
-      ${d.exps.length?`<div style="background:#fff;border-radius:12px;padding:1rem 1.2rem;margin-bottom:.9rem;box-shadow:0 2px 8px rgba(0,0,0,.06)"><h2 style="margin:0 0 .6rem;font-size:.85rem;color:${c};text-transform:uppercase;letter-spacing:.06em">Expériences</h2>${d.exps.map(e=>`<div style="margin-bottom:.5rem;padding-bottom:.5rem;border-bottom:1px solid #f1f5f9"><b>${esc(e.poste)}</b> <span style="color:#94a3b8;font-size:.8rem">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span>${e.emp?`<div style="font-size:.85rem;color:#64748b">${esc(e.emp)}</div>`:""}${e.miss?`<div style="font-size:.84rem;color:#475569">${esc(e.miss)}</div>`:""}</div>`).join("")}</div>`:""}
-      <div style="display:flex;gap:.9rem;flex-wrap:wrap">
-        ${d.forms.length?`<div style="background:#fff;border-radius:12px;padding:1rem 1.2rem;flex:1;min-width:180px;box-shadow:0 2px 8px rgba(0,0,0,.06)"><h2 style="margin:0 0 .5rem;font-size:.85rem;color:${c};text-transform:uppercase">Formations</h2>${d.forms.map(f=>`<div style="margin-bottom:.35rem;font-size:.88rem"><b>${esc(f.dipl)}</b> <span style="color:#94a3b8">${esc(f.an)}</span></div>`).join("")}</div>`:""}
-        <div style="background:#fff;border-radius:12px;padding:1rem 1.2rem;flex:1;min-width:160px;box-shadow:0 2px 8px rgba(0,0,0,.06)">
-          ${d.skills.length?`<h2 style="margin:0 0 .4rem;font-size:.85rem;color:${c};text-transform:uppercase">Compétences</h2><p style="margin:0 0 .7rem;font-size:.85rem">${d.skills.map(esc).join(" · ")}</p>`:""}
-          ${d.certs&&d.certs.length?`<h2 style="margin:0 0 .35rem;font-size:.85rem;color:${c};text-transform:uppercase">Certifications</h2><p style="margin:0 0 .7rem;font-size:.84rem">${d.certs.map(esc).join(" · ")}</p>`:""}
-          <p style="margin:0;font-size:.85rem"><b>Langues :</b> ${esc(d.lang)}</p>
-        </div>
-      </div>
-    </div>`;
-  }
-
-  // ========== ÉLÉGANT (clair, typo soignée, inspiré PDF) ==========
-  else if(cvModel === "elegant"){
-    html = `<div style="font-family:Georgia,'Times New Roman',serif;max-width:780px;margin:0 auto;background:#fff;color:#1a1a1a;padding:0">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:1.6rem 1.8rem 1rem;border-bottom:3px solid #1a1a1a">
-        <div>
-          <h1 style="margin:0;font-size:1.85rem;font-weight:700;letter-spacing:.06em">${esc(name)}</h1>
-          <p style="margin:.4rem 0 0;font-size:1rem;color:#444;font-style:italic"><span style="margin-right:.35rem">${cvJobIcon(title)}</span>${esc(title)}</p>
-          <div style="margin:.45rem 0 0;font-size:.82rem;color:#555">${cvContactInline(d)}</div>
-        </div>
-        ${d.photo?`<img src="${d.photo}" style="width:85px;height:85px;border-radius:6px;object-fit:cover;border:1px solid #ddd">`:`<div style="width:85px;height:85px;border-radius:6px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:1.8rem;border:1px solid #ddd">👤</div>`}
-      </div>
-      <div style="display:flex">
-        <div style="width:34%;padding:1.2rem 1.3rem;background:#fafafa;border-right:1px solid #eee">
-          <h2 style="font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#666;margin:0 0 .5rem">Coordonnées</h2>
-          <p style="font-size:.82rem;line-height:1.7;margin:0 0 1rem">${contactLines.map(esc).join("<br>")}</p>
-          ${d.skills.length ? `<h2 style="font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#666;margin:0 0 .4rem">Qualités</h2>
-          <ul style="margin:0 0 1rem;padding-left:1.1rem;font-size:.82rem;line-height:1.65">${d.skills.map(s=>"<li>"+esc(s)+"</li>").join("")}</ul>` : ""}
-          <h2 style="font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#666;margin:0 0 .3rem">Langues</h2>
-          <p style="font-size:.82rem;margin:0 0 1rem">${esc(d.lang)}</p>
-          ${d.interests ? `<h2 style="font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#666;margin:0 0 .3rem">Loisirs</h2><p style="font-size:.82rem;margin:0">${esc(d.interests)}</p>` : ""}
-        </div>
-        <div style="width:66%;padding:1.2rem 1.4rem">
-          ${d.profile ? `<p style="margin:0 0 1rem;font-size:.9rem;line-height:1.55;color:#333">${esc(d.profile)}</p>` : ""}
-          ${d.forms.length ? `<h2 style="font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:#1a1a1a;border-bottom:1px solid #ccc;padding-bottom:.25rem;margin:0 0 .55rem">Scolarité</h2>
-          ${d.forms.map(f=>`<div style="margin-bottom:.5rem"><b>${esc(f.dipl)}</b>${f.etab?" — "+esc(f.etab):""}<span style="float:right;font-size:.8rem;color:#777">${esc(f.an)}</span><div style="clear:both"></div></div>`).join("")}` : ""}
-          ${d.exps.length ? `<h2 style="font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:#1a1a1a;border-bottom:1px solid #ccc;padding-bottom:.25rem;margin:1rem 0 .55rem">Expériences professionnelles</h2>
-          ${d.exps.map(e=>`<div style="margin-bottom:.6rem"><b>${esc(e.poste)}</b>${e.emp?" — "+esc(e.emp):""}<span style="float:right;font-size:.8rem;color:#777">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span><div style="clear:both"></div>${e.miss?`<div style="font-size:.85rem;color:#555;margin-top:.12rem">${esc(e.miss)}</div>`:""}</div>`).join("")}` : ""}
-        </div>
-      </div>
-    </div>`;
-  }
-
   // ========== MODERNE ==========
   else if(cvModel === "modern"){
-    html = `<div style="font-family:system-ui,sans-serif;max-width:760px;margin:0 auto;background:#fff">
-      <div style="background:linear-gradient(135deg,${getCvColor()},#0f4c81);color:#fff;padding:1.5rem 1.7rem;display:flex;justify-content:space-between;align-items:center;gap:1rem">
+    const c = getCvColor();
+    html = `<div style="font-family:system-ui,sans-serif;max-width:760px;margin:0 auto;background:#fff;min-height:100vh">
+      <div style="background:linear-gradient(135deg,${c},#0f4c81);color:#fff;padding:1.5rem 1.6rem;display:flex;justify-content:space-between;align-items:center;gap:1rem">
         <div style="min-width:0">
-          <h1 style="margin:0;font-size:1.65rem;font-weight:700;word-break:break-word">${esc(name)}</h1>
-          <p style="margin:.3rem 0 0;opacity:.95;font-size:1.05rem"><span style="margin-right:.35rem">${cvJobIcon(title)}</span>${esc(title)}</p>
-          <div style="margin:.45rem 0 0;font-size:.82rem;opacity:.9">${cvContactInline(d)}</div>
+          <h1 style="margin:0;font-size:1.6rem;word-break:break-word">${esc(name)}</h1>
+          <p style="margin:.3rem 0 0;opacity:.95">${cvJobIcon(title)} ${esc(title)}</p>
+          <div style="margin:.4rem 0 0;font-size:.82rem;opacity:.9">${cvContactInline(d)}</div>
         </div>
-        ${d.photo?`<img src="${d.photo}" style="width:78px;height:78px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.6);flex-shrink:0">`:`<div style="width:78px;height:78px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:1.7rem;border:2px solid rgba(255,255,255,.5);flex-shrink:0">👤</div>`}
+        ${d.photo?`<img src="${d.photo}" style="width:78px;height:78px;border-radius:50%;object-fit:cover;border:2px solid #fff">`:`<div style="width:78px;height:78px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:1.6rem">👤</div>`}
       </div>
-      <div style="padding:1.3rem 1.7rem">
-        ${d.profile ? `<p style="margin:0 0 1rem;color:#334155;line-height:1.5;font-size:.9rem">${esc(d.profile)}</p>` : ""}
-        ${d.exps.length ? `<h2 style="font-size:.85rem;color:#0f4c81;text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .45rem">Expériences</h2>
-        ${d.exps.map(e=>`<div style="margin-bottom:.65rem;padding-left:.65rem;border-left:3px solid #0f4c81"><b>${esc(e.poste)}</b> ${e.emp?"· "+esc(e.emp):""}<br><span style="font-size:.8rem;color:#64748b">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span>${e.miss?`<div style="font-size:.85rem;margin-top:.15rem;color:#334155">${esc(e.miss)}</div>`:""}</div>`).join("")}` : ""}
-        ${d.forms.length ? `<h2 style="font-size:.85rem;color:#0f4c81;text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .45rem">Formations</h2>
-        ${d.forms.map(f=>`<div style="margin-bottom:.4rem"><b>${esc(f.dipl)}</b>${f.etab?" · "+esc(f.etab):""} <span style="color:#64748b;font-size:.82rem">(${esc(f.an)})</span></div>`).join("")}` : ""}
-        ${d.skills.length ? `<h2 style="font-size:.85rem;color:#0f4c81;text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .4rem">Compétences</h2>
-        <div>${d.skills.map(s=>`<span style="display:inline-block;background:#e8f0fe;color:#0f4c81;padding:.18rem .5rem;border-radius:4px;margin:.12rem .2rem .12rem 0;font-size:.8rem">${esc(s)}</span>`).join("")}</div>` : ""}
+      <div style="padding:1.3rem 1.6rem">
+        ${d.profile?`<p style="margin:0 0 1rem;color:#334155">${esc(d.profile)}</p>`:""}
+        ${d.exps.length?`<h2 style="font-size:.82rem;color:${c};text-transform:uppercase;letter-spacing:.08em">Expériences</h2>${d.exps.map(e=>`<div style="margin:.5rem 0;padding-left:.6rem;border-left:3px solid ${c}"><b>${esc(e.poste)}</b>${e.emp?" · "+esc(e.emp):""}<br><span style="font-size:.8rem;color:#64748b">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span>${e.miss?`<div style="font-size:.85rem">${esc(e.miss)}</div>`:""}</div>`).join("")}`:""}
+        ${d.forms.length?`<h2 style="font-size:.82rem;color:${c};text-transform:uppercase;margin-top:1rem">Formations</h2>${d.forms.map(f=>`<div style="margin:.35rem 0"><b>${esc(f.dipl)}</b> <span style="color:#64748b;font-size:.8rem">(${esc(f.an)})</span></div>`).join("")}`:""}
+        ${d.skills.length?`<h2 style="font-size:.82rem;color:${c};margin-top:1rem">Compétences</h2>${cvSkillPills(d.skills,c+"22",c)}`:""}
         <p style="margin:.8rem 0 0;font-size:.85rem"><b>Langues :</b> ${esc(d.lang)}</p>
-        ${d.interests ? `<p style="margin:.25rem 0 0;font-size:.85rem"><b>Loisirs :</b> ${esc(d.interests)}</p>` : ""}
       </div>
     </div>`;
   }
-
-  // ========== MINIMAL ==========
-  else if(cvModel === "minimal"){
-    html = `<div style="font-family:system-ui,sans-serif;color:#111;padding:1.7rem 1.9rem;max-width:700px;margin:0 auto;background:#fff">
-      <h1 style="margin:0;font-size:1.55rem;font-weight:700;letter-spacing:.03em">${esc(name)}</h1>
-      <p style="margin:.25rem 0 0;font-size:.98rem;color:#555"><span style="margin-right:.3rem">${cvJobIcon(title)}</span>${esc(title)}</p>
-      <div style="margin:.4rem 0 1rem;font-size:.82rem;color:#666">${cvContactInline(d)}</div>
-      ${d.profile ? `<p style="margin:0 0 1.1rem;line-height:1.55;font-size:.9rem">${esc(d.profile)}</p>` : ""}
-      ${d.exps.length ? `<h2 style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#999;margin:1.1rem 0 .4rem">Expérience</h2>
-      ${d.exps.map(e=>`<div style="margin-bottom:.55rem;display:flex;justify-content:space-between;gap:1rem"><div><b>${esc(e.poste)}</b>${e.emp?", "+esc(e.emp):""}${e.miss?`<div style="font-size:.85rem;color:#444;margin-top:.1rem">${esc(e.miss)}</div>`:""}</div><span style="font-size:.8rem;color:#999;white-space:nowrap">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span></div>`).join("")}` : ""}
-      ${d.forms.length ? `<h2 style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#999;margin:1.1rem 0 .4rem">Formation</h2>
-      ${d.forms.map(f=>`<div style="margin-bottom:.35rem;display:flex;justify-content:space-between"><div><b>${esc(f.dipl)}</b>${f.etab?", "+esc(f.etab):""}</div><span style="font-size:.8rem;color:#999">${esc(f.an)}</span></div>`).join("")}` : ""}
-      ${d.skills.length ? `<h2 style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#999;margin:1.1rem 0 .35rem">Compétences</h2><p style="margin:0;font-size:.88rem">${d.skills.map(s=>esc(s)).join("  ·  ")}</p>` : ""}
-      <p style="margin:.75rem 0 0;font-size:.85rem"><b>Langues</b> — ${esc(d.lang)}</p>
-      ${d.interests ? `<p style="margin:.2rem 0 0;font-size:.85rem"><b>Loisirs</b> — ${esc(d.interests)}</p>` : ""}
-    </div>`;
-  }
-
   // ========== DÉGRADÉ ==========
   else if(cvModel === "gradient"){
     const c = getCvColor();
     html = `<div style="font-family:system-ui,sans-serif;max-width:760px;margin:0 auto;background:#fff;min-height:100vh">
-      <div style="background:linear-gradient(125deg,${c} 0%,#db2777 45%,#f59e0b 100%);color:#fff;padding:1.7rem 1.6rem;display:flex;justify-content:space-between;align-items:center;gap:1rem">
-        <div style="min-width:0;flex:1">
-          <h1 style="margin:0;font-size:1.6rem;font-weight:700;word-break:break-word">${esc(name)}</h1>
-          <p style="margin:.3rem 0 0;opacity:.95;font-size:1.05rem"><span style="margin-right:.3rem">${cvJobIcon(title)}</span>${esc(title)}</p>
-          <div style="margin:.5rem 0 0;font-size:.82rem;opacity:.9;display:flex;flex-wrap:wrap;gap:.5rem 1rem">${d.tel?`<span>${CV_ICONS.phone}${esc(d.tel)}</span>`:""}${d.email?`<span style="word-break:break-all">${CV_ICONS.mail}${esc(d.email)}</span>`:""}${d.city?`<span>${CV_ICONS.pin}${esc(d.city)}</span>`:""}</div>
+      <div style="background:linear-gradient(125deg,${c} 0%,#db2777 50%,#f59e0b 100%);color:#fff;padding:1.6rem;display:flex;justify-content:space-between;align-items:center;gap:1rem">
+        <div style="min-width:0">
+          <h1 style="margin:0;font-size:1.55rem">${esc(name)}</h1>
+          <p style="margin:.3rem 0 0">${cvJobIcon(title)} ${esc(title)}</p>
+          <div style="margin:.45rem 0 0;font-size:.82rem;opacity:.95">${cvContactInline(d)}</div>
         </div>
-        ${d.photo?`<img src="${d.photo}" style="width:82px;height:82px;border-radius:50%;object-fit:cover;border:3px solid #fff;flex-shrink:0">`:`<div style="width:82px;height:82px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:1.7rem;flex-shrink:0;border:2px solid rgba(255,255,255,.5)">👤</div>`}
+        ${d.photo?`<img src="${d.photo}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #fff">`:`<div style="width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:1.6rem">👤</div>`}
       </div>
       <div style="padding:1.3rem 1.6rem">
-        ${d.profile?`<p style="margin:0 0 1rem;line-height:1.5;color:#334155">${esc(d.profile)}</p>`:""}
-        ${d.exps.length?`<h2 style="font-size:.82rem;color:${c};text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .4rem">Expériences</h2>${d.exps.map(e=>`<div style="margin-bottom:.55rem"><b>${esc(e.poste)}</b>${e.emp?" · "+esc(e.emp):""}<br><span style="font-size:.8rem;color:#64748b">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span>${e.miss?`<div style="font-size:.85rem;color:#475569">${esc(e.miss)}</div>`:""}</div>`).join("")}`:""}
-        ${d.forms.length?`<h2 style="font-size:.82rem;color:${c};text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .4rem">Formations</h2>${d.forms.map(f=>`<div style="margin-bottom:.35rem"><b>${esc(f.dipl)}</b>${f.etab?" · "+esc(f.etab):""} <span style="color:#64748b;font-size:.8rem">(${esc(f.an)})</span></div>`).join("")}`:""}
-        ${d.certs&&d.certs.length?`<h2 style="font-size:.82rem;color:${c};text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .4rem">Certifications</h2><p style="margin:0;font-size:.85rem">${d.certs.map(esc).join(" · ")}</p>`:""}
-        ${d.skills.length?`<h2 style="font-size:.82rem;color:${c};text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .35rem">Compétences</h2>${cvSkillPills(d.skills,"linear-gradient(120deg,#ede9fe,#fce7f3)","#6b21a8")}`:""}
+        ${d.profile?`<p style="margin:0 0 1rem">${esc(d.profile)}</p>`:""}
+        ${d.exps.length?`<h2 style="font-size:.82rem;color:${c};text-transform:uppercase">Expériences</h2>${d.exps.map(e=>`<div style="margin:.45rem 0"><b>${esc(e.poste)}</b>${e.emp?" · "+esc(e.emp):""}<br><span style="font-size:.8rem;color:#64748b">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span></div>`).join("")}`:""}
+        ${d.forms.length?`<h2 style="font-size:.82rem;color:${c};text-transform:uppercase;margin-top:.9rem">Formations</h2>${d.forms.map(f=>`<div style="margin:.3rem 0"><b>${esc(f.dipl)}</b> (${esc(f.an)})</div>`).join("")}`:""}
+        ${d.skills.length?`<h2 style="font-size:.82rem;color:${c};margin-top:.9rem">Compétences</h2>${cvSkillPills(d.skills,"#fce7f3","#9d174d")}`:""}
         <p style="margin:.8rem 0 0;font-size:.85rem"><b>Langues :</b> ${esc(d.lang)}</p>
-        ${d.interests?`<p style="margin:.3rem 0 0;font-size:.85rem"><b>Centres d'intérêt :</b> ${esc(d.interests)}</p>`:""}
       </div>
     </div>`;
   }
-  // ========== TIMELINE ==========
+  // ========== MINIMAL / CLASSIC / TIMELINE / BANNER ==========
+  else if(cvModel === "minimal"){
+    html = `<div style="font-family:system-ui,sans-serif;max-width:700px;margin:0 auto;padding:1.6rem;background:#fff;min-height:100vh">
+      <h1 style="margin:0;font-size:1.5rem">${esc(name)}</h1>
+      <p style="margin:.25rem 0;color:#555">${cvJobIcon(title)} ${esc(title)}</p>
+      <div style="margin:.4rem 0 1rem;font-size:.85rem;color:#666">${cvContactInline(d)}</div>
+      ${d.profile?`<p style="margin:0 0 1rem">${esc(d.profile)}</p>`:""}
+      ${d.exps.length?`<h2 style="font-size:.8rem;text-transform:uppercase;color:#888;letter-spacing:.1em">Expérience</h2>${d.exps.map(e=>`<div style="margin:.4rem 0"><b>${esc(e.poste)}</b>${e.emp?", "+esc(e.emp):""} <span style="color:#999;font-size:.8rem">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span></div>`).join("")}`:""}
+      ${d.forms.length?`<h2 style="font-size:.8rem;text-transform:uppercase;color:#888;letter-spacing:.1em;margin-top:1rem">Formation</h2>${d.forms.map(f=>`<div style="margin:.3rem 0"><b>${esc(f.dipl)}</b> ${esc(f.an)}</div>`).join("")}`:""}
+      ${d.skills.length?`<h2 style="font-size:.8rem;text-transform:uppercase;color:#888;margin-top:1rem">Compétences</h2><p>${d.skills.map(esc).join(" · ")}</p>`:""}
+      <p style="margin:.7rem 0 0;font-size:.85rem"><b>Langues</b> — ${esc(d.lang)}</p>
+    </div>`;
+  }
   else if(cvModel === "timeline"){
     const c = getCvColor();
-    html = `<div style="font-family:system-ui,sans-serif;max-width:720px;margin:0 auto;background:#fff;min-height:100vh;padding:1.5rem 1.6rem;box-sizing:border-box">
+    html = `<div style="font-family:system-ui,sans-serif;max-width:720px;margin:0 auto;padding:1.5rem;background:#fff;min-height:100vh">
       <div style="text-align:center;margin-bottom:1.2rem">
-        ${d.photo?`<img src="${d.photo}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid ${c}">`:`<div style="width:90px;height:90px;border-radius:50%;background:${c};color:#fff;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:1.9rem">👤</div>`}
-        <h1 style="margin:.65rem 0 0;font-size:1.55rem;color:#0f172a;word-break:break-word">${esc(name)}</h1>
-        <p style="margin:.25rem 0;color:${c};font-weight:600">${esc(title)}</p>
-        <div style="margin:.4rem 0 0;font-size:.82rem;color:#64748b;display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem 1rem">${d.tel?`<span>${CV_ICONS.phone}${esc(d.tel)}</span>`:""}${d.email?`<span style="word-break:break-all">${CV_ICONS.mail}${esc(d.email)}</span>`:""}${d.city?`<span>${CV_ICONS.pin}${esc(d.city)}</span>`:""}</div>
+        ${d.photo?`<img src="${d.photo}" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid ${c}">`:`<div style="width:88px;height:88px;border-radius:50%;background:${c};color:#fff;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:1.8rem">👤</div>`}
+        <h1 style="margin:.6rem 0 0">${esc(name)}</h1>
+        <p style="color:${c};font-weight:600">${cvJobIcon(title)} ${esc(title)}</p>
+        <div style="font-size:.85rem;color:#666;margin-top:.4rem">${cvContactInline(d)}</div>
       </div>
-      ${d.profile?`<p style="text-align:center;color:#334155;margin:0 0 1.2rem;font-size:.9rem">${esc(d.profile)}</p>`:""}
-      ${d.exps.length?`<h2 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:${c};margin:0 0 .6rem">Parcours</h2>
-      <div style="border-left:3px solid ${c}44;padding-left:1.1rem;margin-left:.35rem">
-        ${d.exps.map(e=>`<div style="margin-bottom:.85rem;position:relative"><span style="position:absolute;left:-1.4rem;top:.25rem;width:11px;height:11px;border-radius:50%;background:${c};border:2px solid #fff;box-shadow:0 0 0 2px ${c}55"></span><b>${esc(e.poste)}</b>${e.emp?" — "+esc(e.emp):""}<br><span style="font-size:.8rem;color:#64748b">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span>${e.miss?`<div style="font-size:.85rem;color:#475569;margin-top:.15rem">${esc(e.miss)}</div>`:""}</div>`).join("")}
-      </div>`:""}
-      ${d.forms.length?`<h2 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:${c};margin:1.1rem 0 .4rem">Formations</h2>${d.forms.map(f=>`<div style="margin-bottom:.35rem"><b>${esc(f.dipl)}</b> <span style="color:#64748b;font-size:.8rem">${esc(f.an)}</span></div>`).join("")}`:""}
-      ${d.skills.length?`<h2 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:${c};margin:1rem 0 .35rem">Compétences</h2>${cvSkillPills(d.skills,c+"22",c)}`:""}
-      ${d.certs&&d.certs.length?`<h2 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:${c};margin:1rem 0 .3rem">Certifications</h2><p style="margin:0;font-size:.85rem">${d.certs.map(esc).join(" · ")}</p>`:""}
+      ${d.exps.length?`<h2 style="font-size:.8rem;color:${c};text-transform:uppercase">Parcours</h2><div style="border-left:3px solid ${c}44;padding-left:1rem;margin-left:.3rem">${d.exps.map(e=>`<div style="margin:.7rem 0;position:relative"><span style="position:absolute;left:-1.35rem;top:.2rem;width:10px;height:10px;border-radius:50%;background:${c}"></span><b>${esc(e.poste)}</b>${e.emp?" — "+esc(e.emp):""}<br><span style="font-size:.8rem;color:#888">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span></div>`).join("")}</div>`:""}
+      ${d.skills.length?`<h2 style="font-size:.8rem;color:${c};margin-top:1rem">Compétences</h2>${cvSkillPills(d.skills,c+"22",c)}`:""}
       <p style="margin:.8rem 0 0;font-size:.85rem"><b>Langues :</b> ${esc(d.lang)}</p>
     </div>`;
   }
-
-  // ========== CLASSIQUE ==========
-  else {
-    html = `<div style="font-family:Georgia,serif;color:#1a1a1a;padding:1.5rem 1.8rem;max-width:700px;margin:0 auto;background:#fff">
-      <div style="text-align:center;border-bottom:2px solid #1a1a1a;padding-bottom:.9rem;margin-bottom:1.1rem">
-        <h1 style="margin:0;font-size:1.65rem;letter-spacing:.04em">${esc(name)}</h1>
-        <p style="margin:.3rem 0 0;font-size:1rem;color:#333"><span style="margin-right:.3rem">${cvJobIcon(title)}</span>${esc(title)}</p>
-        <div style="margin:.4rem 0 0;font-size:.82rem;color:#555;display:flex;flex-wrap:wrap;justify-content:center;gap:.3rem .8rem">${cvContactInline(d)}</div>
+  else if(cvModel === "banner"){
+    const c = getCvColor();
+    html = `<div style="font-family:system-ui,sans-serif;max-width:760px;margin:0 auto;background:#fff;min-height:100vh">
+      <div style="background:${c};color:#fff;padding:1.8rem 1.5rem;text-align:center">
+        ${d.photo?`<img src="${d.photo}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid #fff;margin-bottom:.6rem">`:`<div style="width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.2);margin:0 auto .6rem;display:flex;align-items:center;justify-content:center;font-size:1.8rem">👤</div>`}
+        <h1 style="margin:0;font-size:1.55rem">${esc(name)}</h1>
+        <p style="margin:.3rem 0 0;opacity:.95">${cvJobIcon(title)} ${esc(title)}</p>
+        <div style="margin:.5rem 0 0;font-size:.85rem;opacity:.9;display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem 1rem">${cvContactInline(d)}</div>
       </div>
-      ${d.profile ? `<p style="font-style:italic;margin:0 0 1rem;color:#333;font-size:.9rem">${esc(d.profile)}</p>` : ""}
-      ${d.exps.length ? `<h2 style="font-size:.9rem;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #ccc;padding-bottom:.25rem;margin:1.1rem 0 .5rem">Expérience professionnelle</h2>
-      ${d.exps.map(e=>`<div style="margin-bottom:.6rem"><b>${esc(e.poste)}</b>${e.emp?" — "+esc(e.emp):""} <span style="float:right;color:#666;font-size:.82rem">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span><div style="clear:both"></div>${e.miss?`<div style="color:#444;font-size:.88rem;margin-top:.12rem">${esc(e.miss)}</div>`:""}</div>`).join("")}` : ""}
-      ${d.forms.length ? `<h2 style="font-size:.9rem;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #ccc;padding-bottom:.25rem;margin:1.1rem 0 .5rem">Formation</h2>
-      ${d.forms.map(f=>`<div style="margin-bottom:.4rem"><b>${esc(f.dipl)}</b>${f.etab?" — "+esc(f.etab):""} <span style="float:right;color:#666;font-size:.82rem">${esc(f.an)}</span><div style="clear:both"></div></div>`).join("")}` : ""}
-      ${d.skills.length ? `<h2 style="font-size:.9rem;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #ccc;padding-bottom:.25rem;margin:1.1rem 0 .5rem">Compétences</h2><p style="margin:0;font-size:.9rem">${d.skills.map(s=>esc(s)).join(" · ")}</p>` : ""}
-      <p style="margin:.7rem 0 0;font-size:.88rem"><b>Langues :</b> ${esc(d.lang)}</p>
-      ${d.interests ? `<p style="margin:.3rem 0 0;font-size:.88rem"><b>Loisirs :</b> ${esc(d.interests)}</p>` : ""}
+      <div style="padding:1.3rem 1.5rem">
+        ${d.profile?`<p style="text-align:center;margin:0 0 1rem">${esc(d.profile)}</p>`:""}
+        ${d.exps.length?`<h2 style="font-size:.82rem;color:${c};text-transform:uppercase">Expériences</h2>${d.exps.map(e=>`<div style="margin:.45rem 0"><b>${esc(e.poste)}</b> — ${esc(e.emp)} <span style="color:#888;font-size:.8rem">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span></div>`).join("")}`:""}
+        ${d.skills.length?`<h2 style="font-size:.82rem;color:${c};margin-top:1rem">Compétences</h2>${cvSkillPills(d.skills,c+"22",c)}`:""}
+        <p style="margin:.8rem 0 0;font-size:.85rem"><b>Langues :</b> ${esc(d.lang)}</p>
+      </div>
+    </div>`;
+  }
+  // fallback classique
+  else {
+    const c = getCvColor();
+    html = `<div style="font-family:Georgia,serif;max-width:700px;margin:0 auto;padding:1.5rem;background:#fff;min-height:100vh;text-align:center">
+      <h1 style="margin:0;font-size:1.6rem">${esc(name)}</h1>
+      <p style="margin:.3rem 0;color:#333">${cvJobIcon(title)} ${esc(title)}</p>
+      <div style="font-size:.85rem;color:#555;margin:.4rem 0 1rem">${cvContactInline(d)}</div>
+      <div style="text-align:left">
+        ${d.profile?`<p style="font-style:italic">${esc(d.profile)}</p>`:""}
+        ${d.exps.length?`<h2 style="font-size:.9rem;border-bottom:1px solid #ccc;padding-bottom:.25rem">Expérience</h2>${d.exps.map(e=>`<div style="margin:.45rem 0"><b>${esc(e.poste)}</b>${e.emp?" — "+esc(e.emp):""}</div>`).join("")}`:""}
+        ${d.forms.length?`<h2 style="font-size:.9rem;border-bottom:1px solid #ccc;padding-bottom:.25rem;margin-top:1rem">Formation</h2>${d.forms.map(f=>`<div style="margin:.35rem 0"><b>${esc(f.dipl)}</b></div>`).join("")}`:""}
+        ${d.skills.length?`<h2 style="font-size:.9rem;margin-top:1rem">Compétences</h2><p>${d.skills.map(esc).join(" · ")}</p>`:""}
+        <p style="margin-top:.8rem"><b>Langues :</b> ${esc(d.lang)}</p>
+      </div>
     </div>`;
   }
 
@@ -1488,14 +1466,16 @@ function cvBuild(){
 
 document.getElementById("cvGen")?.addEventListener("click", () => {
   cvBuild();
-  document.getElementById("cvMsg").textContent = "✅ CV généré. Choisissez un autre modèle ou imprimez.";
+  const m = document.getElementById("cvMsg");
+  if(m) m.textContent = "✅ CV généré.";
 });
 
 document.getElementById("cvSave")?.addEventListener("click", () => {
   const data = cvGetData();
   data.model = cvModel;
   localStorage.setItem("sf_cv_private_v2", JSON.stringify(data));
-  document.getElementById("cvMsg").textContent = "💾 Sauvegardé uniquement sur cet appareil.";
+  const m = document.getElementById("cvMsg");
+  if(m) m.textContent = "💾 Sauvegardé sur cet appareil uniquement.";
 });
 
 document.getElementById("cvLoad")?.addEventListener("click", () => {
@@ -1512,10 +1492,10 @@ document.getElementById("cvLoad")?.addEventListener("click", () => {
     if(data.profile) document.getElementById("cvProfile").value = data.profile;
     if(data.lang) document.getElementById("cvLang").value = data.lang;
     if(data.interests) document.getElementById("cvInterests").value = data.interests;
+    if(data.certs) document.getElementById("cvCerts").value = (data.certs||[]).join("\\n");
+    if(data.photo) window._cvPhotoData = data.photo;
     if(data.model){ cvModel = data.model; document.querySelectorAll("#cvModels .chip").forEach(c => c.classList.toggle("on", c.dataset.model===cvModel)); }
-    // Skills
     document.querySelectorAll("#cvSkillChecks input").forEach(c => { c.checked = (data.skills||[]).includes(c.value); });
-    // Rebuild exps/forms
     document.getElementById("cvExps").innerHTML = "";
     document.getElementById("cvForms").innerHTML = "";
     expCount = 0; formCount = 0;
@@ -1532,14 +1512,9 @@ document.getElementById("cvPrint")?.addEventListener("click", () => {
   const html = document.getElementById("cvPreview").innerHTML;
   const w = window.open("", "_blank");
   w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>CV</title>
-<style>
-@page{size:A4;margin:0}
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;background:#fff;height:100%}
-body{font-family:system-ui,-apple-system,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-body>div{min-height:100vh}
-img{max-width:100%;height:auto}
-</style></head><body>${html}
+<style>@page{size:A4;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff;height:100%}
+body{font-family:system-ui,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body>div{min-height:100vh}img{max-width:100%;height:auto}</style></head><body>${html}
 <script>window.onload=function(){setTimeout(function(){window.print()},200)}<\/script></body></html>`);
   w.document.close();
 });
@@ -1552,469 +1527,52 @@ document.getElementById("cvDl")?.addEventListener("click", () => {
   a.click();
 });
 
-
 if(ld("sf_dark",window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches))document.body.classList.add("dark");
 initMap();renderRes();renderChecks();renderAll();
 </script>
 
-<style>
-.wrap{display:flex;flex-direction:column}.wrap>.kpis{order:-1}
-.hero{background:linear-gradient(135deg,var(--h1,#0f4c81),var(--h2,#093154))!important;position:relative;overflow:hidden}
-.hero::before,.hero::after{position:absolute;font-size:2rem;opacity:.35;pointer-events:none;animation:fl 7s ease-in-out infinite}
-.hero::before{content:"🕊️";left:6%;top:18%}.hero::after{content:"🌿";right:7%;bottom:15%;animation-delay:2s}
-@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
-@media(prefers-reduced-motion:reduce){.hero::before,.hero::after,.orb{animation:none}}
-body{transition:padding-right .3s}body.padr{padding-right:400px}
-@media(max-width:800px){body.padr{padding-right:0}}
-.tb{position:relative;display:flex;gap:.3rem;align-items:center}
-.tb select,.tb>button{border:1px solid var(--bd);background:var(--bg);color:var(--text);border-radius:8px;padding:.45rem .55rem;font-size:.9rem;cursor:pointer;font-family:inherit}
-.pal{position:absolute;right:0;top:110%;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:.7rem;box-shadow:0 10px 25px rgba(0,0,0,.3);display:grid;grid-template-columns:repeat(4,44px);gap:8px;z-index:2000}
-.pal[hidden]{display:none}
-.sw{width:44px;height:44px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px var(--bd);cursor:pointer}
-.sw.on{box-shadow:0 0 0 3px var(--text)}
-#lockBtn{position:fixed;left:12px;bottom:12px;z-index:5000;width:44px;height:44px;border-radius:50%;border:0;background:var(--navy);color:#fff;font-size:1.2rem;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.35)}
-#maint{position:fixed;inset:0;z-index:4000;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;gap:1rem}
-#maint[hidden],#side[hidden]{display:none}
-#maint h1{color:var(--navy)}
-#side{position:fixed;top:0;right:0;bottom:0;width:400px;max-width:100vw;z-index:6000;background:var(--card);color:var(--text);border-left:3px solid var(--text);display:flex;flex-direction:column;transition:transform .3s}
-#side.min{transform:translateX(100%)}
-#sArrow{position:absolute;left:-36px;top:50%;transform:translateY(-50%);width:36px;height:70px;border:3px solid var(--text);border-right:0;border-radius:14px 0 0 14px;background:var(--navy);color:#fff;font-size:1.1rem;cursor:pointer}
-#side .sh{display:flex;justify-content:space-between;align-items:center;padding:.8rem 1rem;border-bottom:3px solid var(--text);gap:.5rem}
-#side .tabs{display:flex;flex-wrap:wrap;gap:.4rem;padding:.8rem 1rem 0}
-#side .sb{flex:1;overflow-y:auto;padding:1rem}
-#side .sf{display:flex;gap:.5rem;padding:.7rem 1rem;border-top:1px solid var(--bd);flex-wrap:wrap}
-#side h3{margin:1rem 0 .4rem;color:var(--navy)}
-#side .ln{display:flex;align-items:center;gap:.5rem;padding:.35rem 0;border-bottom:1px solid var(--bd);font-size:.9rem}
-#side .ln span{flex:1}#side .ln button{padding:.2rem .6rem}
-#side .two2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
-#cBox{width:100%;height:50vh;font:12px/1.4 monospace;background:var(--bg);color:var(--text);border:1px solid var(--bd);border-radius:8px;padding:.5rem}
-.mbanner{background:#fbbf24;color:#000;text-align:center;padding:.4rem;font-weight:700;font-size:.85rem}
-.calm{max-width:1128px;width:calc(100% - 2rem);margin:1rem auto 0;padding:1rem 1.2rem;background:var(--card);border:1px solid var(--bd);border-radius:14px;box-shadow:var(--sh);display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between}
-.calm[hidden]{display:none}
-#kind{transition:opacity .5s;color:var(--muted);margin-top:.2rem}
-.cb span{background:var(--bg);border:1px solid var(--bd);border-radius:20px;padding:.3rem .8rem;font-size:.85rem;font-weight:600;margin:.2rem;display:inline-block}
-#br{width:100%;text-align:center}#br[hidden]{display:none}
-.orb{width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,var(--blue),var(--navy));margin:1rem auto;animation:brt 8s ease-in-out infinite;opacity:.8}
-@keyframes brt{0%,100%{transform:scale(.7)}50%{transform:scale(1.3)}}
-.cathead{grid-column:1/-1;margin:.8rem 0 0;color:var(--navy);border-bottom:2px solid var(--bd);padding-bottom:.3rem}
-.cathead small{color:var(--muted)}
-/* UX improvements */
-h2.t{margin-top:2.8rem;padding-bottom:.4rem;border-bottom:2px solid var(--bd)}
-.sub{margin-bottom:1.2rem;line-height:1.5}
-.panel{margin-bottom:.5rem}
-.card{transition:transform .15s,box-shadow .15s}
-.card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,23,42,.12)}
-body.dark .card:hover{box-shadow:0 8px 20px rgba(0,0,0,.4)}
-/* Compact mode for many results */
-body.compact .card{padding:.75rem .9rem;gap:.45rem}
-body.compact .card h3{font-size:.95rem;margin:.25rem 0}
-body.compact .card p{font-size:.82rem;margin-bottom:.1rem}
-body.compact .card .row .btn{padding:.4rem .6rem;font-size:.8rem}
-body.compact .grid{gap:.7rem}
-/* Make category headers stickier / clearer */
-.cathead{position:sticky;top:60px;background:var(--bg);z-index:5;padding:.6rem 0 .4rem;margin-top:1.2rem!important}
-.kpi{transition:transform .15s}
-.kpi:hover{transform:translateY(-2px)}
-.hero p{font-size:1.05rem}
-.quick{gap:.6rem}
-#side{box-shadow:-8px 0 30px rgba(0,0,0,.15)}
-#side .sb{padding:1rem 1.1rem 2rem}
-#side label{display:block;margin:.4rem 0 .15rem;font-size:.88rem;font-weight:600;color:var(--muted)}
-#side .field{margin:.2rem 0 .7rem}
-.sec-intro{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:1rem 1.2rem;margin-bottom:1rem;font-size:.95rem;color:var(--muted);box-shadow:var(--sh)}
-</style>
-
-<button id="lockBtn" aria-label="Espace créateur" title="Espace créateur">🔒</button>
-<div id="maint" hidden><h1>🛠️ Maintenance</h1><p id="maintMsg"></p></div>
-<aside id="side" hidden></aside>
-
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {getFirestore,doc,setDoc,getDoc,onSnapshot,increment} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-/* ① COLLE ICI TA CONFIG FIREBASE */
-const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyAuSi-FAgMH-nRACrLvJy5_m8TYDKIIJzo",
-  authDomain: "jamais-seul-1559b.firebaseapp.com",
-  projectId: "jamais-seul-1559b",
-  storageBucket: "jamais-seul-1559b.firebasestorage.app",
-  messagingSenderId: "152897763801",
-  appId: "1:152897763801:web:924fd688b73117d91d81c8"
-};
-let READY = FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey !== "COLLE_ICI" && FIREBASE_CONFIG.authDomain && !FIREBASE_CONFIG.authDomain.startsWith("://");
-let auth, db;
-if (READY) {
-  try {
-    const app = initializeApp(FIREBASE_CONFIG);
-    auth = getAuth(app);
-    db = getFirestore(app);
-  } catch (err) {
-    console.error("Firebase init error:", err);
-    READY = false;
-  }
-}
-
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const e=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const SECS={carte:"🗺️ Carte",pres:"🔎 Près de chez vous",ressources:"📞 Numéros & sites",assistant:"🤖 Assistant",cv:"📄 Mon CV",simulateur:"🧭 Simulateur",benevolat:"🙋 Bénévolat"};
-const DEF={
-  primary:"#0f4c81",accent:"#2563eb",font:"system-ui",size:16,
-  bg:"#f1f5f9",card:"#ffffff",text:"#0f172a",muted:"#475569",bd:"#cbd5e1",
-  title:"",subtitle:"",
-  calm:true,maintenance:false,
-  mmsg:"Le site est en maintenance. Retour très bientôt !",
-  urgBar:true,
-  order:Object.keys(SECS),hidden:[],
-  heroTitle:"",heroText:"",
-  calmMessages:["Demander de l'aide est un acte de courage, pas de faiblesse.","Chaque petit pas compte. Vous avez déjà fait le premier en venant ici.","Il existe des personnes bienveillantes près de chez vous.","Vous méritez d'être soutenu(e), sans jugement.","Respirez. On avance ensemble, à votre rythme."],
-  footerText:"Solidarité France — portail citoyen libre et gratuit. Informations indicatives : seuls les organismes officiels font foi.",
-  mapWarn:"Les lieux « Repère » ont une position approximative (centre-ville) : ils signalent le type de structure présent dans la ville et renvoient vers le site officiel. Les autres viennent d'OpenStreetMap (données collaboratives, parfois incomplètes ou dépassées). Appelez ou vérifiez avant de vous déplacer.",
-  showKpis:true,showQuick:true,showSimulator:true,showBenevolat:true,showMap:true,
-  compactCards:false
-};
-const FONTS={"system-ui":"Système","Georgia,serif":"Georgia (serif)","'Trebuchet MS',sans-serif":"Trebuchet","Verdana,sans-serif":"Verdana (lisible)","'Courier New',monospace":"Machine à écrire","'Comic Sans MS',cursive":"Arrondie"};
-let cfg={...DEF},user=null,theme=localStorage.getItem("sf_theme")||"0",lang=localStorage.getItem("sf_lang")||"fr",tab="app",first=false;
-const dayKey=()=>new Date().toISOString().slice(0,10);
-
-/* ② 10 couleurs pour les visiteurs (0 = couleur du créateur) */
-const TH=[["Créateur"],["Océan","#0f4c81","#2563eb","#0f4c81","#093154"],["Forêt","#166534","#16a34a","#166534","#0b3d1e"],["Lavande","#6d28d9","#7c3aed","#6d28d9","#3b1580"],["Corail","#be123c","#e11d48","#be123c","#7f0d28"],["Soleil","#b45309","#d97706","#b45309","#78350f"],["Turquoise","#0e7490","#0891b2","#0e7490","#064e63"],["Rose","#be185d","#db2777","#be185d","#831843"],["Ardoise","#334155","#475569","#334155","#0f172a"],["Menthe","#047857","#10b981","#047857","#064e3b"],["Indigo","#3730a3","#4f46e5","#3730a3","#1e1b4b"]];
-const th=i=>i==="0"?["",cfg.primary,cfg.accent,cfg.primary,cfg.primary]:TH[i];
-function applyTheme(){
-  const t=th(theme),b=document.body,dark=b.classList.contains("dark");
-  const set=(k,v)=>v?b.style.setProperty(k,v):b.style.removeProperty(k);
-  // Base theme from palette or creator
-  if(dark){
-    b.style.removeProperty("--navy");
-  } else {
-    set("--navy", t[1] || cfg.primary);
-  }
-  set("--blue", t[2] || cfg.accent);
-  set("--h1", t[3] || cfg.primary);
-  set("--h2", t[4] || cfg.primary);
-  // Full surface colors (creator can override whites / backgrounds)
-  if(!dark){
-    if(cfg.bg) set("--bg", cfg.bg);
-    if(cfg.card) set("--card", cfg.card);
-    if(cfg.text) set("--text", cfg.text);
-    if(cfg.muted) set("--muted", cfg.muted);
-    if(cfg.bd) set("--bd", cfg.bd);
-  } else {
-    // In dark mode keep the dark defaults unless explicitly overridden later
-    ["--bg","--card","--text","--muted","--bd"].forEach(k=>b.style.removeProperty(k));
-  }
-  $$(".sw").forEach(s=>s.classList.toggle("on",s.dataset.i===theme));
-}
-new MutationObserver(applyTheme).observe(document.body,{attributes:true,attributeFilter:["class"]});
-
-/* ③ Langues (textes fixes du site) */
-const T={
-"Carte":["Map","Mapa","الخريطة"],
-"Près de chez vous":["Near you","Cerca de ti","بالقرب منك"],
-"Numéros & sites":["Numbers & sites","Números y webs","أرقام ومواقع"],
-"Simulateur":["Simulator","Simulador","المحاكي"],
-"Bénévolat":["Volunteering","Voluntariado","التطوع"],
-"Trouvez de l'aide dans n'importe quelle ville de France":["Find help in any city in France","Encuentra ayuda en cualquier ciudad de Francia","ابحث عن المساعدة في أي مدينة في فرنسا"],
-"Tapez votre ville ou votre code postal : banques alimentaires, magasins solidaires, hébergements, accueils de jour, centres sociaux… autour de vous.":["Type your city or postcode: food banks, solidarity shops, shelters, day centres, social centres… near you.","Escribe tu ciudad o código postal: bancos de alimentos, tiendas solidarias, albergues, centros de día… cerca de ti.","اكتب مدينتك أو الرمز البريدي: بنوك الطعام، المتاجر التضامنية، الملاجئ… بالقرب منك."],
-"Chercher":["Search","Buscar","بحث"],
-"📍 Autour de moi":["📍 Near me","📍 Cerca de mí","📍 بالقرب مني"],
-"🥫 Manger":["🥫 Food","🥫 Comer","🥫 طعام"],
-"🚿 Douche":["🚿 Shower","🚿 Ducha","🚿 استحمام"],
-"💼 Emploi":["💼 Jobs","💼 Empleo","💼 عمل"],
-"🎓 Étudiant":["🎓 Student","🎓 Estudiante","🎓 طالب"],
-"👕 Vêtements":["👕 Clothes","👕 Ropa","👕 ملابس"],
-"Lieux référencés":["Places listed","Lugares listados","أماكن مدرجة"],
-"Communes cherchables":["Searchable towns","Municipios","بلديات قابلة للبحث"],
-"Vos favoris":["Your favourites","Tus favoritos","مفضلتك"],
-"Gratuit & sans compte":["Free, no account","Gratis, sin cuenta","مجاني بدون حساب"],
-"🗺️ Carte des centres d'aide":["🗺️ Map of help centres","🗺️ Mapa de centros de ayuda","🗺️ خريطة مراكز المساعدة"],
-"🔄 Chercher dans cette zone":["🔄 Search this area","🔄 Buscar en esta zona","🔄 ابحث في هذه المنطقة"],
-"🇫🇷 Vue France":["🇫🇷 France view","🇫🇷 Vista Francia","🇫🇷 عرض فرنسا"],
-"Voir plus de résultats":["More results","Más resultados","المزيد من النتائج"],
-"+ Lieu":["+ Place","+ Lugar","+ مكان"],
-"🚨 Gratuit, 24h/24 :":["🚨 Free, 24/7:","🚨 Gratis, 24h:","🚨 مجاني 24/24:"],
-"📞 Numéros utiles & sites officiels":["📞 Useful numbers & official sites","📞 Números útiles y webs oficiales","📞 أرقام مفيدة ومواقع رسمية"],
-"🧭 Simulateur & démarches":["🧭 Simulator & procedures","🧭 Simulador y trámites","🧭 المحاكي والإجراءات"],
-"🙋 Bénévolat, dons & partage":["🙋 Volunteering, donations & sharing","🙋 Voluntariado y donaciones","🙋 التطوع والتبرعات"],
-"Que puis-je faire ?":["What can I do?","¿Qué puedo hacer?","ماذا يمكنني أن أفعل؟"],
-"Afficher mes pistes":["Show my options","Ver mis opciones","اعرض الخيارات"],
-"✅ Checklist des démarches":["✅ Checklist","✅ Lista de trámites","✅ قائمة المهام"],
-"Réinitialiser":["Reset","Restablecer","إعادة ضبط"],
-"Vous n'êtes pas seul(e).":["You are not alone.","No estás solo/a.","أنت لست وحيداً."],
-"Sans compte":["No account","Sin cuenta","بدون حساب"],
-"Sans jugement":["No judgement","Sin juicio","بدون أحكام"],
-"Gratuit":["Free","Gratis","مجاني"],
-"À votre rythme":["At your pace","A tu ritmo","على وتيرتك"],
-"Respirer une minute":["Breathe for a minute","Respirar un minuto","تنفس لدقيقة"],
-"Inspirez…":["Breathe in…","Inhala…","شهيق…"],
-"Expirez…":["Breathe out…","Exhala…","زفير…"],
-"Détails":["Details","Detalles","التفاصيل"],
-"Repère":["Landmark","Referencia","مرجع"],
-"Ajouté par vous":["Added by you","Añadido por ti","أضفته أنت"],
-"Filtrer par mot-clé (ex : repas, douche, Emmaüs)…":["Filter by keyword (e.g. meal, shower, Emmaüs)…","Filtrar por palabra clave…","تصفية حسب الكلمة…"],
-"Charger en déplaçant la carte":["Load while moving the map","Cargar al mover el mapa","تحميل عند تحريك الخريطة"],
-"Ranger par catégorie":["Group by category","Agrupar por categoría","تجميع حسب الفئة"],
-"Par distance / ordre d'origine":["By distance / original order","Por distancia / orden original","حسب المسافة"],
-"Ordre alphabétique":["Alphabetical order","Orden alfabético","ترتيب أبجدي"],
-"Aider à son tour":["Help in turn","Ayudar a tu vez","ساعد بدورك"],
-"Sauvegarde & partage":["Save & share","Guardar y compartir","حفظ ومشاركة"],
-"Exporter (.json)":["Export (.json)","Exportar (.json)","تصدير"],
-"Copier le lien":["Copy link","Copiar enlace","نسخ الرابط"],
-"Imprimer":["Print","Imprimir","طباعة"],
-"Mode sombre / clair":["Dark / light mode","Modo oscuro / claro","الوضع الداكن / الفاتح"]
-};
-const LI={fr:-1,en:0,es:1,ar:2},orig=new WeakMap();
-function applyLang(){
-  const i=LI[lang];document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";
-  const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;
-  while(n=w.nextNode()){
-    if(n.parentNode.closest("#side,script,style,#cBox"))continue;
-    const raw=n.nodeValue;
-    if(!orig.has(n)){
-      const k=raw.trim();
-      if(!T[k])continue;
-      orig.set(n,[raw,k]);
-    }
-    const[o,k]=orig.get(n);
-    n.nodeValue=i<0?o:o.replace(k,T[k][i]);
-  }
-  // Placeholders & dynamic bits
-  const ph=i<0?"Ville ou code postal (ex : Bordeaux, 33000)":["City or postcode (e.g. Bordeaux, 33000)","Ciudad o código postal (ej. Burdeos, 33000)","المدينة أو الرمز البريدي"][i];
-  const city=$("#city");if(city)city.placeholder=ph;
-  const kw=$("#kw");if(kw)kw.placeholder=i<0?"Filtrer par mot-clé (ex : repas, douche, Emmaüs)…":["Filter by keyword (e.g. meal, shower, Emmaüs)…","Filtrar por palabra clave…","تصفية حسب الكلمة…"][i];
-}
-
-/* Barre d'outils visiteurs (langue + couleurs) */
-const tb=document.createElement("div");tb.className="tb";
-tb.innerHTML='<select id="sfLang" aria-label="Langue"><option value="fr">🌐 FR</option><option value="en">🌐 EN</option><option value="es">🌐 ES</option><option value="ar">🌐 AR</option></select><button id="palBtn" aria-label="Couleurs du site" title="Couleurs personnelles">🎨</button><div class="pal" id="pal" hidden style="min-width:220px;padding:12px;grid-template-columns:1fr;gap:8px">'
-  +'<div style="font-size:.8rem;font-weight:700;margin-bottom:4px">Vos couleurs (personnelles)</div>'
-  +'<label style="font-size:.78rem;display:flex;justify-content:space-between;align-items:center">Principale <input type="color" id="ucPrimary" value="#0f4c81" style="width:42px;height:28px;border:0;padding:0;cursor:pointer"></label>'
-  +'<label style="font-size:.78rem;display:flex;justify-content:space-between;align-items:center">Accent <input type="color" id="ucAccent" value="#2563eb" style="width:42px;height:28px;border:0;padding:0;cursor:pointer"></label>'
-  +'<label style="font-size:.78rem;display:flex;justify-content:space-between;align-items:center">Fond de page <input type="color" id="ucBg" value="#f1f5f9" style="width:42px;height:28px;border:0;padding:0;cursor:pointer"></label>'
-  +'<label style="font-size:.78rem;display:flex;justify-content:space-between;align-items:center">Cartes (zones blanches) <input type="color" id="ucCard" value="#ffffff" style="width:42px;height:28px;border:0;padding:0;cursor:pointer"></label>'
-  +'<label style="font-size:.78rem;display:flex;justify-content:space-between;align-items:center">Texte <input type="color" id="ucText" value="#0f172a" style="width:42px;height:28px;border:0;padding:0;cursor:pointer"></label>'
-  +'<button type="button" id="ucReset" class="btn l" style="width:100%;margin-top:6px;font-size:.8rem">Réinitialiser</button>'
-  +'<div style="font-size:.7rem;color:var(--muted);margin-top:4px">Uniquement sur votre appareil</div>'
-  +'</div>';
-$("nav").insertBefore(tb,$('nav [data-a="theme"]'));
-$("#sfLang").value=lang;
-$("#sfLang").onchange=function(){lang=this.value;localStorage.setItem("sf_lang",lang);applyLang()};
-$("#palBtn").onclick=ev=>{ev.stopPropagation();$("#pal").hidden=!$("#pal").hidden};
-document.addEventListener("click",e=>{if(!e.target.closest("#pal")&&!e.target.closest("#palBtn"))$("#pal").hidden=true});
-
-/* Couleurs personnelles (localStorage) – n'affectent pas les autres visiteurs */
-function loadUserColors(){
-  try{return JSON.parse(localStorage.getItem("sf_user_colors")||"{}")}catch(e){return {}}
-}
-function applyUserColors(){
-  const u=loadUserColors();
-  const b=document.body;
-  if(b.classList.contains("dark"))return;
-  const set=(k,v)=>{if(v)b.style.setProperty(k,v)};
-  set("--navy",u.primary);set("--blue",u.accent);set("--h1",u.primary);set("--h2",u.primary);
-  set("--bg",u.bg);set("--card",u.card);set("--text",u.text);
-  const el=id=>{const n=document.getElementById(id);if(n&&u[id.replace("uc","").toLowerCase()]){/*skip*/}};
-  if(document.getElementById("ucPrimary")&&u.primary)document.getElementById("ucPrimary").value=u.primary;
-  if(document.getElementById("ucAccent")&&u.accent)document.getElementById("ucAccent").value=u.accent;
-  if(document.getElementById("ucBg")&&u.bg)document.getElementById("ucBg").value=u.bg;
-  if(document.getElementById("ucCard")&&u.card)document.getElementById("ucCard").value=u.card;
-  if(document.getElementById("ucText")&&u.text)document.getElementById("ucText").value=u.text;
-}
-function saveUserColor(key,val){
-  const u=loadUserColors();u[key]=val;localStorage.setItem("sf_user_colors",JSON.stringify(u));applyUserColors();
-}
-["ucPrimary","ucAccent","ucBg","ucCard","ucText"].forEach(id=>{
-  const map={ucPrimary:"primary",ucAccent:"accent",ucBg:"bg",ucCard:"card",ucText:"text"};
-  const el=document.getElementById(id);
-  if(el)el.oninput=()=>saveUserColor(map[id],el.value);
-});
-const ucr=document.getElementById("ucReset");
-if(ucr)ucr.onclick=()=>{localStorage.removeItem("sf_user_colors");
-  ["--navy","--blue","--h1","--h2","--bg","--card","--text"].forEach(k=>document.body.style.removeProperty(k));
-  applyTheme();
-  if(document.getElementById("ucPrimary")){document.getElementById("ucPrimary").value="#0f4c81";document.getElementById("ucAccent").value="#2563eb";document.getElementById("ucBg").value="#f1f5f9";document.getElementById("ucCard").value="#ffffff";document.getElementById("ucText").value="#0f172a";}
-};
-applyUserColors();
-
-/* ④ Bandeau rassurant + respiration */
-window.__KIND=["Demander de l'aide est un acte de courage, pas de faiblesse.","Chaque petit pas compte. Vous avez déjà fait le premier en venant ici.","Il existe des personnes bienveillantes près de chez vous.","Vous méritez d'être soutenu(e), sans jugement.","Respirez. On avance ensemble, à votre rythme."];
-const rs=document.createElement("section");rs.id="calm";rs.className="calm";
-rs.innerHTML='<div><b>💙 Vous n\'êtes pas seul(e).</b><p id="kind">'+window.__KIND[0]+'</p></div><div class="cb"><span>🔒 Sans compte</span><span>🕊️ Sans jugement</span><span>💯 Gratuit</span><span>🌿 À votre rythme</span></div><button class="btn l" id="brBtn">🌬️ Respirer une minute</button><div id="br" hidden><div class="orb"></div><p id="brT">Inspirez…</p></div>';
-$(".hero").after(rs);
-let ki=0;setInterval(()=>{const k=$("#kind");if(!k)return;const arr=window.__KIND||[];if(!arr.length)return;k.style.opacity=0;setTimeout(()=>{ki=(ki+1)%arr.length;k.textContent=arr[ki];k.style.opacity=1},500)},7000);
-let bt,bo;$("#brBtn").onclick=()=>{const b=$("#br");clearInterval(bt);clearTimeout(bo);if(!b.hidden){b.hidden=true;return}b.hidden=false;let x=0;$("#brT").textContent="Inspirez…";bt=setInterval(()=>{x++;$("#brT").textContent=x%2?"Expirez…":"Inspirez…"},4000);bo=setTimeout(()=>{b.hidden=true;clearInterval(bt)},60000)};
-$("footer").insertAdjacentHTML("beforeend","<br>Fait avec 💙 pour que personne ne reste seul.");
-
-/* ⑤ Cartes rangées par catégorie */
-const ICO={"Alimentaire":"🥫","Magasins solidaires":"🛍️","Aides & accueil social":"🤝","Santé & logement":"🩺","Hygiène & numérique":"🚿","Emploi & insertion":"💼","Étudiants":"🎓"},CAT=Object.keys(ICO);
-let sort=localStorage.getItem("sf_sort")||"cat";
-const sel=document.createElement("select");sel.className="field";sel.style.maxWidth="260px";
-sel.innerHTML='<option value="cat">📂 Grouper par catégorie</option><option value="dist">📏 Par distance</option><option value="az">🔤 A → Z</option>';sel.value=sort;
-const compactBtn=document.createElement("button");
-compactBtn.className="btn l";
-compactBtn.style.marginLeft="8px";
-compactBtn.textContent=localStorage.getItem("sf_compact")==="1"?"📇 Vue normale":"🗂️ Vue compacte";
-if(localStorage.getItem("sf_compact")==="1")document.body.classList.add("compact");
-compactBtn.onclick=()=>{const on=!document.body.classList.contains("compact");document.body.classList.toggle("compact",on);localStorage.setItem("sf_compact",on?"1":"0");compactBtn.textContent=on?"📇 Vue normale":"🗂️ Vue compacte"};
-const toolsRow=document.createElement("div");toolsRow.style.cssText="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:1rem 0 .6rem";
-toolsRow.append(sel,compactBtn);
-$("#cards").before(toolsRow);
-const ob=new MutationObserver(org);
-function org(){
-  ob.disconnect();
-  const g=$("#cards"),cs=[...g.querySelectorAll(":scope>article.card")];
-  g.querySelectorAll(":scope>.cathead").forEach(x=>x.remove());
-  cs.forEach((c,i)=>{if(c.dataset.o==null)c.dataset.o=i});
-  const cat=c=>c.querySelector(".badge").textContent,nm=c=>c.querySelector("h3").textContent;
-  cs.sort((a,b)=>sort==="az"?nm(a).localeCompare(nm(b),"fr"):sort==="cat"?(CAT.indexOf(cat(a))-CAT.indexOf(cat(b)))||(a.querySelector(".meta")?a.dataset.o-b.dataset.o:nm(a).localeCompare(nm(b),"fr")):a.dataset.o-b.dataset.o);
-  let last="";
-  cs.forEach(c=>{const k=cat(c);if(sort==="cat"&&k!==last){last=k;const h=document.createElement("h3");h.className="cathead";h.innerHTML=(ICO[k]||"📌")+" "+e(k)+" <small>("+cs.filter(x=>cat(x)===k).length+")</small>";g.append(h)}g.append(c)});
-  ob.observe(g,{childList:true})}
-sel.onchange=()=>{sort=sel.value;localStorage.setItem("sf_sort",sort);org()};
-org();
-
-/* Sections réordonnables */
-const main=$("main.wrap");
-$$("main.wrap>h2.t").forEach(h=>{const d=document.createElement("section");d.dataset.sec=h.id;main.insertBefore(d,h);let n=h;while(n&&(n===h||!n.matches("h2.t"))){const nx=n.nextElementSibling;d.append(n);n=nx}});
-
-/* Application de la configuration */
+const DEF={primary:"#0f4c81",accent:"#2563eb",bg:"#f1f5f9",card:"#ffffff",text:"#0f172a",font:"system-ui",size:16,title:"",calm:true,maintenance:false,mmsg:"Le site est en maintenance. Retour très bientôt !",urgBar:true,order:Object.keys(SECS),hidden:[]};
+const FONTS={"system-ui":"Système","Georgia,serif":"Georgia","'Trebuchet MS',sans-serif":"Trebuchet","Verdana,sans-serif":"Verdana"};
+let cfg={...DEF};try{const s=localStorage.getItem("sf_cfg");if(s)cfg={...DEF,...JSON.parse(s)}}catch(err){}
+let theme=localStorage.getItem("sf_theme")||"0",lang=localStorage.getItem("sf_lang")||"fr",tab="app";
+function applyTheme(){/* kept minimal */}
+function applyLang(){/* translations applied by main script */}
 function applyCfg(){
   const c={...DEF,...cfg};
-  document.body.style.fontFamily=c.font;document.documentElement.style.fontSize=c.size+"px";
-  const h1=$(".hero h1");if(!h1.dataset.o)h1.dataset.o=h1.textContent;h1.textContent=c.heroTitle||c.title||h1.dataset.o;
-  const hp=$(".hero p");if(hp){if(!hp.dataset.o)hp.dataset.o=hp.textContent;if(c.heroText)hp.textContent=c.heroText;else if(hp.dataset.o)hp.textContent=hp.dataset.o;}
-  $(".urg").style.display=c.urgBar?"":"none";
-  const calmEl=$("#calm");if(calmEl)calmEl.hidden=!c.calm;
-  // Update calm messages if present
-  if(c.calmMessages&&c.calmMessages.length){window.__KIND=c.calmMessages;}
-  c.order.forEach((id,i)=>{const s=$('[data-sec="'+id+'"]');if(s){s.style.order=i;s.hidden=c.hidden.includes(id)}});
-  $$(".links a").forEach(a=>{const id=a.getAttribute("href").slice(1);a.style.display=c.hidden.includes(id)?"none":""});
-  $("#maintMsg").textContent=c.mmsg;$("#maint").hidden=!(c.maintenance&&!user);
-  let mb=$(".mbanner");if(c.maintenance&&user){if(!mb){mb=document.createElement("div");mb.className="mbanner";mb.textContent="⚠️ Mode maintenance ACTIF : seuls vous le voyez normalement";document.body.prepend(mb)}}else if(mb)mb.remove();
-  // Feature toggles
-  const kpis=$(".kpis");if(kpis)kpis.style.display=c.showKpis===false?"none":"";
-  const mapSec=$('[data-sec="carte"]');if(mapSec&&c.showMap===false)mapSec.hidden=true;
-  const simSec=$('[data-sec="simulateur"]');if(simSec&&c.showSimulator===false)simSec.hidden=true;
-  const benSec=$('[data-sec="benevolat"]');if(benSec&&c.showBenevolat===false)benSec.hidden=true;
-  // Map warning
-  const warn=$(".warn");if(warn&&c.mapWarn)warn.textContent="⚠️ "+c.mapWarn;
-  // Footer
-  const foot=$("footer");if(foot&&c.footerText){const strong=foot.querySelector("strong");const rest=c.footerText;if(strong){strong.nextSibling&&strong.nextSibling.remove();strong.insertAdjacentText("afterend"," — "+rest.replace(/^Solidarité France — /,""));}}
-  applyTheme();window.dispatchEvent(new Event("resize"))}
-if(READY)onSnapshot(doc(db,"config","site"),s=>{if(s.exists()){cfg={...DEF,...s.data()};applyCfg();if(!$("#side").hidden&&tab!=="code"&&tab!=="st")panel()}},()=>{});
-applyCfg();applyLang();
-
-/* ⑥ Stats de visite (les visiteurs incrémentent, seul toi peux lire) */
-async function hit(){try{if(sessionStorage.sf_hit)return;sessionStorage.sf_hit=1;for(const id of["total","d"+dayKey()])await setDoc(doc(db,"stats",id),{n:increment(1)},{merge:true})}catch(er){}}
-async function stats(){
-  const el=$("#stBox");if(!el)return;
-  try{const d=[...Array(7)].map((_,i)=>new Date(Date.now()-i*864e5).toISOString().slice(0,10));
-    const [tot,...ds]=await Promise.all([getDoc(doc(db,"stats","total")),...d.map(x=>getDoc(doc(db,"stats","d"+x)))]);
-    const n=s=>s.exists()?s.data().n:0,a=ds.map(n),mx=Math.max(1,...a);
-    el.innerHTML='<div class="two2"><div class="kpi"><b>'+n(tot)+'</b><span>visites au total</span></div><div class="kpi"><b>'+a[0]+'</b><span>aujourd\'hui</span></div></div><h3>7 derniers jours</h3>'+d.map((x,i)=>'<div class="ln"><span style="flex:0 0 50px">'+x.slice(5)+'</span><div class="bar" style="flex:1"><i style="width:'+a[i]/mx*100+'%"></i></div><b>'+a[i]+"</b></div>").join("")
-  }catch(er){el.textContent="Stats indisponibles : vérifie les règles Firestore."}}
-async function code(){
-  const el=$("#cBox");if(!el)return;let t;
-  try{t=await(await fetch(location.href.split("#")[0],{cache:"no-store"})).text()}catch(er){t="<!DOCTYPE html>\n"+document.documentElement.outerHTML}
-  el.value=t;$("#cInfo").textContent=Math.round(t.length/1024)+" Ko";
-  $("#cCopy").onclick=()=>navigator.clipboard.writeText(t).then(()=>$("#cInfo").textContent="✅ Copié !");
-  $("#cDl").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([t],{type:"text/html"}));a.download="index.html";a.click()}}
-
-/* ⑦ Cadenas + panneau latéral */
-function openSide(min){const S=$("#side");S.hidden=false;S.classList.toggle("min",!!min);document.body.classList.toggle("padr",!min);panel();setTimeout(()=>window.dispatchEvent(new Event("resize")),350)}
-function closeSide(){$("#side").hidden=true;document.body.classList.remove("padr");setTimeout(()=>window.dispatchEvent(new Event("resize")),350)}
-$("#lockBtn").onclick=()=>openSide(false);
-if(READY)onAuthStateChanged(auth,u=>{user=u;$("#lockBtn").textContent=u?"🔓":"🔒";if(!first){first=true;if(!u)hit()}applyCfg();if(!$("#side").hidden)panel()});
-
+  document.body.style.fontFamily=c.font;
+  document.documentElement.style.fontSize=c.size+"px";
+  const h1=document.querySelector(".hero h1");
+  if(h1){if(!h1.dataset.o)h1.dataset.o=h1.textContent;h1.textContent=c.title||h1.dataset.o}
+  const urg=document.querySelector(".urg");if(urg)urg.style.display=c.urgBar?"":"none";
+  const calm=document.getElementById("calm");if(calm)calm.hidden=!c.calm;
+}
 function panel(){
-  const S=$("#side"),min=S.classList.contains("min");
-  S.innerHTML='<button id="sArrow" aria-label="Agrandir / réduire">'+(min?"◀":"▶")+'</button><div class="sh"><b>⚙️ Espace créateur</b><span>'+(user?'<button class="btn l" id="aOut">Déconnexion</button> ':"")+'<button class="btn rd" id="sX">✕ Fermer</button></span></div><div id="sBody" style="display:contents"></div>';
-  $("#sArrow").onclick=()=>{const m=!S.classList.contains("min");S.classList.toggle("min",m);document.body.classList.toggle("padr",!m);$("#sArrow").textContent=m?"◀":"▶";setTimeout(()=>window.dispatchEvent(new Event("resize")),350)};
-  $("#sX").onclick=closeSide;
-  const B=$("#sBody");
-  if(!READY){B.innerHTML='<div class="sb"><p>Colle d\'abord ta configuration Firebase dans <code>FIREBASE_CONFIG</code>.</p></div>';return}
-  if(!user){
-    B.innerHTML='<div class="sb"><h3>🔒 Connexion</h3><p class="sub">Connecte-toi pour modifier le site en direct (apparence, textes, sections, maintenance…).</p><input id="aE" class="field" type="email" placeholder="Email" autocomplete="username"><input id="aP" class="field" type="password" placeholder="Mot de passe" autocomplete="current-password"><button class="btn g" style="width:100%" id="aGo">Se connecter</button><p id="aErr" class="sub" style="color:#b91c1c"></p></div>';
-    const go=async()=>{try{await signInWithEmailAndPassword(auth,$("#aE").value.trim(),$("#aP").value)}catch(er){$("#aErr").textContent="Identifiants incorrects ou compte inexistant."}};
-    $("#aGo").onclick=go;$("#aP").onkeydown=ev=>{if(ev.key==="Enter")go()};return}
-  $("#aOut").onclick=()=>signOut(auth);
-  const c={...DEF,...cfg};
-  const TABS=[
-    ["app","🎨 Apparence"],
-    ["txt","📝 Textes"],
-    ["sec","📐 Sections"],
-    ["feat","🧩 Fonctions"],
-    ["mnt","🔨 Maintenance"],
-    ["st","📊 Stats"],
-    ["code","</> Code"]
-  ];
-  let h='<div class="tabs">'+TABS.map(t=>'<button class="chip'+(t[0]===tab?" on":"")+'" data-t="'+t[0]+'">'+t[1]+"</button>").join("")+'</div><div class="sb">';
-
-  if(tab==="app"){
-    h+='<h3>Couleurs principales</h3>';
-    h+='<div class="two2"><label>Principale (boutons, titres)<input id="cP" type="color" class="field" value="'+c.primary+'"></label><label>Accent (liens, highlights)<input id="cA" type="color" class="field" value="'+c.accent+'"></label></div>';
-    h+='<h3 style="margin-top:1.2rem">Surfaces (zones « blanches »)</h3>';
-    h+='<div class="two2"><label>Fond de page<input id="cBg" type="color" class="field" value="'+(c.bg||"#f1f5f9")+'"></label><label>Cartes & panneaux<input id="cCard" type="color" class="field" value="'+(c.card||"#ffffff")+'"></label></div>';
-    h+='<div class="two2"><label>Texte principal<input id="cTxt" type="color" class="field" value="'+(c.text||"#0f172a")+'"></label><label>Texte secondaire<input id="cMut" type="color" class="field" value="'+(c.muted||"#475569")+'"></label></div>';
-    h+='<label>Bordures<input id="cBd" type="color" class="field" value="'+(c.bd||"#cbd5e1")+'"></label>';
-    h+='<h3 style="margin-top:1.2rem">Typographie</h3>';
-    h+='<label>Police<select id="cF" class="field">'+Object.entries(FONTS).map(([k,v])=>'<option value="'+e(k)+'"'+(k===c.font?" selected":"")+">"+v+"</option>").join("")+'</select></label>';
-    h+='<label>Taille du texte : <b id="cSv">'+c.size+'</b> px<input id="cS" type="range" min="13" max="22" value="'+c.size+'" style="width:100%"></label>';
-    h+='<p class="sub">Tu choisis n\'importe quelle teinte exacte. Les visiteurs ont aussi 10 thèmes rapides via le bouton 🎨.</p>';
-  }
-
-  if(tab==="txt"){
-    h+='<h3>Textes du site</h3>';
-    h+='<label>Titre principal (hero)<input id="cHT" class="field" value="'+e(c.heroTitle||c.title||"")+'" maxlength="120" placeholder="Laisser vide = texte d\'origine"></label>';
-    h+='<label>Sous-texte du hero<textarea id="cHTx" class="field" rows="3" style="resize:vertical">'+e(c.heroText||"")+'</textarea></label>';
-    h+='<label>Messages rassurants (un par ligne)<textarea id="cKind" class="field" rows="5" style="resize:vertical">'+(c.calmMessages||DEF.calmMessages).map(e).join("\n")+'</textarea></label>';
-    h+='<label>Texte du pied de page<textarea id="cFoot" class="field" rows="2" style="resize:vertical">'+e(c.footerText||"")+'</textarea></label>';
-    h+='<label>Avertissement sous la carte<textarea id="cWarn" class="field" rows="3" style="resize:vertical">'+e(c.mapWarn||"")+'</textarea></label>';
-  }
-
-  if(tab==="sec"){
-    h+='<h3>Ordre & visibilité des sections</h3><p class="sub">Utilise ↑ ↓ pour réordonner. Décoche pour masquer aux visiteurs.</p>';
-    h+=c.order.map((id,i)=>'<div class="ln"><span>'+SECS[id]+'</span><button class="btn l" data-mv="'+i+'" data-d="-1">↑</button><button class="btn l" data-mv="'+i+'" data-d="1">↓</button><label style="display:inline;font-weight:400"><input type="checkbox" data-hd="'+id+'"'+(c.hidden.includes(id)?"":" checked")+"> visible</label></div>").join("");
-  }
-
-  if(tab==="feat"){
-    h+='<h3>Activer / désactiver des blocs</h3>';
-    h+='<label class="ck"><input type="checkbox" id="fKpi"'+(c.showKpis!==false?" checked":"")+'><span>Afficher les indicateurs (KPIs)</span></label>';
-    h+='<label class="ck"><input type="checkbox" id="fMap"'+(c.showMap!==false?" checked":"")+'><span>Afficher la carte</span></label>';
-    h+='<label class="ck"><input type="checkbox" id="fSim"'+(c.showSimulator!==false?" checked":"")+'><span>Afficher le simulateur & checklist</span></label>';
-    h+='<label class="ck"><input type="checkbox" id="fBen"'+(c.showBenevolat!==false?" checked":"")+'><span>Afficher la section Bénévolat</span></label>';
-    h+='<label class="ck"><input type="checkbox" id="cC"'+(c.calm?" checked":"")+'><span>Afficher le bandeau rassurant 💙</span></label>';
-    h+='<label class="ck"><input type="checkbox" id="cU"'+(c.urgBar?" checked":"")+'><span>Afficher la barre des numéros d\'urgence</span></label>';
-    h+='<p class="sub" style="margin-top:1rem">Les lieux réels se chargent automatiquement via OpenStreetMap quand on zoome ou cherche une ville. Les « Repères » nationaux sont déjà nombreux (réseaux Restos du Cœur, Secours Populaire, Emmaüs, Croix-Rouge, Banques alimentaires, PASS, Missions Locales, France Services, CROUS…).</p>';
-  }
-
-  if(tab==="mnt"){
-    h+='<h3>Mode maintenance</h3>';
-    h+='<label class="ck"><input type="checkbox" id="cM"'+(c.maintenance?" checked":"")+'><span>Activer le mode maintenance (les visiteurs voient uniquement le message)</span></label>';
-    h+='<label>Message de maintenance<input id="cMm" class="field" value="'+e(c.mmsg)+'" maxlength="200"></label>';
-    h+='<p class="sub">Quand la maintenance est active, toi seul (connecté) continues de voir le site normalement, avec un bandeau jaune d\'avertissement.</p>';
-  }
-
-  if(tab==="st")h+='<div id="stBox">Chargement des statistiques…</div>';
-  if(tab==="code")h+='<div class="row" style="margin-bottom:.6rem"><button class="btn" id="cCopy">📋 Copier le code</button><button class="btn l" id="cDl">⬇️ Télécharger index.html</button><span class="meta" id="cInfo"></span></div><textarea id="cBox" readonly spellcheck="false" style="height:55vh"></textarea>';
-
-  h+='</div><div class="sf"><button class="btn g" id="aSave">💾 Publier les changements</button><button class="btn l" id="aRst">↩︎ Réinitialiser</button><span class="sub" id="aMsg"></span></div>';
-  B.innerHTML=h;
-
-  $$("[data-t]").forEach(b=>b.onclick=()=>{tab=b.dataset.t;panel()});
-
-  const bind=(id,k,t)=>{const el=$("#"+id);if(!el)return;el.oninput=()=>{c[k]=t==="b"?el.checked:t==="n"?+el.value:el.value;if(id==="cS")$("#cSv").textContent=c.size;cfg=c;applyCfg()}};
-  [["cP","primary"],["cA","accent"],["cBg","bg"],["cCard","card"],["cTxt","text"],["cMut","muted"],["cBd","bd"],["cF","font"],["cS","size","n"],["cHT","heroTitle"],["cHTx","heroText"],["cFoot","footerText"],["cWarn","mapWarn"],["cC","calm","b"],["cM","maintenance","b"],["cMm","mmsg"],["cU","urgBar","b"],["fKpi","showKpis","b"],["fMap","showMap","b"],["fSim","showSimulator","b"],["fBen","showBenevolat","b"]].forEach(a=>bind(a[0],a[1],a[2]));
-
-  const kindEl=$("#cKind");
-  if(kindEl)kindEl.oninput=()=>{c.calmMessages=kindEl.value.split("\n").map(s=>s.trim()).filter(Boolean);cfg=c;applyCfg()};
-
-  $$("[data-hd]").forEach(k=>k.onchange=()=>{c.hidden=k.checked?c.hidden.filter(x=>x!==k.dataset.hd):c.hidden.concat(k.dataset.hd);cfg=c;applyCfg()});
-  $$("[data-mv]").forEach(b=>b.onclick=()=>{const i=+b.dataset.mv,j=i+ +b.dataset.d;if(j<0||j>=c.order.length)return;[c.order[i],c.order[j]]=[c.order[j],c.order[i]];cfg=c;applyCfg();panel()});
-
-  $("#aSave").onclick=async()=>{try{await setDoc(doc(db,"config","site"),c);$("#aMsg").textContent="✅ Publié — visible par tous les visiteurs"}catch(er){$("#aMsg").textContent="❌ Refusé (vérifie les règles Firestore)"}};
-  $("#aRst").onclick=()=>{cfg={...DEF};applyCfg();panel()};
-  if(tab==="st")stats();if(tab==="code")code()}
+  const S=document.getElementById("side");if(!S)return;
+  const min=S.classList.contains("min");
+  S.innerHTML=`<button id="sArrow">${min?"◀":"▶"}</button><div class="sh"><b>⚙️ Espace créateur</b><span><button class="btn rd" id="sX">✕ Fermer</button></span></div><div id="sBody" style="display:contents"></div>`;
+  document.getElementById("sArrow").onclick=()=>{const m=!S.classList.contains("min");S.classList.toggle("min",m);document.body.classList.toggle("padr",!m);document.getElementById("sArrow").textContent=m?"◀":"▶"};
+  document.getElementById("sX").onclick=()=>{S.hidden=true;document.body.classList.remove("padr")};
+  const B=document.getElementById("sBody");
+  B.innerHTML=`<div class="sb">
+    <div class="two2"><label>Couleur principale<input id="cP" type="color" class="field" value="${cfg.primary}"></label>
+    <label>Accent<input id="cA" type="color" class="field" value="${cfg.accent}"></label></div>
+    <label>Fond<input id="cBg" type="color" class="field" value="${cfg.bg||"#f1f5f9"}"></label>
+    <label>Cartes (blancs)<input id="cCard" type="color" class="field" value="${cfg.card||"#ffffff"}"></label>
+    <label>Titre d'accueil<input id="cT" class="field" value="${e(cfg.title)}" maxlength="120"></label>
+    <label class="ck"><input type="checkbox" id="cC"${cfg.calm?" checked":""}><span>Bandeau rassurant</span></label>
+    <div class="sf"><button class="btn g" id="aSave">💾 Sauvegarder</button><button class="btn l" id="aRst">↩︎ Par défaut</button><span class="sub" id="aMsg"></span></div>
+  </div>`;
+  const bind=(id,key,type)=>{const el=document.getElementById(id);if(!el)return;el.oninput=()=>{if(type==="b")cfg[key]=el.checked;else cfg[key]=el.value;applyCfg()}};
+  bind("cP","primary");bind("cA","accent");bind("cBg","bg");bind("cCard","card");bind("cT","title");bind("cC","calm","b");
+  document.getElementById("aSave").onclick=()=>{localStorage.setItem("sf_cfg",JSON.stringify(cfg));document.getElementById("aMsg").textContent="✅ Sauvegardé"};
+  document.getElementById("aRst").onclick=()=>{if(confirm("Remettre par défaut ?")){cfg={...DEF};localStorage.setItem("sf_cfg",JSON.stringify(cfg));applyCfg();panel()}};
+}
+document.getElementById("lockBtn")?.addEventListener("click",()=>{const S=document.getElementById("side");S.hidden=false;S.classList.remove("min");document.body.classList.add("padr");panel()});
+applyCfg();
 </script>
 </body>
 </html>
