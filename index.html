@@ -543,4 +543,210 @@ if(ld("sf_dark",window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").ma
 initMap();renderRes();renderChecks();renderAll();
 </script>
 </body>
+  <style>
+<style>
+.wrap{display:flex;flex-direction:column}.wrap>.kpis{order:-1}
+.hero{background:linear-gradient(135deg,var(--h1,#0f4c81),var(--h2,#093154))!important;position:relative;overflow:hidden}
+.hero::before,.hero::after{position:absolute;font-size:2rem;opacity:.35;pointer-events:none;animation:fl 7s ease-in-out infinite}
+.hero::before{content:"🕊️";left:6%;top:18%}.hero::after{content:"🌿";right:7%;bottom:15%;animation-delay:2s}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@media(prefers-reduced-motion:reduce){.hero::before,.hero::after,.orb{animation:none}}
+body{transition:padding-right .3s}body.padr{padding-right:400px}
+@media(max-width:800px){body.padr{padding-right:0}}
+.tb{position:relative;display:flex;gap:.3rem;align-items:center}
+.tb select,.tb>button{border:1px solid var(--bd);background:var(--bg);color:var(--text);border-radius:8px;padding:.45rem .55rem;font-size:.9rem;cursor:pointer;font-family:inherit}
+.pal{position:absolute;right:0;top:110%;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:.7rem;box-shadow:0 10px 25px rgba(0,0,0,.3);display:grid;grid-template-columns:repeat(4,44px);gap:8px;z-index:2000}
+.pal[hidden]{display:none}
+.sw{width:44px;height:44px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px var(--bd);cursor:pointer}
+.sw.on{box-shadow:0 0 0 3px var(--text)}
+#lockBtn{position:fixed;left:12px;bottom:12px;z-index:5000;width:44px;height:44px;border-radius:50%;border:0;background:var(--navy);color:#fff;font-size:1.2rem;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.35)}
+#maint{position:fixed;inset:0;z-index:4000;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;gap:1rem}
+#maint[hidden],#side[hidden]{display:none}
+#maint h1{color:var(--navy)}
+#side{position:fixed;top:0;right:0;bottom:0;width:400px;max-width:100vw;z-index:6000;background:var(--card);color:var(--text);border-left:3px solid var(--text);display:flex;flex-direction:column;transition:transform .3s}
+#side.min{transform:translateX(100%)}
+#sArrow{position:absolute;left:-36px;top:50%;transform:translateY(-50%);width:36px;height:70px;border:3px solid var(--text);border-right:0;border-radius:14px 0 0 14px;background:var(--navy);color:#fff;font-size:1.1rem;cursor:pointer}
+#side .sh{display:flex;justify-content:space-between;align-items:center;padding:.8rem 1rem;border-bottom:3px solid var(--text);gap:.5rem}
+#side .tabs{display:flex;flex-wrap:wrap;gap:.4rem;padding:.8rem 1rem 0}
+#side .sb{flex:1;overflow-y:auto;padding:1rem}
+#side .sf{display:flex;gap:.5rem;padding:.7rem 1rem;border-top:1px solid var(--bd);flex-wrap:wrap}
+#side h3{margin:1rem 0 .4rem;color:var(--navy)}
+#side .ln{display:flex;align-items:center;gap:.5rem;padding:.35rem 0;border-bottom:1px solid var(--bd);font-size:.9rem}
+#side .ln span{flex:1}#side .ln button{padding:.2rem .6rem}
+#side .two2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+#cBox{width:100%;height:50vh;font:12px/1.4 monospace;background:var(--bg);color:var(--text);border:1px solid var(--bd);border-radius:8px;padding:.5rem}
+.mbanner{background:#fbbf24;color:#000;text-align:center;padding:.4rem;font-weight:700;font-size:.85rem}
+.calm{max-width:1128px;width:calc(100% - 2rem);margin:1rem auto 0;padding:1rem 1.2rem;background:var(--card);border:1px solid var(--bd);border-radius:14px;box-shadow:var(--sh);display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between}
+.calm[hidden]{display:none}
+#kind{transition:opacity .5s;color:var(--muted);margin-top:.2rem}
+.cb span{background:var(--bg);border:1px solid var(--bd);border-radius:20px;padding:.3rem .8rem;font-size:.85rem;font-weight:600;margin:.2rem;display:inline-block}
+#br{width:100%;text-align:center}#br[hidden]{display:none}
+.orb{width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,var(--blue),var(--navy));margin:1rem auto;animation:brt 8s ease-in-out infinite;opacity:.8}
+@keyframes brt{0%,100%{transform:scale(.7)}50%{transform:scale(1.3)}}
+.cathead{grid-column:1/-1;margin:.8rem 0 0;color:var(--navy);border-bottom:2px solid var(--bd);padding-bottom:.3rem}
+.cathead small{color:var(--muted)}
+</style>
+
+<button id="lockBtn" aria-label="Espace créateur" title="Espace créateur">🔒</button>
+<div id="maint" hidden><h1>🛠️ Maintenance</h1><p id="maintMsg"></p></div>
+<aside id="side" hidden></aside>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getFirestore,doc,setDoc,getDoc,onSnapshot,increment} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ① COLLE ICI TA CONFIG FIREBASE */
+const FIREBASE_CONFIG={apiKey:"COLLE_ICI",authDomain:"COLLE_ICI",projectId:"COLLE_ICI",appId:"COLLE_ICI"};
+const READY=FIREBASE_CONFIG.apiKey!=="COLLE_ICI";
+let auth,db;if(READY){const app=initializeApp(FIREBASE_CONFIG);auth=getAuth(app);db=getFirestore(app)}
+
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const e=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const SECS={carte:"🗺️ Carte",pres:"🔎 Près de chez vous",ressources:"📞 Numéros & sites",simulateur:"🧭 Simulateur",benevolat:"🙋 Bénévolat"};
+const DEF={primary:"#0f4c81",accent:"#2563eb",font:"system-ui",size:16,title:"",calm:true,maintenance:false,mmsg:"Le site est en maintenance. Retour très bientôt !",urgBar:true,order:Object.keys(SECS),hidden:[]};
+const FONTS={"system-ui":"Système","Georgia,serif":"Georgia (serif)","'Trebuchet MS',sans-serif":"Trebuchet","Verdana,sans-serif":"Verdana (lisible)","'Courier New',monospace":"Machine à écrire","'Comic Sans MS',cursive":"Arrondie"};
+let cfg={...DEF},user=null,theme=localStorage.getItem("sf_theme")||"0",lang=localStorage.getItem("sf_lang")||"fr",tab="app",first=false;
+const dayKey=()=>new Date().toISOString().slice(0,10);
+
+/* ② 10 couleurs pour les visiteurs (0 = couleur du créateur) */
+const TH=[["Créateur"],["Océan","#0f4c81","#2563eb","#0f4c81","#093154"],["Forêt","#166534","#16a34a","#166534","#0b3d1e"],["Lavande","#6d28d9","#7c3aed","#6d28d9","#3b1580"],["Corail","#be123c","#e11d48","#be123c","#7f0d28"],["Soleil","#b45309","#d97706","#b45309","#78350f"],["Turquoise","#0e7490","#0891b2","#0e7490","#064e63"],["Rose","#be185d","#db2777","#be185d","#831843"],["Ardoise","#334155","#475569","#334155","#0f172a"],["Menthe","#047857","#10b981","#047857","#064e3b"],["Indigo","#3730a3","#4f46e5","#3730a3","#1e1b4b"]];
+const th=i=>i==="0"?["",cfg.primary,cfg.accent,cfg.primary,cfg.primary]:TH[i];
+function applyTheme(){
+  const t=th(theme),b=document.body,dark=b.classList.contains("dark");
+  const set=(k,v)=>v?b.style.setProperty(k,v):b.style.removeProperty(k);
+  if(dark)b.style.removeProperty("--navy");else set("--navy",t[1]);
+  set("--blue",t[2]);set("--h1",t[3]);set("--h2",t[4]);
+  $$(".sw").forEach(s=>s.classList.toggle("on",s.dataset.i===theme))}
+new MutationObserver(applyTheme).observe(document.body,{attributes:true,attributeFilter:["class"]});
+
+/* ③ Langues (textes fixes du site) */
+const T={"Carte":["Map","Mapa","الخريطة"],"Près de chez vous":["Near you","Cerca de ti","بالقرب منك"],"Numéros & sites":["Numbers & sites","Números y webs","أرقام ومواقع"],"Simulateur":["Simulator","Simulador","المحاكي"],"Bénévolat":["Volunteering","Voluntariado","التطوع"],
+"Trouvez de l'aide dans n'importe quelle ville de France":["Find help in any city in France","Encuentra ayuda en cualquier ciudad de Francia","ابحث عن المساعدة في أي مدينة في فرنسا"],
+"Chercher":["Search","Buscar","بحث"],"📍 Autour de moi":["📍 Near me","📍 Cerca de mí","📍 بالقرب مني"],"🥫 Manger":["🥫 Food","🥫 Comer","🥫 طعام"],"🚿 Douche":["🚿 Shower","🚿 Ducha","🚿 استحمام"],"💼 Emploi":["💼 Jobs","💼 Empleo","💼 عمل"],"🎓 Étudiant":["🎓 Student","🎓 Estudiante","🎓 طالب"],"👕 Vêtements":["👕 Clothes","👕 Ropa","👕 ملابس"],
+"Lieux référencés":["Places listed","Lugares","أماكن"],"Vos favoris":["Your favourites","Tus favoritos","مفضلتك"],"Gratuit & sans compte":["Free, no account","Gratis, sin cuenta","مجاني بدون حساب"],
+"🗺️ Carte des centres d'aide":["🗺️ Map of help centres","🗺️ Mapa de centros de ayuda","🗺️ خريطة مراكز المساعدة"],"🔄 Chercher dans cette zone":["🔄 Search this area","🔄 Buscar en esta zona","🔄 ابحث في هذه المنطقة"],"🇫🇷 Vue France":["🇫🇷 France view","🇫🇷 Vista Francia","🇫🇷 عرض فرنسا"],
+"Voir plus de résultats":["More results","Más resultados","المزيد"],"+ Lieu":["+ Place","+ Lugar","+ مكان"],"🚨 Gratuit, 24h/24 :":["🚨 Free, 24/7:","🚨 Gratis, 24h:","🚨 مجاني 24/24:"],
+"📞 Numéros utiles & sites officiels":["📞 Useful numbers & official sites","📞 Números útiles y webs oficiales","📞 أرقام مفيدة ومواقع رسمية"],"🧭 Simulateur & démarches":["🧭 Simulator & procedures","🧭 Simulador y trámites","🧭 المحاكي والإجراءات"],
+"🙋 Bénévolat, dons & partage":["🙋 Volunteering, donations & sharing","🙋 Voluntariado y donaciones","🙋 التطوع والتبرعات"],"Que puis-je faire ?":["What can I do?","¿Qué puedo hacer?","ماذا يمكنني أن أفعل؟"],"Afficher mes pistes":["Show my options","Ver mis opciones","اعرض الخيارات"],"✅ Checklist des démarches":["✅ Checklist","✅ Lista de trámites","✅ قائمة المهام"],"Réinitialiser":["Reset","Restablecer","إعادة ضبط"]};
+const LI={fr:-1,en:0,es:1,ar:2},orig=new WeakMap();
+function applyLang(){
+  const i=LI[lang];document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+  const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;
+  while(n=w.nextNode()){if(n.parentNode.closest("#side,script,style"))continue;
+    if(!orig.has(n)){const k=n.nodeValue.trim();if(!T[k])continue;orig.set(n,[n.nodeValue,k])}
+    const[o,k]=orig.get(n);n.nodeValue=i<0?o:o.replace(k,T[k][i])}
+  $("#city").placeholder=i<0?"Ville ou code postal (ex : Bordeaux, 33000)":["City or postcode (e.g. Bordeaux, 33000)","Ciudad o código postal (ej. Burdeos, 33000)","المدينة أو الرمز البريدي"][i]}
+
+/* Barre d'outils visiteurs (langue + couleurs) */
+const tb=document.createElement("div");tb.className="tb";
+tb.innerHTML='<select id="sfLang" aria-label="Langue"><option value="fr">🌐 FR</option><option value="en">🌐 EN</option><option value="es">🌐 ES</option><option value="ar">🌐 AR</option></select><button id="palBtn" aria-label="Couleurs du site" title="Couleurs">🎨</button><div class="pal" id="pal" hidden>'+TH.map((t,i)=>'<div class="sw" data-i="'+i+'" title="'+t[0]+'" style="background:'+(i?t[2]:"conic-gradient(#f43f5e,#f59e0b,#10b981,#3b82f6,#a855f7,#f43f5e)")+'"></div>').join("")+"</div>";
+$("nav").insertBefore(tb,$('nav [data-a="theme"]'));
+$("#sfLang").value=lang;
+$("#sfLang").onchange=function(){lang=this.value;localStorage.setItem("sf_lang",lang);applyLang()};
+$("#palBtn").onclick=ev=>{ev.stopPropagation();$("#pal").hidden=!$("#pal").hidden};
+$("#pal").onclick=ev=>{const s=ev.target.closest(".sw");if(!s)return;theme=s.dataset.i;localStorage.setItem("sf_theme",theme);applyTheme()};
+document.addEventListener("click",()=>{$("#pal").hidden=true});
+
+/* ④ Bandeau rassurant + respiration */
+const KIND=["Demander de l'aide est un acte de courage, pas de faiblesse.","Chaque petit pas compte. Vous avez déjà fait le premier en venant ici.","Il existe des personnes bienveillantes près de chez vous.","Vous méritez d'être soutenu(e), sans jugement.","Respirez. On avance ensemble, à votre rythme."];
+const rs=document.createElement("section");rs.id="calm";rs.className="calm";
+rs.innerHTML='<div><b>💙 Vous n\'êtes pas seul(e).</b><p id="kind">'+KIND[0]+'</p></div><div class="cb"><span>🔒 Sans compte</span><span>🕊️ Sans jugement</span><span>💯 Gratuit</span><span>🌿 À votre rythme</span></div><button class="btn l" id="brBtn">🌬️ Respirer une minute</button><div id="br" hidden><div class="orb"></div><p id="brT">Inspirez…</p></div>';
+$(".hero").after(rs);
+let ki=0;setInterval(()=>{const k=$("#kind");k.style.opacity=0;setTimeout(()=>{ki=(ki+1)%KIND.length;k.textContent=KIND[ki];k.style.opacity=1},500)},7000);
+let bt,bo;$("#brBtn").onclick=()=>{const b=$("#br");clearInterval(bt);clearTimeout(bo);if(!b.hidden){b.hidden=true;return}b.hidden=false;let x=0;$("#brT").textContent="Inspirez…";bt=setInterval(()=>{x++;$("#brT").textContent=x%2?"Expirez…":"Inspirez…"},4000);bo=setTimeout(()=>{b.hidden=true;clearInterval(bt)},60000)};
+$("footer").insertAdjacentHTML("beforeend","<br>Fait avec 💙 pour que personne ne reste seul.");
+
+/* ⑤ Cartes rangées par catégorie */
+const ICO={"Alimentaire":"🥫","Magasins solidaires":"🛍️","Aides & accueil social":"🤝","Santé & logement":"🩺","Hygiène & numérique":"🚿","Emploi & insertion":"💼","Étudiants":"🎓"},CAT=Object.keys(ICO);
+let sort=localStorage.getItem("sf_sort")||"cat";
+const sel=document.createElement("select");sel.className="field";sel.style.maxWidth="300px";
+sel.innerHTML='<option value="cat">📂 Ranger par catégorie</option><option value="dist">📏 Par distance / ordre d\'origine</option><option value="az">🔤 Ordre alphabétique</option>';sel.value=sort;
+$("#cards").before(sel);
+const ob=new MutationObserver(org);
+function org(){
+  ob.disconnect();
+  const g=$("#cards"),cs=[...g.querySelectorAll(":scope>article.card")];
+  g.querySelectorAll(":scope>.cathead").forEach(x=>x.remove());
+  cs.forEach((c,i)=>{if(c.dataset.o==null)c.dataset.o=i});
+  const cat=c=>c.querySelector(".badge").textContent,nm=c=>c.querySelector("h3").textContent;
+  cs.sort((a,b)=>sort==="az"?nm(a).localeCompare(nm(b),"fr"):sort==="cat"?(CAT.indexOf(cat(a))-CAT.indexOf(cat(b)))||(a.querySelector(".meta")?a.dataset.o-b.dataset.o:nm(a).localeCompare(nm(b),"fr")):a.dataset.o-b.dataset.o);
+  let last="";
+  cs.forEach(c=>{const k=cat(c);if(sort==="cat"&&k!==last){last=k;const h=document.createElement("h3");h.className="cathead";h.innerHTML=(ICO[k]||"📌")+" "+e(k)+" <small>("+cs.filter(x=>cat(x)===k).length+")</small>";g.append(h)}g.append(c)});
+  ob.observe(g,{childList:true})}
+sel.onchange=()=>{sort=sel.value;localStorage.setItem("sf_sort",sort);org()};
+org();
+
+/* Sections réordonnables */
+const main=$("main.wrap");
+$$("main.wrap>h2.t").forEach(h=>{const d=document.createElement("section");d.dataset.sec=h.id;main.insertBefore(d,h);let n=h;while(n&&(n===h||!n.matches("h2.t"))){const nx=n.nextElementSibling;d.append(n);n=nx}});
+
+/* Application de la configuration */
+function applyCfg(){
+  const c={...DEF,...cfg};
+  document.body.style.fontFamily=c.font;document.documentElement.style.fontSize=c.size+"px";
+  const h1=$(".hero h1");if(!h1.dataset.o)h1.dataset.o=h1.textContent;h1.textContent=c.title||h1.dataset.o;
+  $(".urg").style.display=c.urgBar?"":"none";$("#calm").hidden=!c.calm;
+  c.order.forEach((id,i)=>{const s=$('[data-sec="'+id+'"]');if(s){s.style.order=i;s.hidden=c.hidden.includes(id)}});
+  $$(".links a").forEach(a=>{const id=a.getAttribute("href").slice(1);a.style.display=c.hidden.includes(id)?"none":""});
+  $("#maintMsg").textContent=c.mmsg;$("#maint").hidden=!(c.maintenance&&!user);
+  let mb=$(".mbanner");if(c.maintenance&&user){if(!mb){mb=document.createElement("div");mb.className="mbanner";mb.textContent="⚠️ Mode maintenance ACTIF : seuls vous le voyez normalement";document.body.prepend(mb)}}else if(mb)mb.remove();
+  applyTheme();window.dispatchEvent(new Event("resize"))}
+if(READY)onSnapshot(doc(db,"config","site"),s=>{if(s.exists()){cfg={...DEF,...s.data()};applyCfg();if(!$("#side").hidden&&tab!=="code"&&tab!=="st")panel()}},()=>{});
+applyCfg();applyLang();
+
+/* ⑥ Stats de visite (les visiteurs incrémentent, seul toi peux lire) */
+async function hit(){try{if(sessionStorage.sf_hit)return;sessionStorage.sf_hit=1;for(const id of["total","d"+dayKey()])await setDoc(doc(db,"stats",id),{n:increment(1)},{merge:true})}catch(er){}}
+async function stats(){
+  const el=$("#stBox");if(!el)return;
+  try{const d=[...Array(7)].map((_,i)=>new Date(Date.now()-i*864e5).toISOString().slice(0,10));
+    const [tot,...ds]=await Promise.all([getDoc(doc(db,"stats","total")),...d.map(x=>getDoc(doc(db,"stats","d"+x)))]);
+    const n=s=>s.exists()?s.data().n:0,a=ds.map(n),mx=Math.max(1,...a);
+    el.innerHTML='<div class="two2"><div class="kpi"><b>'+n(tot)+'</b><span>visites au total</span></div><div class="kpi"><b>'+a[0]+'</b><span>aujourd\'hui</span></div></div><h3>7 derniers jours</h3>'+d.map((x,i)=>'<div class="ln"><span style="flex:0 0 50px">'+x.slice(5)+'</span><div class="bar" style="flex:1"><i style="width:'+a[i]/mx*100+'%"></i></div><b>'+a[i]+"</b></div>").join("")
+  }catch(er){el.textContent="Stats indisponibles : vérifie les règles Firestore."}}
+async function code(){
+  const el=$("#cBox");if(!el)return;let t;
+  try{t=await(await fetch(location.href.split("#")[0],{cache:"no-store"})).text()}catch(er){t="<!DOCTYPE html>\n"+document.documentElement.outerHTML}
+  el.value=t;$("#cInfo").textContent=Math.round(t.length/1024)+" Ko";
+  $("#cCopy").onclick=()=>navigator.clipboard.writeText(t).then(()=>$("#cInfo").textContent="✅ Copié !");
+  $("#cDl").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([t],{type:"text/html"}));a.download="index.html";a.click()}}
+
+/* ⑦ Cadenas + panneau latéral */
+function openSide(min){const S=$("#side");S.hidden=false;S.classList.toggle("min",!!min);document.body.classList.toggle("padr",!min);panel();setTimeout(()=>window.dispatchEvent(new Event("resize")),350)}
+function closeSide(){$("#side").hidden=true;document.body.classList.remove("padr");setTimeout(()=>window.dispatchEvent(new Event("resize")),350)}
+$("#lockBtn").onclick=()=>openSide(false);
+if(READY)onAuthStateChanged(auth,u=>{user=u;$("#lockBtn").textContent=u?"🔓":"🔒";if(!first){first=true;if(!u)hit()}applyCfg();if(!$("#side").hidden)panel()});
+
+function panel(){
+  const S=$("#side"),min=S.classList.contains("min");
+  S.innerHTML='<button id="sArrow" aria-label="Agrandir / réduire">'+(min?"◀":"▶")+'</button><div class="sh"><b>⚙️ Espace créateur</b><span>'+(user?'<button class="btn l" id="aOut">Déconnexion</button> ':"")+'<button class="btn rd" id="sX">✕ Fermer</button></span></div><div id="sBody" style="display:contents"></div>';
+  $("#sArrow").onclick=()=>{const m=!S.classList.contains("min");S.classList.toggle("min",m);document.body.classList.toggle("padr",!m);$("#sArrow").textContent=m?"◀":"▶";setTimeout(()=>window.dispatchEvent(new Event("resize")),350)};
+  $("#sX").onclick=closeSide;
+  const B=$("#sBody");
+  if(!READY){B.innerHTML='<div class="sb"><p>Colle d\'abord ta configuration Firebase dans <code>FIREBASE_CONFIG</code>.</p></div>';return}
+  if(!user){
+    B.innerHTML='<div class="sb"><h3>🔒 Connexion</h3><input id="aE" class="field" type="email" placeholder="Email" autocomplete="username"><input id="aP" class="field" type="password" placeholder="Mot de passe" autocomplete="current-password"><button class="btn g" style="width:100%" id="aGo">Se connecter</button><p id="aErr" class="sub" style="color:#b91c1c"></p></div>';
+    const go=async()=>{try{await signInWithEmailAndPassword(auth,$("#aE").value.trim(),$("#aP").value)}catch(er){$("#aErr").textContent="Identifiants incorrects."}};
+    $("#aGo").onclick=go;$("#aP").onkeydown=ev=>{if(ev.key==="Enter")go()};return}
+  $("#aOut").onclick=()=>signOut(auth);
+  const c={...DEF,...cfg};
+  const TABS=[["app","🎨 Apparence"],["sec","📐 Sections"],["mnt","🔨 Maintenance"],["st","📊 Stats"],["code","</> Code"]];
+  let h='<div class="tabs">'+TABS.map(t=>'<button class="chip'+(t[0]===tab?" on":"")+'" data-t="'+t[0]+'">'+t[1]+"</button>").join("")+'</div><div class="sb">';
+  if(tab==="app")h+='<div class="two2"><label>Couleur principale<input id="cP" type="color" class="field" value="'+c.primary+'"></label><label>Couleur d\'accent<input id="cA" type="color" class="field" value="'+c.accent+'"></label></div><label>Police<select id="cF" class="field">'+Object.entries(FONTS).map(([k,v])=>'<option value="'+e(k)+'"'+(k===c.font?" selected":"")+">"+v+"</option>").join("")+'</select></label><label>Taille du texte : <b id="cSv">'+c.size+'</b> px<input id="cS" type="range" min="13" max="22" value="'+c.size+'" style="width:100%"></label><label>Titre d\'accueil (vide = d\'origine)<input id="cT" class="field" value="'+e(c.title)+'" maxlength="120"></label><label class="ck"><input type="checkbox" id="cC"'+(c.calm?" checked":"")+'><span>Afficher le bandeau rassurant 💙</span></label>';
+  if(tab==="sec")h+=c.order.map((id,i)=>'<div class="ln"><span>'+SECS[id]+'</span><button class="btn l" data-mv="'+i+'" data-d="-1">↑</button><button class="btn l" data-mv="'+i+'" data-d="1">↓</button><label><input type="checkbox" data-hd="'+id+'"'+(c.hidden.includes(id)?"":" checked")+"> visible</label></div>").join("");
+  if(tab==="mnt")h+='<label class="ck"><input type="checkbox" id="cM"'+(c.maintenance?" checked":"")+'><span>Activer le mode maintenance</span></label><input id="cMm" class="field" value="'+e(c.mmsg)+'" maxlength="200" placeholder="Message de maintenance"><label class="ck"><input type="checkbox" id="cU"'+(c.urgBar?" checked":"")+'><span>Afficher la barre des numéros d\'urgence</span></label>';
+  if(tab==="st")h+='<div id="stBox">Chargement…</div>';
+  if(tab==="code")h+='<div class="row" style="margin-bottom:.6rem"><button class="btn" id="cCopy">📋 Copier</button><button class="btn l" id="cDl">⬇️ Télécharger</button><span class="meta" id="cInfo"></span></div><textarea id="cBox" readonly spellcheck="false"></textarea>';
+  h+='</div><div class="sf"><button class="btn g" id="aSave">💾 Publier</button><button class="btn l" id="aRst">↩︎ Par défaut</button><span class="sub" id="aMsg"></span></div>';
+  B.innerHTML=h;
+  $$("[data-t]").forEach(b=>b.onclick=()=>{tab=b.dataset.t;panel()});
+  const bind=(id,k,t)=>{const el=$("#"+id);if(!el)return;el.oninput=()=>{c[k]=t==="b"?el.checked:t==="n"?+el.value:el.value;if(id==="cS")$("#cSv").textContent=c.size;cfg=c;applyCfg()}};
+  [["cP","primary"],["cA","accent"],["cF","font"],["cS","size","n"],["cT","title"],["cC","calm","b"],["cM","maintenance","b"],["cMm","mmsg"],["cU","urgBar","b"]].forEach(a=>bind(a[0],a[1],a[2]));
+  $$("[data-hd]").forEach(k=>k.onchange=()=>{c.hidden=k.checked?c.hidden.filter(x=>x!==k.dataset.hd):c.hidden.concat(k.dataset.hd);cfg=c;applyCfg()});
+  $$("[data-mv]").forEach(b=>b.onclick=()=>{const i=+b.dataset.mv,j=i+ +b.dataset.d;if(j<0||j>=c.order.length)return;[c.order[i],c.order[j]]=[c.order[j],c.order[i]];cfg=c;applyCfg();panel()});
+  $("#aSave").onclick=async()=>{try{await setDoc(doc(db,"config","site"),c);$("#aMsg").textContent="✅ Publié"}catch(er){$("#aMsg").textContent="❌ Refusé (règles Firestore)"}};
+  $("#aRst").onclick=()=>{cfg={...DEF};applyCfg();panel()};
+  if(tab==="st")stats();if(tab==="code")code()}
+</script>
+</body>
 </html>
