@@ -1384,6 +1384,51 @@ function cvBuild(){
     </div>`;
   }
 
+  // ========== DÉGRADÉ ==========
+  else if(cvModel === "gradient"){
+    const c = getCvColor();
+    html = `<div style="font-family:system-ui,sans-serif;max-width:760px;margin:0 auto;background:#fff;min-height:100vh">
+      <div style="background:linear-gradient(125deg,${c} 0%,#db2777 45%,#f59e0b 100%);color:#fff;padding:1.7rem 1.6rem;display:flex;justify-content:space-between;align-items:center;gap:1rem">
+        <div style="min-width:0;flex:1">
+          <h1 style="margin:0;font-size:1.6rem;font-weight:700;word-break:break-word">${esc(name)}</h1>
+          <p style="margin:.3rem 0 0;opacity:.95;font-size:1.05rem">${esc(title)}</p>
+          <div style="margin:.5rem 0 0;font-size:.82rem;opacity:.9;display:flex;flex-wrap:wrap;gap:.5rem 1rem">${d.tel?`<span>${CV_ICONS.phone}${esc(d.tel)}</span>`:""}${d.email?`<span style="word-break:break-all">${CV_ICONS.mail}${esc(d.email)}</span>`:""}${d.city?`<span>${CV_ICONS.pin}${esc(d.city)}</span>`:""}</div>
+        </div>
+        ${d.photo?`<img src="${d.photo}" style="width:82px;height:82px;border-radius:50%;object-fit:cover;border:3px solid #fff;flex-shrink:0">`:`<div style="width:82px;height:82px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:1.7rem;flex-shrink:0;border:2px solid rgba(255,255,255,.5)">👤</div>`}
+      </div>
+      <div style="padding:1.3rem 1.6rem">
+        ${d.profile?`<p style="margin:0 0 1rem;line-height:1.5;color:#334155">${esc(d.profile)}</p>`:""}
+        ${d.exps.length?`<h2 style="font-size:.82rem;color:${c};text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .4rem">Expériences</h2>${d.exps.map(e=>`<div style="margin-bottom:.55rem"><b>${esc(e.poste)}</b>${e.emp?" · "+esc(e.emp):""}<br><span style="font-size:.8rem;color:#64748b">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span>${e.miss?`<div style="font-size:.85rem;color:#475569">${esc(e.miss)}</div>`:""}</div>`).join("")}`:""}
+        ${d.forms.length?`<h2 style="font-size:.82rem;color:${c};text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .4rem">Formations</h2>${d.forms.map(f=>`<div style="margin-bottom:.35rem"><b>${esc(f.dipl)}</b>${f.etab?" · "+esc(f.etab):""} <span style="color:#64748b;font-size:.8rem">(${esc(f.an)})</span></div>`).join("")}`:""}
+        ${d.certs&&d.certs.length?`<h2 style="font-size:.82rem;color:${c};text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .4rem">Certifications</h2><p style="margin:0;font-size:.85rem">${d.certs.map(esc).join(" · ")}</p>`:""}
+        ${d.skills.length?`<h2 style="font-size:.82rem;color:${c};text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .35rem">Compétences</h2>${cvSkillPills(d.skills,"linear-gradient(120deg,#ede9fe,#fce7f3)","#6b21a8")}`:""}
+        <p style="margin:.8rem 0 0;font-size:.85rem"><b>Langues :</b> ${esc(d.lang)}</p>
+        ${d.interests?`<p style="margin:.3rem 0 0;font-size:.85rem"><b>Centres d'intérêt :</b> ${esc(d.interests)}</p>`:""}
+      </div>
+    </div>`;
+  }
+  // ========== TIMELINE ==========
+  else if(cvModel === "timeline"){
+    const c = getCvColor();
+    html = `<div style="font-family:system-ui,sans-serif;max-width:720px;margin:0 auto;background:#fff;min-height:100vh;padding:1.5rem 1.6rem;box-sizing:border-box">
+      <div style="text-align:center;margin-bottom:1.2rem">
+        ${d.photo?`<img src="${d.photo}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid ${c}">`:`<div style="width:90px;height:90px;border-radius:50%;background:${c};color:#fff;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:1.9rem">👤</div>`}
+        <h1 style="margin:.65rem 0 0;font-size:1.55rem;color:#0f172a;word-break:break-word">${esc(name)}</h1>
+        <p style="margin:.25rem 0;color:${c};font-weight:600">${esc(title)}</p>
+        <div style="margin:.4rem 0 0;font-size:.82rem;color:#64748b;display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem 1rem">${d.tel?`<span>${CV_ICONS.phone}${esc(d.tel)}</span>`:""}${d.email?`<span style="word-break:break-all">${CV_ICONS.mail}${esc(d.email)}</span>`:""}${d.city?`<span>${CV_ICONS.pin}${esc(d.city)}</span>`:""}</div>
+      </div>
+      ${d.profile?`<p style="text-align:center;color:#334155;margin:0 0 1.2rem;font-size:.9rem">${esc(d.profile)}</p>`:""}
+      ${d.exps.length?`<h2 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:${c};margin:0 0 .6rem">Parcours</h2>
+      <div style="border-left:3px solid ${c}44;padding-left:1.1rem;margin-left:.35rem">
+        ${d.exps.map(e=>`<div style="margin-bottom:.85rem;position:relative"><span style="position:absolute;left:-1.4rem;top:.25rem;width:11px;height:11px;border-radius:50%;background:${c};border:2px solid #fff;box-shadow:0 0 0 2px ${c}55"></span><b>${esc(e.poste)}</b>${e.emp?" — "+esc(e.emp):""}<br><span style="font-size:.8rem;color:#64748b">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span>${e.miss?`<div style="font-size:.85rem;color:#475569;margin-top:.15rem">${esc(e.miss)}</div>`:""}</div>`).join("")}
+      </div>`:""}
+      ${d.forms.length?`<h2 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:${c};margin:1.1rem 0 .4rem">Formations</h2>${d.forms.map(f=>`<div style="margin-bottom:.35rem"><b>${esc(f.dipl)}</b> <span style="color:#64748b;font-size:.8rem">${esc(f.an)}</span></div>`).join("")}`:""}
+      ${d.skills.length?`<h2 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:${c};margin:1rem 0 .35rem">Compétences</h2>${cvSkillPills(d.skills,c+"22",c)}`:""}
+      ${d.certs&&d.certs.length?`<h2 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:${c};margin:1rem 0 .3rem">Certifications</h2><p style="margin:0;font-size:.85rem">${d.certs.map(esc).join(" · ")}</p>`:""}
+      <p style="margin:.8rem 0 0;font-size:.85rem"><b>Langues :</b> ${esc(d.lang)}</p>
+    </div>`;
+  }
+
   // ========== CLASSIQUE ==========
   else {
     html = `<div style="font-family:Georgia,serif;color:#1a1a1a;padding:1.5rem 1.8rem;max-width:700px;margin:0 auto;background:#fff">
