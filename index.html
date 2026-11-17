@@ -89,7 +89,7 @@ footer{background:var(--card);border-top:1px solid var(--bd);text-align:center;p
 
 <nav>
 <a class="logo" href="#top">🤝 Solidarité France</a>
-<div class="links"><a href="#carte">Carte</a><a href="#pres">Près de chez vous</a><a href="#ressources">Numéros & sites</a><a href="#simulateur">Simulateur</a><a href="#benevolat">Bénévolat</a></div>
+<div class="links"><a href="#carte">Carte</a><a href="#pres">Près de chez vous</a><a href="#ressources">Numéros & sites</a><a href="#assistant">Assistant</a><a href="#cv">Mon CV</a><a href="#simulateur">Simulateur</a><a href="#benevolat">Bénévolat</a></div>
 <button class="btn l" data-a="theme" aria-label="Mode sombre / clair">🌓</button>
 <button class="btn g" data-a="add">+ Lieu</button>
 </nav>
@@ -154,6 +154,56 @@ footer{background:var(--card);border-top:1px solid var(--bd);text-align:center;p
 <div class="panel"><h3>✅ Checklist des démarches</h3>
 <div class="bar"><i id="pbar"></i></div><div class="sub" id="ptxt"></div><div id="checks"></div>
 <button class="btn l" style="margin-top:.8rem" data-a="resetchecks">Réinitialiser</button></div>
+</div>
+
+
+<h2 class="t" id="assistant">🤖 Assistant Solidarité</h2>
+<p class="sub">Posez une question sur vos droits, où trouver de l'aide, les démarches… L'assistant est spécialisé pour ce site et la solidarité en France.</p>
+<div class="panel" id="aiBox">
+  <div id="aiChat" style="max-height:320px;overflow-y:auto;display:flex;flex-direction:column;gap:.7rem;margin-bottom:1rem;padding:.5rem 0"></div>
+  <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+    <input id="aiInput" class="field" style="flex:1;margin:0" placeholder="Ex : Où manger gratuitement à Lyon ? Comment faire une demande de RSA ?" maxlength="300">
+    <button class="btn g" id="aiSend">Envoyer</button>
+  </div>
+  <div class="chips" style="margin-top:.8rem" id="aiSug">
+    <button class="chip" data-q="Où trouver à manger gratuitement ?">🥫 Manger</button>
+    <button class="chip" data-q="Je n'ai nulle part où dormir ce soir">🏠 Hébergement</button>
+    <button class="chip" data-q="Comment avoir la complémentaire santé solidaire ?">🩺 Santé</button>
+    <button class="chip" data-q="Je cherche un emploi ou une formation">💼 Emploi</button>
+    <button class="chip" data-q="Comment faire une domiciliation postale ?">📄 Démarches</button>
+  </div>
+</div>
+
+<h2 class="t" id="cv">📄 Créer mon CV</h2>
+<p class="sub">Remplissez vos infos → un CV clair et professionnel est généré. <b>Tout reste sur votre appareil</b> (personne d'autre n'y a accès). Vous pouvez le télécharger ou l'imprimer.</p>
+<div class="two">
+  <div class="panel">
+    <h3>Vos informations</h3>
+    <label>Prénom & Nom</label><input id="cvName" class="field" placeholder="Ex : Marie Dupont" maxlength="80">
+    <label>Email</label><input id="cvEmail" class="field" placeholder="marie@email.com" maxlength="80">
+    <label>Téléphone</label><input id="cvTel" class="field" placeholder="06 12 34 56 78" maxlength="20">
+    <label>Ville</label><input id="cvCity" class="field" placeholder="Bordeaux" maxlength="60">
+    <label>Titre / objectif</label><input id="cvTitle" class="field" placeholder="Ex : Recherche un poste d'aide à domicile" maxlength="120">
+    <label>Expériences (une par ligne)</label><textarea id="cvExp" class="field" rows="4" placeholder="2022-2024 — Serveuse, Café de la Gare&#10;2020-2022 — Aide à domicile, association X"></textarea>
+    <label>Formations (une par ligne)</label><textarea id="cvForm" class="field" rows="3" placeholder="2020 — CAP Cuisine&#10;2018 — Bac pro"></textarea>
+    <label>Compétences (séparées par des virgules)</label><input id="cvSkills" class="field" placeholder="Ponctualité, travail en équipe, permis B, anglais" maxlength="200">
+    <div class="row" style="margin-top:.8rem">
+      <button class="btn g" id="cvGen" style="flex:1">✨ Générer mon CV</button>
+      <button class="btn l" id="cvSave">💾 Sauvegarder</button>
+      <button class="btn l" id="cvLoad">📂 Charger</button>
+    </div>
+    <p class="sub" id="cvMsg" style="margin-top:.5rem"></p>
+  </div>
+  <div class="panel">
+    <h3>Aperçu du CV</h3>
+    <div id="cvPreview" style="background:#fff;color:#111;border:1px solid #ddd;border-radius:8px;padding:1.2rem;min-height:280px;font-size:.9rem;line-height:1.45">
+      <p style="color:#888;text-align:center;margin-top:3rem">Le CV apparaîtra ici après génération.</p>
+    </div>
+    <div class="row" style="margin-top:.8rem">
+      <button class="btn" id="cvPrint" style="flex:1">🖨️ Imprimer / PDF</button>
+      <button class="btn l" id="cvDl">⬇️ Télécharger (.html)</button>
+    </div>
+  </div>
 </div>
 
 <h2 class="t" id="benevolat">🙋 Bénévolat, dons & partage</h2>
@@ -387,7 +437,7 @@ function norm(s){return String(s==null?"":s).toLowerCase().normalize("NFD").repl
 function dist(a,b,c,d){var r=Math.PI/180,x=Math.sin((c-a)*r/2),y=Math.sin((d-b)*r/2),h=x*x+Math.cos(a*r)*Math.cos(c*r)*y*y;return Math.round(12742*Math.atan2(Math.sqrt(h),Math.sqrt(1-h))*10)/10}
 var SYN={repas:"aliment manger epicerie colis resto",douche:"hygiene bain laverie",emploi:"insertion travail chantier",etudiant:"crous fage etudiants",vetements:"vestiaire boutique emmaus seconde main"};
 
-var S={c:null,cat:"Tout",show:36,live:{},sug:[],busy:false,pending:false,kw:""};
+var S={c:null,cat:"Tout",show:4,live:{},sug:[],busy:false,pending:false,kw:""};
 var NATIONAL=REFS.map(function(r,i){return{id:"r"+(i+1),src:"ref",n:r[0],c:r[1],la:r[2],ln:r[3],k:r[4],d:r[5],web:r[6],q:r[0]+" "+r[1],a:"",h:"",tel:"",o:""}});
 var GENERATED=genRefs(); // synthetic city markers – shown only when a city is selected
 var REFITEMS=NATIONAL; // start clean
@@ -496,13 +546,17 @@ function gps(p){return"https://www.google.com/maps/dir/?api=1&destination="+p.la
 function get(id){return byId[id]||favs[id]}
 
 function renderChips(){
-  var cnt={},all=items();all.forEach(function(p){cnt[p.k]=(cnt[p.k]||0)+1});
+  var cnt={},all=items(), totalAll = NATIONAL.length + GENERATED.length;
+  all.forEach(function(p){cnt[p.k]=(cnt[p.k]||0)+1});
   var tabs=["Tout"].concat(Object.keys(CATS),["Favoris"]);
   $("#chips").innerHTML=tabs.map(function(t){
     var n=t==="Tout"?all.length:t==="Favoris"?Object.keys(favs).length:(cnt[t]||0);
     return'<button class="chip'+(t===S.cat?" on":"")+'" data-a="cat" data-v="'+esc(t)+'">'+(t==="Favoris"?"⭐ ":"")+esc(t)+" ("+n+")</button>"}).join("");
   $("#legend").innerHTML=Object.keys(CATS).map(function(k){return'<span><i class="dot" style="background:'+CATS[k]+'"></i>'+esc(k)+"</span>"}).join("");
-  $("#k1").textContent=all.length;$("#k3").textContent=Object.keys(favs).length}
+  // Show the real total potential, not just currently filtered
+  $("#k1").textContent = totalAll.toLocaleString("fr-FR");
+  $("#k3").textContent=Object.keys(favs).length;
+}
 function renderList(l){
   l=l||list();byId={};items().forEach(function(p){byId[p.id]=p});
   var rp=refPt();
@@ -594,13 +648,13 @@ document.addEventListener("click",function(e){
   else if(a==="save")savePlace();
   else if(a==="del"){custom=custom.filter(function(p){return p.id!==id});delete favs[id];sv("sf_custom_v8",custom);sv("sf_favs_v8",favs);closeModal();renderAll()}
   else if(a==="city")pick(S.sug[Number(t.dataset.i)]);
-  else if(a==="cat"){S.cat=v;S.show=60;renderAll()}
-  else if(a==="more"){S.show+=60;renderList()}
+  else if(a==="cat"){S.cat=v;S.show=4;renderAll()}
+  else if(a==="more"){S.show+=4;renderList()}
   else if(a==="rtab"){rtab=v;renderRes()}
   else if(a==="focus")focusPlace(id);
   else if(a==="fav"){var p=get(id);if(p){if(favs[id])delete favs[id];else favs[id]=p;sv("sf_favs_v8",favs);renderAll()}}
   else if(a==="locate")locate();
-  else if(a==="kw"){S.kw=v;$("#kw").value=v;S.show=60;renderAll();$("#carte").scrollIntoView({behavior:"smooth"})}
+  else if(a==="kw"){S.kw=v;$("#kw").value=v;S.show=4;renderAll();$("#carte").scrollIntoView({behavior:"smooth"})}
   else if(a==="here"){if(!map)return alert("La carte n'est pas disponible.");loadView(true)}
   else if(a==="reset"){if(map)map.setView([46.6,2.4],6);status("Vue France : zoomez sur une ville pour charger les centres réels.")}
   else if(a==="sim")simulate();
@@ -612,7 +666,148 @@ document.addEventListener("click",function(e){
 document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeModal();$("#sug").hidden=true}});
 $("#city").addEventListener("input",function(){var q=this.value;clearTimeout(tm);tm=setTimeout(async function(){showSug(await cities(q))},250)});
 $("#sform").addEventListener("submit",async function(e){e.preventDefault();var l=await cities($("#city").value);if(l.length)pick(l[0]);else alert("Ville introuvable. Essayez le nom complet ou le code postal.")});
-$("#kw").addEventListener("input",function(){S.kw=this.value;S.show=60;renderAll()});
+$("#kw").addEventListener("input",function(){S.kw=this.value;S.show=4;renderAll()});
+
+
+
+/* ===== ASSISTANT IA (spécialisé Solidarité France) ===== */
+const AI_KB = [
+  {k:["manger","repas","alimentaire","faim","manger gratuit","colis","épicerie","restos"],r:"Pour manger ou faire des courses à petit prix :\n• Appelez ou allez au **CCAS** de votre mairie (orientation vers épicerie solidaire).\n• **Restos du Cœur**, **Secours Populaire**, **Secours Catholique**, **Banques alimentaires**.\n• Utilisez la carte ou la section « Près de chez vous » en haut de cette page.\n• Soliguide.fr liste aussi les distributions de repas."},
+  {k:["dormir","hébergement","115","sdf","rue","nuit","abri"],r:"Hébergement d'urgence :\n• **Appelez le 115** (gratuit, 24h/24) — c'est le numéro officiel.\n• Danger immédiat : **17** ou **112**.\n• Les accueils de jour (douche, courrier) sont visibles sur la carte et sur Soliguide.\n• Le CCAS peut aussi aider pour une domiciliation."},
+  {k:["santé","médecin","mutuelle","c2s","ameli","médicament","pass","soin"],r:"Soins sans mutuelle ou sans avance de frais :\n• **PASS** (Permanence d'Accès aux Soins de Santé) dans les hôpitaux publics.\n• Demandez la **Complémentaire Santé Solidaire (C2S)** sur ameli.fr ou au 3646.\n• Soutien psychologique gratuit : **3114** (24h/24)."},
+  {k:["emploi","travail","job","formation","mission locale","france travail","insertion"],r:"Emploi et insertion :\n• Inscrivez-vous à **France Travail** (ex-Pôle emploi) — tél. 3949.\n• Moins de 26 ans → **Mission Locale** (accompagnement global).\n• Structures d'insertion (SIAE) via la plateforme de l'inclusion.\n• Utilisez les filtres « Emploi & insertion » sur la carte."},
+  {k:["rsa","caf","apl","aide","argent","facture","loyer","budget"],r:"Aides financières :\n• **CAF** : RSA, APL, prime d'activité, aides exceptionnelles.\n• **CCAS** : aides d'urgence, Fonds de Solidarité Logement (FSL).\n• Point Conseil Budget (gratuit) pour les impayés.\n• Simulateur officiel : mesdroitssociaux.gouv.fr"},
+  {k:["domiciliation","adresse","courrier","papier","sans domicile"],r:"Domiciliation postale :\n• Allez au **CCAS** de la mairie de la commune où vous avez un lien (présence, vie quotidienne).\n• C'est un droit. Ils doivent vous domicilier si les conditions sont remplies.\n• Utile pour recevoir du courrier, ouvrir des droits, etc."},
+  {k:["violence","danger","femme","conjugale","enfant","maltraitance"],r:"En cas de danger ou de violences :\n• **Urgence immédiate** : 17 ou 112 (114 par SMS).\n• Violences faites aux femmes : **3919** (gratuit, 24h/24).\n• Enfant en danger : **119**.\n• Vous pouvez aussi aller dans un commissariat ou une association spécialisée."},
+  {k:["douche","hygiène","laverie","bagagerie","accueil de jour"],r:"Hygiène et accueil de jour :\n• Bains-douches, laveries solidaires et accueils de jour sont sur la carte (filtre « Hygiène & numérique »).\n• Soliguide.fr est très complet pour ces services.\n• Croix-Rouge et CCAS orientent aussi."},
+  {k:["étudiant","crous","bourse","agoraé","fac"],r:"Étudiants :\n• **CROUS** : bourses, aides d'urgence, logement, repas à 1 € si éligible.\n• Épiceries solidaires étudiantes (AGORAé / FAGE).\n• Service social du CROUS de votre académie.\n• Filtre « Étudiants » sur la carte."},
+  {k:["cv","curriculum","embauche","recrutement"],r:"Vous pouvez créer un CV directement sur ce site, dans la section **« Mon CV »** plus bas. Tout reste privé sur votre appareil."},
+  {k:["bonjour","salut","hello","aide","help"],r:"Bonjour 👋 Je suis l'assistant de Solidarité France. Je peux vous orienter vers de l'aide alimentaire, un hébergement, la santé, l'emploi, les démarches administratives… Posez votre question ou cliquez sur une suggestion."}
+];
+
+function aiReply(q){
+  q = (q||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  for(const item of AI_KB){
+    if(item.k.some(k => q.includes(k.normalize("NFD").replace(/[\u0300-\u036f]/g,"")))) return item.r;
+  }
+  return "Je n'ai pas une réponse précise pour ça. Essayez de reformuler ou utilisez :\n• La **carte** et la recherche par ville\n• Les **numéros utiles** (115, 3919, 3114…)\n• Le **simulateur** plus bas sur la page\n• Soliguide.fr pour un annuaire très complet.";
+}
+
+function aiAdd(msg, who){
+  const chat = document.getElementById("aiChat");
+  if(!chat) return;
+  const div = document.createElement("div");
+  div.style.cssText = who==="user"
+    ? "align-self:flex-end;background:var(--navy);color:#fff;padding:.6rem 1rem;border-radius:14px 14px 4px 14px;max-width:85%;font-size:.92rem"
+    : "align-self:flex-start;background:var(--bg);border:1px solid var(--bd);padding:.6rem 1rem;border-radius:14px 14px 14px 4px;max-width:90%;font-size:.92rem;white-space:pre-wrap";
+  div.innerHTML = msg.replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/\n/g,"<br>");
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function aiSend(){
+  const inp = document.getElementById("aiInput");
+  const q = (inp.value||"").trim();
+  if(!q) return;
+  aiAdd(q, "user");
+  inp.value = "";
+  setTimeout(() => aiAdd(aiReply(q), "bot"), 400);
+}
+
+document.getElementById("aiSend")?.addEventListener("click", aiSend);
+document.getElementById("aiInput")?.addEventListener("keydown", e => { if(e.key==="Enter") aiSend(); });
+document.getElementById("aiSug")?.addEventListener("click", e => {
+  const b = e.target.closest("[data-q]");
+  if(!b) return;
+  document.getElementById("aiInput").value = b.dataset.q;
+  aiSend();
+});
+// Welcome message
+setTimeout(() => aiAdd("Bonjour 👋 Je suis l'assistant de **Solidarité France**. Posez une question ou choisissez une suggestion ci-dessous.", "bot"), 600);
+
+/* ===== GÉNÉRATEUR DE CV (100% local / privé) ===== */
+function cvBuild(){
+  const name = (document.getElementById("cvName").value||"").trim() || "Prénom Nom";
+  const email = (document.getElementById("cvEmail").value||"").trim();
+  const tel = (document.getElementById("cvTel").value||"").trim();
+  const city = (document.getElementById("cvCity").value||"").trim();
+  const title = (document.getElementById("cvTitle").value||"").trim() || "Curriculum Vitae";
+  const exp = (document.getElementById("cvExp").value||"").trim().split("\n").filter(Boolean);
+  const form = (document.getElementById("cvForm").value||"").trim().split("\n").filter(Boolean);
+  const skills = (document.getElementById("cvSkills").value||"").trim().split(",").map(s=>s.trim()).filter(Boolean);
+
+  let html = `<div style="font-family:system-ui,sans-serif;color:#111;max-width:700px;margin:0 auto">
+    <div style="border-bottom:3px solid #0f4c81;padding-bottom:.8rem;margin-bottom:1.2rem">
+      <h1 style="margin:0;font-size:1.6rem;color:#0f4c81">${esc(name)}</h1>
+      <p style="margin:.3rem 0 0;font-size:1.05rem;color:#333">${esc(title)}</p>
+      <p style="margin:.4rem 0 0;font-size:.9rem;color:#555">${[email,tel,city].filter(Boolean).map(esc).join(" · ")}</p>
+    </div>`;
+  if(exp.length){
+    html += `<h2 style="font-size:1.05rem;color:#0f4c81;margin:1.2rem 0 .4rem;border-bottom:1px solid #ddd;padding-bottom:.2rem">Expériences</h2><ul style="margin:0;padding-left:1.2rem">`;
+    exp.forEach(l => html += `<li style="margin:.25rem 0">${esc(l)}</li>`);
+    html += `</ul>`;
+  }
+  if(form.length){
+    html += `<h2 style="font-size:1.05rem;color:#0f4c81;margin:1.2rem 0 .4rem;border-bottom:1px solid #ddd;padding-bottom:.2rem">Formations</h2><ul style="margin:0;padding-left:1.2rem">`;
+    form.forEach(l => html += `<li style="margin:.25rem 0">${esc(l)}</li>`);
+    html += `</ul>`;
+  }
+  if(skills.length){
+    html += `<h2 style="font-size:1.05rem;color:#0f4c81;margin:1.2rem 0 .4rem;border-bottom:1px solid #ddd;padding-bottom:.2rem">Compétences</h2>
+    <p style="margin:0">${skills.map(s=>`<span style="display:inline-block;background:#e8f0fe;color:#0f4c81;padding:.2rem .6rem;border-radius:20px;margin:.2rem .3rem .2rem 0;font-size:.85rem">${esc(s)}</span>`).join("")}</p>`;
+  }
+  html += `<p style="margin-top:2rem;font-size:.75rem;color:#999;text-align:center">CV généré sur Solidarité France — données privées (stockées uniquement sur cet appareil)</p></div>`;
+  document.getElementById("cvPreview").innerHTML = html;
+  return html;
+}
+
+document.getElementById("cvGen")?.addEventListener("click", () => {
+  cvBuild();
+  document.getElementById("cvMsg").textContent = "✅ CV généré. Vous pouvez l'imprimer ou le télécharger.";
+});
+
+document.getElementById("cvSave")?.addEventListener("click", () => {
+  const data = {
+    name: document.getElementById("cvName").value,
+    email: document.getElementById("cvEmail").value,
+    tel: document.getElementById("cvTel").value,
+    city: document.getElementById("cvCity").value,
+    title: document.getElementById("cvTitle").value,
+    exp: document.getElementById("cvExp").value,
+    form: document.getElementById("cvForm").value,
+    skills: document.getElementById("cvSkills").value
+  };
+  localStorage.setItem("sf_cv_private", JSON.stringify(data));
+  document.getElementById("cvMsg").textContent = "💾 Sauvegardé uniquement sur cet appareil (personne d'autre n'y a accès).";
+});
+
+document.getElementById("cvLoad")?.addEventListener("click", () => {
+  try {
+    const data = JSON.parse(localStorage.getItem("sf_cv_private") || "{}");
+    if(!data.name && !data.email){ document.getElementById("cvMsg").textContent = "Aucun CV sauvegardé sur cet appareil."; return; }
+    ["Name","Email","Tel","City","Title","Exp","Form","Skills"].forEach(k => {
+      const el = document.getElementById("cv"+k);
+      if(el) el.value = data[k.toLowerCase()] || "";
+    });
+    cvBuild();
+    document.getElementById("cvMsg").textContent = "📂 CV chargé depuis cet appareil.";
+  } catch(e){ document.getElementById("cvMsg").textContent = "Erreur de chargement."; }
+});
+
+document.getElementById("cvPrint")?.addEventListener("click", () => {
+  const html = document.getElementById("cvPreview").innerHTML;
+  const w = window.open("", "_blank");
+  w.document.write(`<!DOCTYPE html><html><head><title>CV</title><style>body{font-family:system-ui,sans-serif;padding:2rem;}</style></head><body>${html}<script>window.onload=()=>window.print()<\/script></body></html>`);
+  w.document.close();
+});
+
+document.getElementById("cvDl")?.addEventListener("click", () => {
+  const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Mon CV</title></head><body>${document.getElementById("cvPreview").innerHTML}</body></html>`;
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([html], {type:"text/html"}));
+  a.download = "mon-cv.html";
+  a.click();
+});
 
 if(ld("sf_dark",window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches))document.body.classList.add("dark");
 initMap();renderRes();renderChecks();renderAll();
@@ -718,7 +913,7 @@ if (READY) {
 
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const e=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const SECS={carte:"🗺️ Carte",pres:"🔎 Près de chez vous",ressources:"📞 Numéros & sites",simulateur:"🧭 Simulateur",benevolat:"🙋 Bénévolat"};
+const SECS={carte:"🗺️ Carte",pres:"🔎 Près de chez vous",ressources:"📞 Numéros & sites",assistant:"🤖 Assistant",cv:"📄 Mon CV",simulateur:"🧭 Simulateur",benevolat:"🙋 Bénévolat"};
 const DEF={
   primary:"#0f4c81",accent:"#2563eb",font:"system-ui",size:16,
   bg:"#f1f5f9",card:"#ffffff",text:"#0f172a",muted:"#475569",bd:"#cbd5e1",
