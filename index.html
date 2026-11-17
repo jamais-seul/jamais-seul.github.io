@@ -116,7 +116,7 @@ footer{background:var(--card);border-top:1px solid var(--bd);text-align:center;p
 </div>
 
 <h2 class="t" id="carte">🗺️ Carte des centres d'aide</h2>
-<p class="sub" id="status" aria-live="polite">Zoomez sur votre ville ou tapez-la en haut : les centres réels se chargent automatiquement.</p>
+<p class="sub" id="status" aria-live="polite">Zoomez sur votre ville ou tapez-la en haut : les centres réels (OpenStreetMap) et les repères nationaux se chargent automatiquement. Cliquez sur un marqueur pour les détails et l'itinéraire.</p>
 <div class="chips" id="chips"></div>
 <div class="panel">
 <div class="tools">
@@ -134,14 +134,16 @@ footer{background:var(--card);border-top:1px solid var(--bd);text-align:center;p
 <div style="text-align:center;margin-top:1rem"><button class="btn l" id="more" data-a="more" hidden>Voir plus de résultats</button></div>
 
 <h2 class="t" id="pres">🔎 Services publics & associations près de chez vous</h2>
-<p class="sub" id="presub">Choisissez d'abord une ville en haut de la page.</p>
+<p class="sub" id="presub">Choisissez d'abord une ville en haut de la page. Les liens ouvrent Google Maps avec les résultats à jour (adresses et horaires).</p>
 <div class="grid" id="quick"></div>
 
 <h2 class="t" id="ressources">📞 Numéros utiles & sites officiels</h2>
+<p class="sub">Numéros d'urgence gratuits et sites officiels pour faire valoir vos droits. Tout est classé par thème.</p>
 <div class="chips" id="rtabs"></div>
 <div class="grid" id="rgrid"></div>
 
 <h2 class="t" id="simulateur">🧭 Simulateur & démarches</h2>
+<p class="sub">Indiquez votre besoin et votre situation pour obtenir des pistes concrètes, puis suivez la checklist des démarches importantes.</p>
 <div class="two">
 <div class="panel"><h3>Que puis-je faire ?</h3>
 <label for="sn">Mon besoin</label>
@@ -155,6 +157,7 @@ footer{background:var(--card);border-top:1px solid var(--bd);text-align:center;p
 </div>
 
 <h2 class="t" id="benevolat">🙋 Bénévolat, dons & partage</h2>
+<p class="sub">Vous pouvez aussi aider à votre tour : dons matériels, temps ou simple partage de ce portail.</p>
 <div class="two">
 <div class="panel"><h3>Aider à son tour</h3>
 <ul style="margin:.6rem 0 1rem 1.2rem;font-size:.92rem;line-height:1.8"><li><b>Alimentaire :</b> conserves, huile, café, lait infantile, couches.</li><li><b>Hygiène :</b> savons, brosses à dents, protections périodiques.</li><li><b>Temps :</b> maraudes, distributions, aide aux devoirs, accueil.</li></ul>
@@ -177,6 +180,7 @@ var CATS={"Alimentaire":"#ef4444","Magasins solidaires":"#f59e0b","Aides & accue
 var SFL={food_bank:"Aide alimentaire",soup_kitchen:"Repas gratuits",shelter:"Hébergement d'urgence",outreach:"Accueil / maraude",ambulatory_care:"Soins ambulatoires",workshop:"Atelier d'insertion",group_home:"Logement accompagné"};
 /* Repères nationaux : position approximative (centre-ville), pas d'horaires inventés */
 var REFS=[
+/* Réseaux nationaux & grandes villes – positions approximatives centre-ville, liens officiels */
 ["Restos du Cœur","Talence",44.808,-0.588,"Alimentaire","Repas, colis alimentaires, espace bébé, ateliers. Inscription selon revenus.","https://www.restosducoeur.org"],
 ["Épiceries solidaires étudiantes AGORAé","Talence",44.801,-0.598,"Étudiants","Produits frais et hygiène à très bas prix pour étudiants (réseau FAGE).","https://www.fage.org"],
 ["CCAS (Centre communal d'action sociale)","Bordeaux",44.838,-0.579,"Aides & accueil social","Aides d'urgence, domiciliation postale, aide alimentaire, dossiers APA/RSA.","https://www.service-public.fr"],
@@ -200,7 +204,73 @@ var REFS=[
 ["Maison d'accueil de jour","Clermont-Ferrand",45.777,3.087,"Hygiène & numérique","Accueil, douches, courrier, repos, orientation sociale.","https://soliguide.fr"],
 ["Espace santé jeunes","Strasbourg",48.585,7.745,"Santé & logement","Écoute, santé, contraception, prévention pour les jeunes.","https://www.filsantejeunes.com"],
 ["Banque alimentaire","Bordeaux",44.865,-0.563,"Alimentaire","Distribution de colis aux associations et épiceries partenaires.","https://www.banquealimentaire.org"],
-["Vestiaire solidaire","Orléans",47.903,1.909,"Magasins solidaires","Vêtements à très bas prix ou gratuits sur orientation.","https://www.secourspopulaire.fr"]
+["Vestiaire solidaire","Orléans",47.903,1.909,"Magasins solidaires","Vêtements à très bas prix ou gratuits sur orientation.","https://www.secourspopulaire.fr"],
+/* ---- Extensions réelles ---- */
+["Restos du Cœur — centre Paris","Paris",48.856,2.352,"Alimentaire","Colis et repas. Inscription selon barème national.","https://www.restosducoeur.org"],
+["Restos du Cœur — Marseille","Marseille",43.296,5.370,"Alimentaire","Distribution de denrées et accompagnement social.","https://www.restosducoeur.org"],
+["Restos du Cœur — Lyon","Lyon",45.764,4.835,"Alimentaire","Centres d'accueil et colis alimentaires.","https://www.restosducoeur.org"],
+["Restos du Cœur — Toulouse","Toulouse",43.604,1.444,"Alimentaire","Aide alimentaire et ateliers.","https://www.restosducoeur.org"],
+["Restos du Cœur — Nantes","Nantes",47.218,-1.553,"Alimentaire","Repas et colis selon revenus.","https://www.restosducoeur.org"],
+["Restos du Cœur — Lille","Lille",50.630,3.057,"Alimentaire","Centres et distributions locales.","https://www.restosducoeur.org"],
+["Restos du Cœur — Strasbourg","Strasbourg",48.573,7.752,"Alimentaire","Aide alimentaire en Alsace.","https://www.restosducoeur.org"],
+["Restos du Cœur — Montpellier","Montpellier",43.611,3.877,"Alimentaire","Colis et accompagnement.","https://www.restosducoeur.org"],
+["Restos du Cœur — Rennes","Rennes",48.117,-1.678,"Alimentaire","Centres d'accueil en Ille-et-Vilaine.","https://www.restosducoeur.org"],
+["Restos du Cœur — Nice","Nice",43.710,7.262,"Alimentaire","Aide alimentaire sur la Côte d'Azur.","https://www.restosducoeur.org"],
+["Secours Populaire — Lyon","Lyon",45.760,4.840,"Alimentaire","Aide alimentaire, vestiaire, culture et vacances.","https://www.secourspopulaire.fr"],
+["Secours Populaire — Marseille","Marseille",43.300,5.370,"Alimentaire","Accueil, colis, vestiaire.","https://www.secourspopulaire.fr"],
+["Secours Populaire — Toulouse","Toulouse",43.600,1.440,"Alimentaire","Aide d'urgence et accompagnement.","https://www.secourspopulaire.fr"],
+["Secours Populaire — Nantes","Nantes",47.220,-1.550,"Alimentaire","Solidarité alimentaire et sociale.","https://www.secourspopulaire.fr"],
+["Secours Populaire — Lille","Lille",50.630,3.060,"Alimentaire","Centres et distributions.","https://www.secourspopulaire.fr"],
+["Secours Catholique — Paris","Paris",48.850,2.340,"Alimentaire","Accueil, écoute, aide alimentaire et démarches.","https://www.secours-catholique.org"],
+["Secours Catholique — Lyon","Lyon",45.760,4.830,"Alimentaire","Accueil de jour et accompagnement.","https://www.secours-catholique.org"],
+["Secours Catholique — Marseille","Marseille",43.295,5.375,"Alimentaire","Solidarité et insertion.","https://www.secours-catholique.org"],
+["Emmaüs — communauté / boutique","Paris",48.860,2.350,"Magasins solidaires","Vêtements, meubles, livres à prix solidaires.","https://emmaus-france.org"],
+["Emmaüs — communauté","Lille",50.635,3.060,"Magasins solidaires","Boutique et ressourcerie solidaire.","https://emmaus-france.org"],
+["Emmaüs — communauté","Toulouse",43.600,1.450,"Magasins solidaires","Seconde main et insertion.","https://emmaus-france.org"],
+["Emmaüs — communauté","Nantes",47.215,-1.560,"Magasins solidaires","Boutique solidaire et ateliers.","https://emmaus-france.org"],
+["Croix-Rouge — unité locale","Paris",48.860,2.340,"Santé & logement","Maraudes, aide alimentaire, premiers secours.","https://www.croix-rouge.fr"],
+["Croix-Rouge — unité locale","Bordeaux",44.840,-0.580,"Santé & logement","Accompagnement social et sanitaire.","https://www.croix-rouge.fr"],
+["Croix-Rouge — unité locale","Lille",50.630,3.060,"Santé & logement","Maraudes et aide d'urgence.","https://www.croix-rouge.fr"],
+["Banque alimentaire","Paris",48.860,2.350,"Alimentaire","Collecte et redistribution aux associations.","https://www.banquealimentaire.org"],
+["Banque alimentaire","Lyon",45.760,4.840,"Alimentaire","Plateforme logistique pour le Rhône.","https://www.banquealimentaire.org"],
+["Banque alimentaire","Marseille",43.300,5.370,"Alimentaire","Aide aux associations des Bouches-du-Rhône.","https://www.banquealimentaire.org"],
+["Banque alimentaire","Toulouse",43.600,1.440,"Alimentaire","Distribution départementale.","https://www.banquealimentaire.org"],
+["Banque alimentaire","Nantes",47.220,-1.550,"Alimentaire","Réseau Loire-Atlantique.","https://www.banquealimentaire.org"],
+["Banque alimentaire","Strasbourg",48.580,7.750,"Alimentaire","Alsace.","https://www.banquealimentaire.org"],
+["Banque alimentaire","Rennes",48.110,-1.680,"Alimentaire","Bretagne.","https://www.banquealimentaire.org"],
+["Banque alimentaire","Montpellier",43.610,3.880,"Alimentaire","Hérault.","https://www.banquealimentaire.org"],
+["PASS — hôpital public","Lyon",45.760,4.850,"Santé & logement","Soins et médicaments sans avance de frais.","https://sante.gouv.fr"],
+["PASS — hôpital public","Marseille",43.290,5.390,"Santé & logement","Permanence d'accès aux soins de santé.","https://sante.gouv.fr"],
+["PASS — hôpital public","Toulouse",43.600,1.440,"Santé & logement","Consultations gratuites.","https://sante.gouv.fr"],
+["PASS — hôpital public","Lille",50.630,3.050,"Santé & logement","Accès aux soins pour tous.","https://sante.gouv.fr"],
+["PASS — hôpital public","Nantes",47.210,-1.550,"Santé & logement","Soins sans mutuelle.","https://sante.gouv.fr"],
+["Mission Locale","Lyon",45.760,4.840,"Emploi & insertion","Jeunes 16-25 ans : emploi, formation, logement.","https://www.mission-locale.fr"],
+["Mission Locale","Marseille",43.300,5.370,"Emploi & insertion","Accompagnement des jeunes.","https://www.mission-locale.fr"],
+["Mission Locale","Toulouse",43.600,1.440,"Emploi & insertion","Contrat d'engagement jeune et orientation.","https://www.mission-locale.fr"],
+["Mission Locale","Lille",50.630,3.060,"Emploi & insertion","Insertion professionnelle des jeunes.","https://www.mission-locale.fr"],
+["Mission Locale","Nantes",47.220,-1.550,"Emploi & insertion","Accompagnement global.","https://www.mission-locale.fr"],
+["France Services","Lyon",45.760,4.840,"Aides & accueil social","Aide gratuite aux démarches administratives.","https://france-services.gouv.fr"],
+["France Services","Marseille",43.300,5.370,"Aides & accueil social","Guichet unique des services publics.","https://france-services.gouv.fr"],
+["France Services","Toulouse",43.600,1.440,"Aides & accueil social","CAF, impôts, France Travail, etc.","https://france-services.gouv.fr"],
+["France Services","Lille",50.630,3.060,"Aides & accueil social","Accompagnement numérique et social.","https://france-services.gouv.fr"],
+["CROUS","Lyon",45.760,4.840,"Étudiants","Bourses, logement, restauration, aides d'urgence.","https://www.etudiant.gouv.fr"],
+["CROUS","Marseille",43.300,5.370,"Étudiants","Service social étudiant et repas à 1 €.","https://www.etudiant.gouv.fr"],
+["CROUS","Toulouse",43.600,1.440,"Étudiants","Aides et accompagnement des étudiants.","https://www.etudiant.gouv.fr"],
+["CROUS","Lille",50.630,3.060,"Étudiants","Bourses et aides d'urgence.","https://www.etudiant.gouv.fr"],
+["CROUS","Nantes",47.220,-1.550,"Étudiants","Logement et restauration étudiante.","https://www.etudiant.gouv.fr"],
+["Accueil de jour / bains-douches","Paris",48.860,2.350,"Hygiène & numérique","Douches, bagagerie, courrier, orientation.","https://soliguide.fr"],
+["Accueil de jour","Lyon",45.760,4.840,"Hygiène & numérique","Accueil inconditionnel, hygiène, repos.","https://soliguide.fr"],
+["Accueil de jour","Marseille",43.300,5.370,"Hygiène & numérique","Services de jour pour personnes sans abri.","https://soliguide.fr"],
+["Accueil de jour","Toulouse",43.600,1.440,"Hygiène & numérique","Douches, lessive, accompagnement.","https://soliguide.fr"],
+["Épicerie solidaire ANDES","Paris",48.860,2.340,"Alimentaire","Courses à prix réduit après orientation sociale.","https://www.andes-france.fr"],
+["Épicerie solidaire","Lyon",45.760,4.840,"Alimentaire","Produits frais et secs à tarifs solidaires.","https://www.andes-france.fr"],
+["Épicerie solidaire","Marseille",43.300,5.370,"Alimentaire","Accès digne à l'alimentation.","https://www.andes-france.fr"],
+["Fondation Abbé Pierre — antenne","Paris",48.860,2.350,"Santé & logement","Lutte contre le mal-logement, conseil juridique.","https://www.fondation-abbe-pierre.fr"],
+["Armée du Salut — accueil","Paris",48.860,2.350,"Santé & logement","Hébergement, restauration, accompagnement.","https://www.armeedusalut.fr"],
+["Armée du Salut","Lyon",45.760,4.840,"Santé & logement","Centres d'hébergement et d'accueil.","https://www.armeedusalut.fr"],
+["Petits Frères des Pauvres","Paris",48.860,2.340,"Aides & accueil social","Lutte contre l'isolement des personnes âgées.","https://www.petitsfreresdespauvres.fr"],
+["ATD Quart Monde","Paris",48.850,2.350,"Aides & accueil social","Action contre la misère et pour les droits.","https://www.atd-quartmonde.fr"],
+["Samu Social / 115 coordination","Paris",48.860,2.350,"Santé & logement","Orientation hébergement d'urgence.","https://www.samusocial.paris"]
 ];
 
 /* ---------- Villes couvertes : préfectures + grandes villes (nom|lat|lng|u = ville universitaire) ---------- */
@@ -542,8 +612,7 @@ $("#kw").addEventListener("input",function(){S.kw=this.value;S.show=60;renderAll
 if(ld("sf_dark",window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches))document.body.classList.add("dark");
 initMap();renderRes();renderChecks();renderAll();
 </script>
-</body>
-  <style>
+
 <style>
 .wrap{display:flex;flex-direction:column}.wrap>.kpis{order:-1}
 .hero{background:linear-gradient(135deg,var(--h1,#0f4c81),var(--h2,#093154))!important;position:relative;overflow:hidden}
@@ -585,6 +654,22 @@ body{transition:padding-right .3s}body.padr{padding-right:400px}
 @keyframes brt{0%,100%{transform:scale(.7)}50%{transform:scale(1.3)}}
 .cathead{grid-column:1/-1;margin:.8rem 0 0;color:var(--navy);border-bottom:2px solid var(--bd);padding-bottom:.3rem}
 .cathead small{color:var(--muted)}
+/* UX improvements */
+h2.t{margin-top:2.8rem;padding-bottom:.4rem;border-bottom:2px solid var(--bd)}
+.sub{margin-bottom:1.2rem;line-height:1.5}
+.panel{margin-bottom:.5rem}
+.card{transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,23,42,.12)}
+body.dark .card:hover{box-shadow:0 8px 20px rgba(0,0,0,.4)}
+.kpi{transition:transform .15s}
+.kpi:hover{transform:translateY(-2px)}
+.hero p{font-size:1.05rem}
+.quick{gap:.6rem}
+#side{box-shadow:-8px 0 30px rgba(0,0,0,.15)}
+#side .sb{padding:1rem 1.1rem 2rem}
+#side label{display:block;margin:.4rem 0 .15rem;font-size:.88rem;font-weight:600;color:var(--muted)}
+#side .field{margin:.2rem 0 .7rem}
+.sec-intro{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:1rem 1.2rem;margin-bottom:1rem;font-size:.95rem;color:var(--muted);box-shadow:var(--sh)}
 </style>
 
 <button id="lockBtn" aria-label="Espace créateur" title="Espace créateur">🔒</button>
@@ -621,7 +706,21 @@ if (READY) {
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const e=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const SECS={carte:"🗺️ Carte",pres:"🔎 Près de chez vous",ressources:"📞 Numéros & sites",simulateur:"🧭 Simulateur",benevolat:"🙋 Bénévolat"};
-const DEF={primary:"#0f4c81",accent:"#2563eb",font:"system-ui",size:16,title:"",calm:true,maintenance:false,mmsg:"Le site est en maintenance. Retour très bientôt !",urgBar:true,order:Object.keys(SECS),hidden:[]};
+const DEF={
+  primary:"#0f4c81",accent:"#2563eb",font:"system-ui",size:16,
+  title:"",subtitle:"",
+  calm:true,maintenance:false,
+  mmsg:"Le site est en maintenance. Retour très bientôt !",
+  urgBar:true,
+  order:Object.keys(SECS),hidden:[],
+  // Contenu éditable
+  heroTitle:"",heroText:"",
+  calmMessages:["Demander de l'aide est un acte de courage, pas de faiblesse.","Chaque petit pas compte. Vous avez déjà fait le premier en venant ici.","Il existe des personnes bienveillantes près de chez vous.","Vous méritez d'être soutenu(e), sans jugement.","Respirez. On avance ensemble, à votre rythme."],
+  footerText:"Solidarité France — portail citoyen libre et gratuit. Informations indicatives : seuls les organismes officiels font foi.",
+  mapWarn:"Les lieux « Repère » ont une position approximative (centre-ville) : ils signalent le type de structure présent dans la ville et renvoient vers le site officiel. Les autres viennent d'OpenStreetMap (données collaboratives, parfois incomplètes ou dépassées). Appelez ou vérifiez avant de vous déplacer.",
+  // Features toggles
+  showKpis:true,showQuick:true,showSimulator:true,showBenevolat:true,showMap:true
+};
 const FONTS={"system-ui":"Système","Georgia,serif":"Georgia (serif)","'Trebuchet MS',sans-serif":"Trebuchet","Verdana,sans-serif":"Verdana (lisible)","'Courier New',monospace":"Machine à écrire","'Comic Sans MS',cursive":"Arrondie"};
 let cfg={...DEF},user=null,theme=localStorage.getItem("sf_theme")||"0",lang=localStorage.getItem("sf_lang")||"fr",tab="app",first=false;
 const dayKey=()=>new Date().toISOString().slice(0,10);
@@ -666,11 +765,11 @@ $("#pal").onclick=ev=>{const s=ev.target.closest(".sw");if(!s)return;theme=s.dat
 document.addEventListener("click",()=>{$("#pal").hidden=true});
 
 /* ④ Bandeau rassurant + respiration */
-const KIND=["Demander de l'aide est un acte de courage, pas de faiblesse.","Chaque petit pas compte. Vous avez déjà fait le premier en venant ici.","Il existe des personnes bienveillantes près de chez vous.","Vous méritez d'être soutenu(e), sans jugement.","Respirez. On avance ensemble, à votre rythme."];
+window.__KIND=["Demander de l'aide est un acte de courage, pas de faiblesse.","Chaque petit pas compte. Vous avez déjà fait le premier en venant ici.","Il existe des personnes bienveillantes près de chez vous.","Vous méritez d'être soutenu(e), sans jugement.","Respirez. On avance ensemble, à votre rythme."];
 const rs=document.createElement("section");rs.id="calm";rs.className="calm";
-rs.innerHTML='<div><b>💙 Vous n\'êtes pas seul(e).</b><p id="kind">'+KIND[0]+'</p></div><div class="cb"><span>🔒 Sans compte</span><span>🕊️ Sans jugement</span><span>💯 Gratuit</span><span>🌿 À votre rythme</span></div><button class="btn l" id="brBtn">🌬️ Respirer une minute</button><div id="br" hidden><div class="orb"></div><p id="brT">Inspirez…</p></div>';
+rs.innerHTML='<div><b>💙 Vous n\'êtes pas seul(e).</b><p id="kind">'+window.__KIND[0]+'</p></div><div class="cb"><span>🔒 Sans compte</span><span>🕊️ Sans jugement</span><span>💯 Gratuit</span><span>🌿 À votre rythme</span></div><button class="btn l" id="brBtn">🌬️ Respirer une minute</button><div id="br" hidden><div class="orb"></div><p id="brT">Inspirez…</p></div>';
 $(".hero").after(rs);
-let ki=0;setInterval(()=>{const k=$("#kind");k.style.opacity=0;setTimeout(()=>{ki=(ki+1)%KIND.length;k.textContent=KIND[ki];k.style.opacity=1},500)},7000);
+let ki=0;setInterval(()=>{const k=$("#kind");if(!k)return;const arr=window.__KIND||[];if(!arr.length)return;k.style.opacity=0;setTimeout(()=>{ki=(ki+1)%arr.length;k.textContent=arr[ki];k.style.opacity=1},500)},7000);
 let bt,bo;$("#brBtn").onclick=()=>{const b=$("#br");clearInterval(bt);clearTimeout(bo);if(!b.hidden){b.hidden=true;return}b.hidden=false;let x=0;$("#brT").textContent="Inspirez…";bt=setInterval(()=>{x++;$("#brT").textContent=x%2?"Expirez…":"Inspirez…"},4000);bo=setTimeout(()=>{b.hidden=true;clearInterval(bt)},60000)};
 $("footer").insertAdjacentHTML("beforeend","<br>Fait avec 💙 pour que personne ne reste seul.");
 
@@ -702,12 +801,25 @@ $$("main.wrap>h2.t").forEach(h=>{const d=document.createElement("section");d.dat
 function applyCfg(){
   const c={...DEF,...cfg};
   document.body.style.fontFamily=c.font;document.documentElement.style.fontSize=c.size+"px";
-  const h1=$(".hero h1");if(!h1.dataset.o)h1.dataset.o=h1.textContent;h1.textContent=c.title||h1.dataset.o;
-  $(".urg").style.display=c.urgBar?"":"none";$("#calm").hidden=!c.calm;
+  const h1=$(".hero h1");if(!h1.dataset.o)h1.dataset.o=h1.textContent;h1.textContent=c.heroTitle||c.title||h1.dataset.o;
+  const hp=$(".hero p");if(hp){if(!hp.dataset.o)hp.dataset.o=hp.textContent;if(c.heroText)hp.textContent=c.heroText;else if(hp.dataset.o)hp.textContent=hp.dataset.o;}
+  $(".urg").style.display=c.urgBar?"":"none";
+  const calmEl=$("#calm");if(calmEl)calmEl.hidden=!c.calm;
+  // Update calm messages if present
+  if(c.calmMessages&&c.calmMessages.length){window.__KIND=c.calmMessages;}
   c.order.forEach((id,i)=>{const s=$('[data-sec="'+id+'"]');if(s){s.style.order=i;s.hidden=c.hidden.includes(id)}});
   $$(".links a").forEach(a=>{const id=a.getAttribute("href").slice(1);a.style.display=c.hidden.includes(id)?"none":""});
   $("#maintMsg").textContent=c.mmsg;$("#maint").hidden=!(c.maintenance&&!user);
   let mb=$(".mbanner");if(c.maintenance&&user){if(!mb){mb=document.createElement("div");mb.className="mbanner";mb.textContent="⚠️ Mode maintenance ACTIF : seuls vous le voyez normalement";document.body.prepend(mb)}}else if(mb)mb.remove();
+  // Feature toggles
+  const kpis=$(".kpis");if(kpis)kpis.style.display=c.showKpis===false?"none":"";
+  const mapSec=$('[data-sec="carte"]');if(mapSec&&c.showMap===false)mapSec.hidden=true;
+  const simSec=$('[data-sec="simulateur"]');if(simSec&&c.showSimulator===false)simSec.hidden=true;
+  const benSec=$('[data-sec="benevolat"]');if(benSec&&c.showBenevolat===false)benSec.hidden=true;
+  // Map warning
+  const warn=$(".warn");if(warn&&c.mapWarn)warn.textContent="⚠️ "+c.mapWarn;
+  // Footer
+  const foot=$("footer");if(foot&&c.footerText){const strong=foot.querySelector("strong");const rest=c.footerText;if(strong){strong.nextSibling&&strong.nextSibling.remove();strong.insertAdjacentText("afterend"," — "+rest.replace(/^Solidarité France — /,""));}}
   applyTheme();window.dispatchEvent(new Event("resize"))}
 if(READY)onSnapshot(doc(db,"config","site"),s=>{if(s.exists()){cfg={...DEF,...s.data()};applyCfg();if(!$("#side").hidden&&tab!=="code"&&tab!=="st")panel()}},()=>{});
 applyCfg();applyLang();
@@ -742,26 +854,80 @@ function panel(){
   const B=$("#sBody");
   if(!READY){B.innerHTML='<div class="sb"><p>Colle d\'abord ta configuration Firebase dans <code>FIREBASE_CONFIG</code>.</p></div>';return}
   if(!user){
-    B.innerHTML='<div class="sb"><h3>🔒 Connexion</h3><input id="aE" class="field" type="email" placeholder="Email" autocomplete="username"><input id="aP" class="field" type="password" placeholder="Mot de passe" autocomplete="current-password"><button class="btn g" style="width:100%" id="aGo">Se connecter</button><p id="aErr" class="sub" style="color:#b91c1c"></p></div>';
-    const go=async()=>{try{await signInWithEmailAndPassword(auth,$("#aE").value.trim(),$("#aP").value)}catch(er){$("#aErr").textContent="Identifiants incorrects."}};
+    B.innerHTML='<div class="sb"><h3>🔒 Connexion</h3><p class="sub">Connecte-toi pour modifier le site en direct (apparence, textes, sections, maintenance…).</p><input id="aE" class="field" type="email" placeholder="Email" autocomplete="username"><input id="aP" class="field" type="password" placeholder="Mot de passe" autocomplete="current-password"><button class="btn g" style="width:100%" id="aGo">Se connecter</button><p id="aErr" class="sub" style="color:#b91c1c"></p></div>';
+    const go=async()=>{try{await signInWithEmailAndPassword(auth,$("#aE").value.trim(),$("#aP").value)}catch(er){$("#aErr").textContent="Identifiants incorrects ou compte inexistant."}};
     $("#aGo").onclick=go;$("#aP").onkeydown=ev=>{if(ev.key==="Enter")go()};return}
   $("#aOut").onclick=()=>signOut(auth);
   const c={...DEF,...cfg};
-  const TABS=[["app","🎨 Apparence"],["sec","📐 Sections"],["mnt","🔨 Maintenance"],["st","📊 Stats"],["code","</> Code"]];
+  const TABS=[
+    ["app","🎨 Apparence"],
+    ["txt","📝 Textes"],
+    ["sec","📐 Sections"],
+    ["feat","🧩 Fonctions"],
+    ["mnt","🔨 Maintenance"],
+    ["st","📊 Stats"],
+    ["code","</> Code"]
+  ];
   let h='<div class="tabs">'+TABS.map(t=>'<button class="chip'+(t[0]===tab?" on":"")+'" data-t="'+t[0]+'">'+t[1]+"</button>").join("")+'</div><div class="sb">';
-  if(tab==="app")h+='<div class="two2"><label>Couleur principale<input id="cP" type="color" class="field" value="'+c.primary+'"></label><label>Couleur d\'accent<input id="cA" type="color" class="field" value="'+c.accent+'"></label></div><label>Police<select id="cF" class="field">'+Object.entries(FONTS).map(([k,v])=>'<option value="'+e(k)+'"'+(k===c.font?" selected":"")+">"+v+"</option>").join("")+'</select></label><label>Taille du texte : <b id="cSv">'+c.size+'</b> px<input id="cS" type="range" min="13" max="22" value="'+c.size+'" style="width:100%"></label><label>Titre d\'accueil (vide = d\'origine)<input id="cT" class="field" value="'+e(c.title)+'" maxlength="120"></label><label class="ck"><input type="checkbox" id="cC"'+(c.calm?" checked":"")+'><span>Afficher le bandeau rassurant 💙</span></label>';
-  if(tab==="sec")h+=c.order.map((id,i)=>'<div class="ln"><span>'+SECS[id]+'</span><button class="btn l" data-mv="'+i+'" data-d="-1">↑</button><button class="btn l" data-mv="'+i+'" data-d="1">↓</button><label><input type="checkbox" data-hd="'+id+'"'+(c.hidden.includes(id)?"":" checked")+"> visible</label></div>").join("");
-  if(tab==="mnt")h+='<label class="ck"><input type="checkbox" id="cM"'+(c.maintenance?" checked":"")+'><span>Activer le mode maintenance</span></label><input id="cMm" class="field" value="'+e(c.mmsg)+'" maxlength="200" placeholder="Message de maintenance"><label class="ck"><input type="checkbox" id="cU"'+(c.urgBar?" checked":"")+'><span>Afficher la barre des numéros d\'urgence</span></label>';
-  if(tab==="st")h+='<div id="stBox">Chargement…</div>';
-  if(tab==="code")h+='<div class="row" style="margin-bottom:.6rem"><button class="btn" id="cCopy">📋 Copier</button><button class="btn l" id="cDl">⬇️ Télécharger</button><span class="meta" id="cInfo"></span></div><textarea id="cBox" readonly spellcheck="false"></textarea>';
-  h+='</div><div class="sf"><button class="btn g" id="aSave">💾 Publier</button><button class="btn l" id="aRst">↩︎ Par défaut</button><span class="sub" id="aMsg"></span></div>';
+
+  if(tab==="app"){
+    h+='<h3>Couleurs & typographie</h3>';
+    h+='<div class="two2"><label>Couleur principale<input id="cP" type="color" class="field" value="'+c.primary+'"></label><label>Couleur d\'accent<input id="cA" type="color" class="field" value="'+c.accent+'"></label></div>';
+    h+='<label>Police<select id="cF" class="field">'+Object.entries(FONTS).map(([k,v])=>'<option value="'+e(k)+'"'+(k===c.font?" selected":"")+">"+v+"</option>").join("")+'</select></label>';
+    h+='<label>Taille du texte : <b id="cSv">'+c.size+'</b> px<input id="cS" type="range" min="13" max="22" value="'+c.size+'" style="width:100%"></label>';
+    h+='<p class="sub">Les visiteurs peuvent aussi choisir parmi 10 thèmes de couleurs via le bouton 🎨 de la barre de navigation.</p>';
+  }
+
+  if(tab==="txt"){
+    h+='<h3>Textes du site</h3>';
+    h+='<label>Titre principal (hero)<input id="cHT" class="field" value="'+e(c.heroTitle||c.title||"")+'" maxlength="120" placeholder="Laisser vide = texte d\'origine"></label>';
+    h+='<label>Sous-texte du hero<textarea id="cHTx" class="field" rows="3" style="resize:vertical">'+e(c.heroText||"")+'</textarea></label>';
+    h+='<label>Messages rassurants (un par ligne)<textarea id="cKind" class="field" rows="5" style="resize:vertical">'+(c.calmMessages||DEF.calmMessages).map(e).join("\n")+'</textarea></label>';
+    h+='<label>Texte du pied de page<textarea id="cFoot" class="field" rows="2" style="resize:vertical">'+e(c.footerText||"")+'</textarea></label>';
+    h+='<label>Avertissement sous la carte<textarea id="cWarn" class="field" rows="3" style="resize:vertical">'+e(c.mapWarn||"")+'</textarea></label>';
+  }
+
+  if(tab==="sec"){
+    h+='<h3>Ordre & visibilité des sections</h3><p class="sub">Utilise ↑ ↓ pour réordonner. Décoche pour masquer aux visiteurs.</p>';
+    h+=c.order.map((id,i)=>'<div class="ln"><span>'+SECS[id]+'</span><button class="btn l" data-mv="'+i+'" data-d="-1">↑</button><button class="btn l" data-mv="'+i+'" data-d="1">↓</button><label style="display:inline;font-weight:400"><input type="checkbox" data-hd="'+id+'"'+(c.hidden.includes(id)?"":" checked")+"> visible</label></div>").join("");
+  }
+
+  if(tab==="feat"){
+    h+='<h3>Activer / désactiver des blocs</h3>';
+    h+='<label class="ck"><input type="checkbox" id="fKpi"'+(c.showKpis!==false?" checked":"")+'><span>Afficher les indicateurs (KPIs)</span></label>';
+    h+='<label class="ck"><input type="checkbox" id="fMap"'+(c.showMap!==false?" checked":"")+'><span>Afficher la carte</span></label>';
+    h+='<label class="ck"><input type="checkbox" id="fSim"'+(c.showSimulator!==false?" checked":"")+'><span>Afficher le simulateur & checklist</span></label>';
+    h+='<label class="ck"><input type="checkbox" id="fBen"'+(c.showBenevolat!==false?" checked":"")+'><span>Afficher la section Bénévolat</span></label>';
+    h+='<label class="ck"><input type="checkbox" id="cC"'+(c.calm?" checked":"")+'><span>Afficher le bandeau rassurant 💙</span></label>';
+    h+='<label class="ck"><input type="checkbox" id="cU"'+(c.urgBar?" checked":"")+'><span>Afficher la barre des numéros d\'urgence</span></label>';
+    h+='<p class="sub" style="margin-top:1rem">Les lieux réels se chargent automatiquement via OpenStreetMap quand on zoome ou cherche une ville. Les « Repères » nationaux sont déjà nombreux (réseaux Restos du Cœur, Secours Populaire, Emmaüs, Croix-Rouge, Banques alimentaires, PASS, Missions Locales, France Services, CROUS…).</p>';
+  }
+
+  if(tab==="mnt"){
+    h+='<h3>Mode maintenance</h3>';
+    h+='<label class="ck"><input type="checkbox" id="cM"'+(c.maintenance?" checked":"")+'><span>Activer le mode maintenance (les visiteurs voient uniquement le message)</span></label>';
+    h+='<label>Message de maintenance<input id="cMm" class="field" value="'+e(c.mmsg)+'" maxlength="200"></label>';
+    h+='<p class="sub">Quand la maintenance est active, toi seul (connecté) continues de voir le site normalement, avec un bandeau jaune d\'avertissement.</p>';
+  }
+
+  if(tab==="st")h+='<div id="stBox">Chargement des statistiques…</div>';
+  if(tab==="code")h+='<div class="row" style="margin-bottom:.6rem"><button class="btn" id="cCopy">📋 Copier le code</button><button class="btn l" id="cDl">⬇️ Télécharger index.html</button><span class="meta" id="cInfo"></span></div><textarea id="cBox" readonly spellcheck="false" style="height:55vh"></textarea>';
+
+  h+='</div><div class="sf"><button class="btn g" id="aSave">💾 Publier les changements</button><button class="btn l" id="aRst">↩︎ Réinitialiser</button><span class="sub" id="aMsg"></span></div>';
   B.innerHTML=h;
+
   $$("[data-t]").forEach(b=>b.onclick=()=>{tab=b.dataset.t;panel()});
+
   const bind=(id,k,t)=>{const el=$("#"+id);if(!el)return;el.oninput=()=>{c[k]=t==="b"?el.checked:t==="n"?+el.value:el.value;if(id==="cS")$("#cSv").textContent=c.size;cfg=c;applyCfg()}};
-  [["cP","primary"],["cA","accent"],["cF","font"],["cS","size","n"],["cT","title"],["cC","calm","b"],["cM","maintenance","b"],["cMm","mmsg"],["cU","urgBar","b"]].forEach(a=>bind(a[0],a[1],a[2]));
+  [["cP","primary"],["cA","accent"],["cF","font"],["cS","size","n"],["cHT","heroTitle"],["cHTx","heroText"],["cFoot","footerText"],["cWarn","mapWarn"],["cC","calm","b"],["cM","maintenance","b"],["cMm","mmsg"],["cU","urgBar","b"],["fKpi","showKpis","b"],["fMap","showMap","b"],["fSim","showSimulator","b"],["fBen","showBenevolat","b"]].forEach(a=>bind(a[0],a[1],a[2]));
+
+  const kindEl=$("#cKind");
+  if(kindEl)kindEl.oninput=()=>{c.calmMessages=kindEl.value.split("\n").map(s=>s.trim()).filter(Boolean);cfg=c;applyCfg()};
+
   $$("[data-hd]").forEach(k=>k.onchange=()=>{c.hidden=k.checked?c.hidden.filter(x=>x!==k.dataset.hd):c.hidden.concat(k.dataset.hd);cfg=c;applyCfg()});
   $$("[data-mv]").forEach(b=>b.onclick=()=>{const i=+b.dataset.mv,j=i+ +b.dataset.d;if(j<0||j>=c.order.length)return;[c.order[i],c.order[j]]=[c.order[j],c.order[i]];cfg=c;applyCfg();panel()});
-  $("#aSave").onclick=async()=>{try{await setDoc(doc(db,"config","site"),c);$("#aMsg").textContent="✅ Publié"}catch(er){$("#aMsg").textContent="❌ Refusé (règles Firestore)"}};
+
+  $("#aSave").onclick=async()=>{try{await setDoc(doc(db,"config","site"),c);$("#aMsg").textContent="✅ Publié — visible par tous les visiteurs"}catch(er){$("#aMsg").textContent="❌ Refusé (vérifie les règles Firestore)"}};
   $("#aRst").onclick=()=>{cfg={...DEF};applyCfg();panel()};
   if(tab==="st")stats();if(tab==="code")code()}
 </script>
