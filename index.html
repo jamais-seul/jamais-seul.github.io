@@ -19,7 +19,7 @@ body.dark .chip{background:#1a2438}
 body.dark .chip.on,body.dark .chip:hover{background:var(--navy);color:#0a0f1a;border-color:var(--navy)}
 body.dark .need-btn{background:#1a2438}
 body.dark .need-btn.on{background:linear-gradient(135deg,#1e3a5f,#152a45);border-color:var(--navy)}
-body.dark .panel,.body.dark .card,.body.dark .kpi,.body.dark .res{background:var(--card);border-color:var(--bd)}
+body.dark .panel,body.dark .card,body.dark .kpi,body.dark .res{background:var(--card);border-color:var(--bd)}
 body.dark .badge{filter:brightness(1.15)}
 body.dark #map{background:#1a2438;border-color:var(--bd)}
 body.dark .legend{color:var(--muted)}
@@ -42,10 +42,22 @@ body.dark #side .tabs .chip{background:#3b1f4a;color:#f0abfc;border-color:#86198
 body.dark #side .tabs .chip.on{background:#7c3aed;color:#f5f3ff;border-color:#a78bfa;box-shadow:0 2px 0 #5b21b6}
 body.dark .kpi b{color:var(--blue)}
 body.dark a{color:#93c5fd}
-body.dark .meta,.body.dark .sub{color:var(--muted)}
+body.dark .meta,body.dark .sub{color:var(--muted)}
 body.dark .tag{background:#1a2438;color:var(--muted);border-color:var(--bd)}
 body.dark .empty{color:var(--muted)}
 body.dark #cvPreview{background:#fff!important;color:#111!important}
+body.dark,html.dark{background:#0a0f1a!important}
+body.dark main,body.dark .wrap{background:transparent}
+body.dark .field{background:#0f172a;color:var(--text);border-color:var(--bd)}
+body.dark .two .panel,body.dark .grid .card{background:var(--card)}
+body.dark footer{background:var(--card);color:var(--muted)}
+body.dark .quick button{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25)}
+body.dark .hero h1,body.dark .hero p{color:#e8eef8}
+body.dark .t{color:var(--navy)}
+body.dark input,body.dark select,body.dark textarea{color:var(--text)}
+body.dark .need-btn small{color:var(--muted)}
+body.dark #aiChat,body.dark #aiBox{background:var(--card)}
+
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;scroll-padding-top:70px}
 body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
@@ -149,14 +161,16 @@ body.padr{padding-right:var(--side-w,380px)}
 
 
 /* Traduction Google */
-.gt-wrap{display:flex;align-items:center;max-width:140px}
+.gt-wrap{display:flex;align-items:center;gap:6px;max-width:200px;background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:2px 8px 2px 6px}
+.gt-wrap .gt-icon{font-size:1.15rem;line-height:1;flex-shrink:0}
 .gt-wrap .goog-te-gadget{font-size:0!important;line-height:1}
-.gt-wrap .goog-te-gadget .goog-te-combo{font-size:.82rem!important;padding:4px 6px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--text);max-width:130px;font-family:inherit}
+.gt-wrap .goog-te-gadget .goog-te-combo{font-size:.82rem!important;padding:4px 6px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--text);max-width:150px;font-family:inherit;cursor:pointer}
 .goog-te-banner-frame{display:none!important}
 body{top:0!important}
 .skiptranslate{display:none!important}
+body.dark .gt-wrap{background:#1a2438;border-color:var(--bd)}
 body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(--text);border-color:var(--bd)}
-@media(max-width:700px){.gt-wrap{max-width:110px}.gt-wrap .goog-te-gadget .goog-te-combo{max-width:100px;font-size:.75rem!important}}
+@media(max-width:700px){.gt-wrap{max-width:150px}.gt-wrap .goog-te-gadget .goog-te-combo{max-width:110px;font-size:.75rem!important}}
 
 </style>
 </head>
@@ -167,8 +181,11 @@ body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(-
 <nav>
 <a class="logo" href="#top">🤝 Solidarité France</a>
 <div class="links"><a href="#besoins">Besoins</a><a href="#carte">Carte</a><a href="#ressources">Numéros</a><a href="#assistant">Assistant</a><a href="#cv">CV</a><a href="#simulateur">Démarches</a><a href="#benevolat">Bénévolat</a></div>
-<div id="google_translate_element" class="gt-wrap notranslate" title="Traduire le site"></div>
-<button class="btn l" data-a="theme" aria-label="Mode sombre / clair">🌓</button>
+<div class="gt-wrap notranslate" title="Traduire tout le site dans n'importe quelle langue">
+  <span class="gt-icon" aria-hidden="true">🌐</span>
+  <div id="google_translate_element"></div>
+</div>
+<button class="btn l" data-a="theme" aria-label="Mode sombre / clair" title="Mode sombre / clair">🌓</button>
 <button class="btn g" data-a="add">+ Lieu</button>
 </nav>
 
@@ -212,7 +229,8 @@ body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(-
 </div>
 
 <h2 class="t" id="carte">🗺️ Carte des centres d'aide</h2>
-<p class="sub" id="status" aria-live="polite">Zoomez sur votre ville ou tapez-la en haut : les centres réels (OpenStreetMap) et les repères nationaux se chargent automatiquement. Cliquez sur un marqueur pour les détails et l'itinéraire.</p>
+<p class="sub" id="status" aria-live="polite">Au démarrage, les grandes villes et repères nationaux sont déjà visibles. Toutes les communes de France (y compris les petites villes et villages) sont cherchables : tapez le nom ou le code postal dans la barre en haut, ou zoomez sur la carte — les centres réels (OpenStreetMap) se chargent alors automatiquement. Cliquez sur un marqueur pour les détails et l'itinéraire.</p>
+<p class="sub" style="margin-top:-.4rem;margin-bottom:.8rem">💡 <b>Astuce :</b> seuls les grands centres sont affichés au début pour alléger la carte. Pour une petite ville ou un village, utilisez la recherche en haut de page — les structures locales apparaîtront ensuite.</p>
 <div class="chips" id="chips"></div>
 <div class="panel">
 <div class="tools">
@@ -314,7 +332,7 @@ body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(-
     <span class="sub" style="margin:0">Les couleurs s’appliquent selon le modèle (barre, titres, fond, texte…).</span>
   </div>
   <label style="font-weight:700;margin-top:.9rem;display:block">Profil type (remplit en 1 clic)</label>
-  <input type="search" id="cvJobSearch" class="field" placeholder="🔍 Chercher un métier (ex : cuisinier, agent d'accueil, chauffeur…)" style="margin-bottom:.5rem" autocomplete="off">
+  <input type="search" id="cvJobSearch" class="field" placeholder="🔍 Chercher un métier (ex : infirmier, boulanger, développeur, chauffeur…)" style="margin-bottom:.5rem" autocomplete="off">
   <div class="chips" id="cvPresets" style="max-height:160px;overflow-y:auto"></div>
   <button class="chip" data-preset="vide" id="cvPresetVide" style="margin-top:.35rem">↺ Vider le formulaire</button>
 </div>
@@ -1341,6 +1359,69 @@ const CV_JOBS = [
   {id:"saisonnier", title:"Employé saisonnier (tourisme / agriculture)", tags:"saisonnier été hiver tourisme agriculture", profile:"Disponible, adaptable et motivé pour les missions saisonnières.", skills:["Polyvalence","Ponctualité","Travail en équipe","Sens du service"], exp:[{poste:"Saisonnier",emp:"Tourisme / Agriculture",deb:"2022",fin:"2023",miss:"Accueil, service, récolte selon saison"}], form:[]},
   {id:"agent_social", title:"Agent d'insertion / Médiateur social", tags:"insertion médiation social accompagnement", profile:"À l'écoute, non-jugeant et engagé dans l'accompagnement des publics fragiles.", skills:["Sens du service","Gestion du stress","Travail en équipe","Rigueur"], exp:[{poste:"Médiateur / Agent d'insertion",emp:"Association",deb:"2021",fin:"Actuel",miss:"Accueil, orientation, ateliers"}], form:[]},
   {id:"vide", title:"— Formulaire vide —", tags:"vide reset", profile:"", skills:[], exp:[], form:[]}
+,
+
+  {id:"infirmier", title:"Infirmier / Infirmière", tags:"infirmier hopital clinique soin patient", profile:"Professionnel(le) de santé à l'écoute, rigoureux(se) et empathique.", skills:["Rigueur","Gestion du stress","Travail en équipe","Sens du service"], exp:[{poste:"Infirmier(ère)",emp:"Hôpital / Clinique",deb:"2021",fin:"Actuel",miss:"Soins, surveillance, transmissions"}], form:[{dipl:"Diplôme d'État Infirmier",an:"2020",etab:""}], icon:"💉"},
+  {id:"medecin", title:"Médecin généraliste", tags:"medecin docteur generaliste sante", profile:"Médecin à l'écoute, orienté(e) prévention et suivi des patients.", skills:["Écoute","Rigueur","Autonomie"], exp:[{poste:"Médecin",emp:"Cabinet / Hôpital",deb:"2018",fin:"Actuel",miss:"Consultations, suivi"}], form:[{dipl:"Doctorat en médecine",an:"",etab:""}], icon:"👨‍⚕️"},
+  {id:"pharmacien", title:"Pharmacien / Pharmacienne", tags:"pharmacien officine medicaments", profile:"Conseil pharmaceutique et dispense de médicaments avec rigueur.", skills:["Rigueur","Sens du service","Autonomie"], exp:[{poste:"Pharmacien(ne)",emp:"Officine",deb:"2020",fin:"Actuel",miss:"Dispense, conseil"}], form:[{dipl:"Doctorat en pharmacie",an:"",etab:""}], icon:"💊"},
+  {id:"kine", title:"Masseur-kinésithérapeute", tags:"kine kinesitherapeute reeducation", profile:"Rééducation et soins kinésithérapiques adaptés à chaque patient.", skills:["Écoute","Rigueur","Autonomie"], exp:[{poste:"Kinésithérapeute",emp:"Cabinet / Centre",deb:"2021",fin:"Actuel",miss:"Rééducation, bilans"}], form:[{dipl:"DE Kinésithérapeute",an:"",etab:""}], icon:"🧘"},
+  {id:"barman", title:"Barman / Barmaid", tags:"barman bar cocktail cafe", profile:"Accueil chaleureux, rapidité et sens du service en bar.", skills:["Sens du service","Polyvalence","Gestion du stress"], exp:[{poste:"Barman",emp:"Bar / Restaurant",deb:"2022",fin:"Actuel",miss:"Service au bar, encaissement"}], form:[{dipl:"",an:"",etab:""}], icon:"🍸"},
+  {id:"barista", title:"Barista", tags:"barista cafe espresso torrefaction", profile:"Passionné(e) de café, précision et accueil client.", skills:["Sens du service","Rigueur","Polyvalence"], exp:[{poste:"Barista",emp:"Coffee shop",deb:"2022",fin:"Actuel",miss:"Préparation cafés, conseil"}], form:[{dipl:"",an:"",etab:""}], icon:"☕"},
+  {id:"patissier", title:"Pâtissier / Pâtissière", tags:"patissier gateau viennoiserie", profile:"Créatif(ve) et précis(e), passionné(e) par la pâtisserie.", skills:["Rigueur","Créativité","Autonomie"], exp:[{poste:"Pâtissier(ère)",emp:"Pâtisserie",deb:"2021",fin:"Actuel",miss:"Fabrication pâtisseries"}], form:[{dipl:"CAP Pâtissier",an:"",etab:""}], icon:"🥐"},
+  {id:"boulanger", title:"Boulanger / Boulangère", tags:"boulanger pain viennoiserie", profile:"Travail de nuit maîtrisé, qualité du pain et des viennoiseries.", skills:["Rigueur","Autonomie","Ponctualité"], exp:[{poste:"Boulanger(ère)",emp:"Boulangerie",deb:"2020",fin:"Actuel",miss:"Pétrissage, cuisson"}], form:[{dipl:"CAP Boulanger",an:"",etab:""}], icon:"🥖"},
+  {id:"boucher", title:"Boucher / Bouchère", tags:"boucher viande charcuterie", profile:"Maîtrise de la découpe et du conseil client en boucherie.", skills:["Rigueur","Sens du service","Autonomie"], exp:[{poste:"Boucher(ère)",emp:"Boucherie",deb:"2021",fin:"Actuel",miss:"Découpe, service"}], form:[{dipl:"CAP Boucher",an:"",etab:""}], icon:"🥩"},
+  {id:"electricien", title:"Électricien / Électricienne", tags:"electricien installation cable", profile:"Installations et dépannages électriques conformes aux normes.", skills:["Rigueur","Autonomie","Permis B"], exp:[{poste:"Électricien(ne)",emp:"Entreprise / Artisan",deb:"2020",fin:"Actuel",miss:"Installation, dépannage"}], form:[{dipl:"CAP Électricien",an:"",etab:""}], icon:"⚡"},
+  {id:"plombier", title:"Plombier / Plombière", tags:"plombier sanitaires chauffage", profile:"Interventions plomberie et sanitaires, dépannage et pose.", skills:["Autonomie","Rigueur","Polyvalence"], exp:[{poste:"Plombier(ère)",emp:"Artisan",deb:"2021",fin:"Actuel",miss:"Dépannage, installation"}], form:[{dipl:"CAP Plombier",an:"",etab:""}], icon:"🔧"},
+  {id:"peintre", title:"Peintre en bâtiment", tags:"peintre batiment renovation", profile:"Finitions soignées, préparation des supports et application.", skills:["Rigueur","Autonomie","Polyvalence"], exp:[{poste:"Peintre",emp:"Entreprise BTP",deb:"2020",fin:"Actuel",miss:"Peinture intérieure/extérieure"}], form:[{dipl:"CAP Peintre",an:"",etab:""}], icon:"🖌️"},
+  {id:"macon", title:"Maçon / Maçonne", tags:"macon batiment beton", profile:"Travaux de maçonnerie, gros œuvre et finitions.", skills:["Rigueur","Travail en équipe","Permis B"], exp:[{poste:"Maçon(ne)",emp:"Entreprise BTP",deb:"2019",fin:"Actuel",miss:"Coulage, élévation"}], form:[{dipl:"CAP Maçon",an:"",etab:""}], icon:"🧱"},
+  {id:"menuisier", title:"Menuisier / Menuisière", tags:"menuisier bois agencement", profile:"Fabrication et pose de menuiseries bois ou PVC.", skills:["Rigueur","Autonomie","Créativité"], exp:[{poste:"Menuisier(ère)",emp:"Atelier",deb:"2020",fin:"Actuel",miss:"Fabrication, pose"}], form:[{dipl:"CAP Menuisier",an:"",etab:""}], icon:"🪚"},
+  {id:"soudeur", title:"Soudeur / Soudeuse", tags:"soudeur metallerie tig mig", profile:"Soudure TIG/MIG, lecture de plans et finitions métalliques.", skills:["Rigueur","Autonomie","Travail en équipe"], exp:[{poste:"Soudeur(se)",emp:"Atelier métallerie",deb:"2021",fin:"Actuel",miss:"Soudure, assemblage"}], form:[{dipl:"CAP Soudure",an:"",etab:""}], icon:"🔥"},
+  {id:"mecanicien", title:"Mécanicien automobile", tags:"mecanicien garage auto", profile:"Diagnostic et réparation automobile, entretien courant.", skills:["Rigueur","Autonomie","Polyvalence"], exp:[{poste:"Mécanicien(ne)",emp:"Garage",deb:"2020",fin:"Actuel",miss:"Révisions, diagnostics"}], form:[{dipl:"CAP Maintenance véhicules",an:"",etab:""}], icon:"🔩"},
+  {id:"enseignant", title:"Enseignant / Professeur", tags:"enseignant professeur ecole college lycee", profile:"Transmission des savoirs, pédagogie et suivi des élèves.", skills:["Écoute","Rigueur","Travail en équipe"], exp:[{poste:"Enseignant(e)",emp:"Éducation nationale",deb:"2019",fin:"Actuel",miss:"Cours, évaluations"}], form:[{dipl:"Master MEEF / CAPES",an:"",etab:""}], icon:"📚"},
+  {id:"formateur", title:"Formateur / Formatrice", tags:"formateur formation professionnelle", profile:"Conception et animation de formations professionnelles.", skills:["Pédagogie","Communication","Autonomie"], exp:[{poste:"Formateur(trice)",emp:"Organisme de formation",deb:"2021",fin:"Actuel",miss:"Animation de sessions"}], form:[{dipl:"",an:"",etab:""}], icon:"🎓"},
+  {id:"educateur", title:"Éducateur / Éducatrice spécialisé(e)", tags:"educateur specialise jeunesse social", profile:"Accompagnement éducatif de publics en difficulté.", skills:["Écoute","Travail en équipe","Gestion du stress"], exp:[{poste:"Éducateur(trice)",emp:"Association / Structure",deb:"2020",fin:"Actuel",miss:"Accompagnement, projets"}], form:[{dipl:"DEES",an:"",etab:""}], icon:"🧒"},
+  {id:"comptable", title:"Comptable", tags:"comptable comptabilite paie", profile:"Tenue de comptabilité, déclarations et suivi client.", skills:["Rigueur","Autonomie","Informatique"], exp:[{poste:"Comptable",emp:"Cabinet / Entreprise",deb:"2021",fin:"Actuel",miss:"Saisie, bilans"}], form:[{dipl:"BTS Comptabilité",an:"",etab:""}], icon:"🧮"},
+  {id:"rh", title:"Assistant(e) RH / Ressources humaines", tags:"rh ressources humaines recrutement paie", profile:"Gestion administrative du personnel et recrutement.", skills:["Rigueur","Discrétion","Travail en équipe"], exp:[{poste:"Assistant(e) RH",emp:"Entreprise",deb:"2022",fin:"Actuel",miss:"Paie, contrats, recrutement"}], form:[{dipl:"BTS / Licence RH",an:"",etab:""}], icon:"👥"},
+  {id:"coiffeur", title:"Coiffeur / Coiffeuse", tags:"coiffeur salon coupe coloration", profile:"Coupes, colorations et conseils capillaires.", skills:["Créativité","Sens du service","Autonomie"], exp:[{poste:"Coiffeur(se)",emp:"Salon",deb:"2021",fin:"Actuel",miss:"Coupes, colorations"}], form:[{dipl:"CAP Coiffure",an:"",etab:""}], icon:"💇"},
+  {id:"estheticienne", title:"Esthéticien(ne)", tags:"estheticienne beaute soins spa", profile:"Soins du visage et du corps, conseil beauté.", skills:["Sens du service","Rigueur","Créativité"], exp:[{poste:"Esthéticien(ne)",emp:"Institut",deb:"2022",fin:"Actuel",miss:"Soins, épilations"}], form:[{dipl:"CAP Esthétique",an:"",etab:""}], icon:"💅"},
+  {id:"photographe", title:"Photographe", tags:"photographe photo studio reportage", profile:"Prise de vue, retouche et direction artistique.", skills:["Créativité","Autonomie","Communication"], exp:[{poste:"Photographe",emp:"Freelance / Studio",deb:"2020",fin:"Actuel",miss:"Reportages, portraits"}], form:[{dipl:"",an:"",etab:""}], icon:"📷"},
+  {id:"graphiste", title:"Graphiste / Designer", tags:"graphiste designer illustrateur ui", profile:"Création visuelle print et digital, identité de marque.", skills:["Créativité","Informatique","Autonomie"], exp:[{poste:"Graphiste",emp:"Agence / Freelance",deb:"2021",fin:"Actuel",miss:"Identité visuelle, supports"}], form:[{dipl:"Bachelor Design",an:"",etab:""}], icon:"🎨"},
+  {id:"developpeur", title:"Développeur / Développeuse web", tags:"developpeur programmeur web code", profile:"Développement d'applications web, front et/ou back.", skills:["Informatique","Autonomie","Rigueur"], exp:[{poste:"Développeur(se)",emp:"ESN / Startup",deb:"2021",fin:"Actuel",miss:"Développement features"}], form:[{dipl:"Bac+2/3 Informatique",an:"",etab:""}], icon:"👨‍💻"},
+  {id:"architecte", title:"Architecte / Dessinateur", tags:"architecte dessinateur batiment plans", profile:"Conception et plans techniques de bâtiments.", skills:["Créativité","Rigueur","Informatique"], exp:[{poste:"Architecte / Dessinateur",emp:"Cabinet",deb:"2020",fin:"Actuel",miss:"Plans, suivi de chantier"}], form:[{dipl:"Diplôme d'architecte",an:"",etab:""}], icon:"📐"},
+  {id:"avocat", title:"Avocat / Juriste", tags:"avocat juriste droit conseil", profile:"Conseil juridique et représentation des clients.", skills:["Rigueur","Communication","Autonomie"], exp:[{poste:"Avocat / Juriste",emp:"Cabinet",deb:"2019",fin:"Actuel",miss:"Dossiers, plaidoiries"}], form:[{dipl:"Master Droit / CRFPA",an:"",etab:""}], icon:"⚖️"},
+  {id:"journaliste", title:"Journaliste / Rédacteur", tags:"journaliste redacteur presse media", profile:"Enquêtes, interviews et rédaction d'articles.", skills:["Communication","Rigueur","Autonomie"], exp:[{poste:"Journaliste",emp:"Média",deb:"2021",fin:"Actuel",miss:"Reportages, articles"}], form:[{dipl:"École de journalisme",an:"",etab:""}], icon:"📰"},
+  {id:"traducteur", title:"Traducteur / Interprète", tags:"traducteur interprete langues", profile:"Traduction et interprétation professionnelle multilingue.", skills:["Langues","Rigueur","Autonomie"], exp:[{poste:"Traducteur(trice)",emp:"Agence / Freelance",deb:"2020",fin:"Actuel",miss:"Traduction documents"}], form:[{dipl:"Master LEA / Traduction",an:"",etab:""}], icon:"🌍"},
+  {id:"pompier", title:"Sapeur-pompier", tags:"pompier secours incendie", profile:"Interventions de secours et lutte contre l'incendie.", skills:["Gestion du stress","Travail en équipe","Rigueur"], exp:[{poste:"Sapeur-pompier",emp:"SDIS",deb:"2018",fin:"Actuel",miss:"Interventions, formation"}], form:[{dipl:"",an:"",etab:""}], icon:"🚒"},
+  {id:"policier", title:"Policier / Gendarme", tags:"police gendarmerie securite publique", profile:"Maintien de l'ordre et protection des personnes.", skills:["Rigueur","Gestion du stress","Travail en équipe"], exp:[{poste:"Policier / Gendarme",emp:"Police / Gendarmerie",deb:"2019",fin:"Actuel",miss:"Patrouilles, enquêtes"}], form:[{dipl:"Concours",an:"",etab:""}], icon:"👮"},
+  {id:"pilote", title:"Pilote / Personnel navigant", tags:"pilote avion hote air navigant", profile:"Transport aérien, sécurité et service à bord.", skills:["Rigueur","Gestion du stress","Langues"], exp:[{poste:"Personnel navigant",emp:"Compagnie aérienne",deb:"2020",fin:"Actuel",miss:"Vols commerciaux"}], form:[{dipl:"ATPL / Formation PNC",an:"",etab:""}], icon:"✈️"},
+  {id:"coach", title:"Coach sportif / Éducateur sportif", tags:"coach sport educateur fitness", profile:"Encadrement sportif et motivation des pratiquants.", skills:["Communication","Écoute","Polyvalence"], exp:[{poste:"Coach sportif",emp:"Salle / Club",deb:"2021",fin:"Actuel",miss:"Cours collectifs, suivi"}], form:[{dipl:"BPJEPS",an:"",etab:""}], icon:"🏋️"},
+  {id:"fleuriste", title:"Fleuriste", tags:"fleuriste fleurs composition", profile:"Compositions florales et conseil client.", skills:["Créativité","Sens du service","Autonomie"], exp:[{poste:"Fleuriste",emp:"Boutique",deb:"2022",fin:"Actuel",miss:"Bouquets, compositions"}], form:[{dipl:"CAP Fleuriste",an:"",etab:""}], icon:"💐"},
+  {id:"veterinaire", title:"Vétérinaire / ASV", tags:"veterinaire animal asv clinique", profile:"Soins aux animaux et accueil des propriétaires.", skills:["Écoute","Rigueur","Gestion du stress"], exp:[{poste:"ASV / Vétérinaire",emp:"Clinique",deb:"2021",fin:"Actuel",miss:"Soins, accueil"}], form:[{dipl:"",an:"",etab:""}], icon:"🐾"},
+  {id:"hotellerie", title:"Réceptionniste / Hôtellerie", tags:"hotel receptionniste tourisme", profile:"Accueil clients, réservations et service hôtelier.", skills:["Sens du service","Langues","Polyvalence"], exp:[{poste:"Réceptionniste",emp:"Hôtel",deb:"2022",fin:"Actuel",miss:"Check-in, conseil"}], form:[{dipl:"BTS Tourisme",an:"",etab:""}], icon:"🏨"},
+  {id:"guide", title:"Guide touristique", tags:"guide tourisme visite patrimoine", profile:"Visites commentées et découverte du patrimoine.", skills:["Communication","Langues","Autonomie"], exp:[{poste:"Guide",emp:"Office de tourisme",deb:"2021",fin:"Actuel",miss:"Visites guidées"}], form:[{dipl:"",an:"",etab:""}], icon:"🗺️"},
+  {id:"assistant_social", title:"Assistant(e) de service social", tags:"assistant social travail social aide", profile:"Accompagnement social et accès aux droits.", skills:["Écoute","Rigueur","Travail en équipe"], exp:[{poste:"Assistant(e) social(e)",emp:"CCAS / Association",deb:"2020",fin:"Actuel",miss:"Entretiens, dossiers"}], form:[{dipl:"DEASS",an:"",etab:""}], icon:"🤲"},
+  {id:"agent_immobilier", title:"Agent immobilier", tags:"immobilier agent transaction location", profile:"Transaction et location immobilière, conseil clients.", skills:["Communication","Autonomie","Sens du service"], exp:[{poste:"Agent immobilier",emp:"Agence",deb:"2021",fin:"Actuel",miss:"Visites, mandats"}], form:[{dipl:"BTS Professions immobilières",an:"",etab:""}], icon:"🏠"},
+  {id:"comptable_aide", title:"Aide-comptable", tags:"aide comptable saisie factures", profile:"Saisie comptable et classement des pièces.", skills:["Rigueur","Informatique","Autonomie"], exp:[{poste:"Aide-comptable",emp:"Cabinet",deb:"2022",fin:"Actuel",miss:"Saisie, classements"}], form:[{dipl:"Bac pro / BTS",an:"",etab:""}], icon:"📒"},
+  {id:"teleconseiller", title:"Télévendeur / Conseiller clientèle", tags:"teleconseiller call center relation client", profile:"Relation client à distance, conseil et vente.", skills:["Communication","Gestion du stress","Sens du service"], exp:[{poste:"Conseiller clientèle",emp:"Centre d'appels",deb:"2022",fin:"Actuel",miss:"Appels, traitement dossiers"}], form:[{dipl:"",an:"",etab:""}], icon:"📞"},
+  {id:"agent_entretien_voirie", title:"Agent d'entretien voirie / Espaces publics", tags:"voirie proprete urbaine agent technique", profile:"Entretien des espaces publics et de la voirie.", skills:["Autonomie","Rigueur","Permis B"], exp:[{poste:"Agent technique",emp:"Collectivité",deb:"2020",fin:"Actuel",miss:"Nettoyage, entretien"}], form:[{dipl:"",an:"",etab:""}], icon:"🛣️"},
+  {id:"agent_polyvalent", title:"Agent polyvalent de collectivité", tags:"collectivite polyvalent mairie technique", profile:"Polyvalence technique au service d'une collectivité.", skills:["Polyvalence","Autonomie","Travail en équipe"], exp:[{poste:"Agent polyvalent",emp:"Mairie",deb:"2021",fin:"Actuel",miss:"Entretien, petits travaux"}], form:[{dipl:"",an:"",etab:""}], icon:"🏛️"},
+  {id:"saisonnier", title:"Saisonnier / Job d'été", tags:"saisonnier ete agriculture tourisme", profile:"Disponible pour missions saisonnières, motivé(e) et adaptable.", skills:["Polyvalence","Ponctualité","Travail en équipe"], exp:[{poste:"Saisonnier(ère)",emp:"Divers",deb:"2023",fin:"2024",miss:"Missions saisonnières"}], form:[{dipl:"",an:"",etab:""}], icon:"☀️"},
+  {id:"aide_cuisine", title:"Aide de cuisine / Plongeur", tags:"plonge aide cuisine restaurant", profile:"Support en cuisine, plonge et mise en place.", skills:["Ponctualité","Travail en équipe","Rigueur"], exp:[{poste:"Plongeur / Aide cuisine",emp:"Restaurant",deb:"2023",fin:"Actuel",miss:"Plonge, préparations"}], form:[{dipl:"",an:"",etab:""}], icon:"🍽️"},
+  {id:"agent_securite_incendie", title:"Agent de sécurité incendie (SSIAP)", tags:"ssiap securite incendie", profile:"Surveillance et sécurité incendie des établissements.", skills:["Rigueur","Gestion du stress","Autonomie"], exp:[{poste:"SSIAP",emp:"Site / Centre commercial",deb:"2022",fin:"Actuel",miss:"Rondes, consignes"}], form:[{dipl:"SSIAP 1",an:"",etab:""}], icon:"🔥"},
+  {id:"caissier", title:"Caissier / Caissière", tags:"caisse encaissement supermarche", profile:"Encaissement rapide et accueil client en magasin.", skills:["Sens du service","Ponctualité","Rigueur"], exp:[{poste:"Caissier(ère)",emp:"Grande distribution",deb:"2022",fin:"Actuel",miss:"Encaissement, conseil"}], form:[{dipl:"",an:"",etab:""}], icon:"🧮"},
+  {id:"preparateur_pharmacie", title:"Préparateur en pharmacie", tags:"preparateur pharmacie medicaments", profile:"Préparation et délivrance sous responsabilité du pharmacien.", skills:["Rigueur","Sens du service","Discrétion"], exp:[{poste:"Préparateur(trice)",emp:"Pharmacie",deb:"2021",fin:"Actuel",miss:"Préparation, conseil"}], form:[{dipl:"BP Préparateur en pharmacie",an:"",etab:""}], icon:"💊"},
+  {id:"ambulancier", title:"Ambulancier / Ambulancière", tags:"ambulancier samu transport sanitaire", profile:"Transport sanitaire et prise en charge des patients.", skills:["Gestion du stress","Permis B","Sens du service"], exp:[{poste:"Ambulancier(ère)",emp:"Ambulance",deb:"2020",fin:"Actuel",miss:"Transports, urgences"}], form:[{dipl:"DEA",an:"",etab:""}], icon:"🚑"},
+  {id:"aide_medico", title:"Aide médico-psychologique (AMP)", tags:"amp medico psychologique handicap", profile:"Accompagnement quotidien de personnes en situation de handicap.", skills:["Écoute","Rigueur","Travail en équipe"], exp:[{poste:"AMP",emp:"Foyer / IME",deb:"2021",fin:"Actuel",miss:"Accompagnement quotidien"}], form:[{dipl:"DEAES / AMP",an:"",etab:""}], icon:"💙"},
+  {id:"animateur", title:"Animateur / Animatrice", tags:"animateur centre loisirs jeunesse", profile:"Animation d'activités pour enfants ou adultes.", skills:["Créativité","Communication","Travail en équipe"], exp:[{poste:"Animateur(trice)",emp:"Centre de loisirs",deb:"2022",fin:"Actuel",miss:"Activités, sorties"}], form:[{dipl:"BAFA",an:"",etab:""}], icon:"🎭"},
+  {id:"comptable_expert", title:"Expert-comptable stagiaire", tags:"expert comptable audit", profile:"Missions d'expertise comptable et de conseil.", skills:["Rigueur","Informatique","Autonomie"], exp:[{poste:"Collaborateur comptable",emp:"Cabinet",deb:"2021",fin:"Actuel",miss:"Bilans, conseils"}], form:[{dipl:"DSCG / DEC en cours",an:"",etab:""}], icon:"📊"},
+  {id:"data_analyst", title:"Data analyst / Analyste données", tags:"data analyst statistiques excel python", profile:"Analyse de données et reporting pour la décision.", skills:["Informatique","Rigueur","Autonomie"], exp:[{poste:"Data analyst",emp:"Entreprise",deb:"2022",fin:"Actuel",miss:"Tableaux de bord, analyses"}], form:[{dipl:"Bac+3/5 Data",an:"",etab:""}], icon:"📊"},
+  {id:"community_manager", title:"Community manager", tags:"community manager reseaux sociaux digital", profile:"Animation des réseaux sociaux et création de contenus.", skills:["Communication","Créativité","Informatique"], exp:[{poste:"Community manager",emp:"Agence / Marque",deb:"2022",fin:"Actuel",miss:"Posts, modération"}], form:[{dipl:"",an:"",etab:""}], icon:"📱"},
+  {id:"logistique_responsable", title:"Responsable logistique / Supply chain", tags:"logistique supply chain entrepot", profile:"Organisation des flux et de l'entrepôt.", skills:["Rigueur","Travail en équipe","Autonomie"], exp:[{poste:"Responsable logistique",emp:"Entrepôt",deb:"2019",fin:"Actuel",miss:"Organisation, équipes"}], form:[{dipl:"Bac+2/3 Logistique",an:"",etab:""}], icon:"📦"},
+  {id:"agent_accueil_hopital", title:"Agent d'accueil hospitalier", tags:"accueil hopital orientation patient", profile:"Accueil et orientation des patients et visiteurs.", skills:["Sens du service","Écoute","Rigueur"], exp:[{poste:"Agent d'accueil",emp:"Hôpital",deb:"2022",fin:"Actuel",miss:"Accueil, orientation"}], form:[{dipl:"",an:"",etab:""}], icon:"🏥"},
+  {id:"ouvrier_agricole", title:"Ouvrier agricole / Viticulteur", tags:"agricole viticulture elevage", profile:"Travaux agricoles, saisonniers ou permanents.", skills:["Autonomie","Rigueur","Polyvalence"], exp:[{poste:"Ouvrier agricole",emp:"Exploitation",deb:"2021",fin:"Actuel",miss:"Cultures, élevage"}], form:[{dipl:"",an:"",etab:""}], icon:"🌾"},
+  {id:"conducteur_travaux", title:"Conducteur de travaux / Chef de chantier", tags:"conducteur travaux chantier btp", profile:"Coordination de chantier et suivi des équipes.", skills:["Rigueur","Travail en équipe","Permis B"], exp:[{poste:"Conducteur de travaux",emp:"Entreprise BTP",deb:"2018",fin:"Actuel",miss:"Suivi chantier, planning"}], form:[{dipl:"Bac+2 BTP",an:"",etab:""}], icon:"🏗️"},
+  {id:"secretaire_medical", title:"Secrétaire médical(e)", tags:"secretaire medical cabinet hopital", profile:"Gestion administrative d'un cabinet ou service médical.", skills:["Rigueur","Discrétion","Informatique"], exp:[{poste:"Secrétaire médical(e)",emp:"Cabinet / Hôpital",deb:"2021",fin:"Actuel",miss:"Rendez-vous, dossiers"}], form:[{dipl:"Secrétariat médical",an:"",etab:""}], icon:"🗂️"},
+  {id:"agent_immobilier_syndic", title:"Gardien d'immeuble / Syndic", tags:"gardien immeuble syndic residence", profile:"Surveillance et entretien d'une résidence.", skills:["Autonomie","Rigueur","Sens du service"], exp:[{poste:"Gardien(ne)",emp:"Résidence",deb:"2020",fin:"Actuel",miss:"Rondes, petits travaux"}], form:[{dipl:"",an:"",etab:""}], icon:"🔑"},
 ];
 const CV_PRESETS = Object.fromEntries(CV_JOBS.map(j => [j.id, j]));
 
@@ -1349,8 +1430,11 @@ function renderCvJobChips(filter=""){
   if(!box) return;
   const q = (filter||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
   const list = CV_JOBS.filter(j => j.id !== "vide" && (!q || (j.title+" "+j.tags).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").includes(q)));
-  box.innerHTML = list.slice(0,40).map(j => `<button type="button" class="chip" data-preset="${j.id}">${esc(j.title)}</button>`).join("")
-    || `<span class="sub">Aucun métier trouvé pour « ${esc(filter)} »</span>`;
+  box.innerHTML = list.slice(0,60).map(j => {
+      const ic = j.icon || (typeof cvJobIcon==="function" ? cvJobIcon(j.title) : "💼");
+      return `<button type="button" class="chip" data-preset="${j.id}" title="${esc(j.title)}">${ic} ${esc(j.title)}</button>`;
+    }).join("")
+    || `<span class="sub">Aucun métier trouvé pour « ${esc(filter)} ». Essayez un autre mot-clé.</span>`;
 }
 renderCvJobChips();
 document.getElementById("cvJobSearch")?.addEventListener("input", e => renderCvJobChips(e.target.value));
@@ -1450,17 +1534,36 @@ const CV_ICONS = {
   user: `<span style="margin-right:8px;font-size:14px;line-height:1">👤</span>`,
   // Logos métiers (emoji pro + lisibles à l'impression)
   job: {
-    "aide": "🤝", "domicile": "🤝", "auxiliaire": "🤝", "soignant": "🩺", "santé": "🩺",
-    "serveur": "🍽️", "serveuse": "🍽️", "restaurant": "🍽️", "cuisine": "👨‍🍳", "cuisinier": "👨‍🍳", "commis": "👨‍🍳",
-    "vendeur": "🛒", "vendeuse": "🛒", "commerce": "🛒", "caisse": "🛒",
-    "manutention": "📦", "magasinier": "📦", "logistique": "📦", "préparateur": "📦", "commandes": "📦",
-    "entretien": "🧹", "propreté": "🧹", "nettoyage": "🧹",
-    "sécurité": "🛡️", "agent de sécurité": "🛡️",
-    "accueil": "🛎️", "administratif": "📋", "secrétaire": "📋", "bureau": "📋",
-    "jardin": "🌿", "espaces verts": "🌿",
-    "chauffeur": "🚚", "livreur": "🚚", "coursier": "🛵",
-    "communication": "📣", "marketing": "📈", "commercial": "💼",
-    "informatique": "💻", "développeur": "💻", "electric": "⚡", "électricien": "⚡",
+    "aide": "🤝", "domicile": "🤝", "auxiliaire": "🤝", "aes": "🤝",
+    "soignant": "🩺", "sante": "🩺", "infirmier": "💉", "infirmiere": "💉", "medecin": "👨‍⚕️", "docteur": "👨‍⚕️",
+    "pharmacien": "💊", "kine": "🧘", "kinesitherapeute": "🧘", "dentiste": "🦷", "sage-femme": "👶",
+    "serveur": "🍽️", "serveuse": "🍽️", "restaurant": "🍽️", "barman": "🍸", "barista": "☕",
+    "cuisine": "👨‍🍳", "cuisinier": "👨‍🍳", "commis": "👨‍🍳", "patissier": "🥐", "boulanger": "🥖", "boucher": "🥩",
+    "vendeur": "🛒", "vendeuse": "🛒", "commerce": "🛒", "caisse": "🧮", "caissier": "🧮",
+    "manutention": "📦", "magasinier": "📦", "logistique": "📦", "preparateur": "📦", "commandes": "📦", "cariste": "🏗️",
+    "entretien": "🧹", "proprete": "🧹", "nettoyage": "🧹", "ash": "🛏️", "menage": "🧹",
+    "securite": "🛡️", "gardien": "🔐", "surveillance": "📷",
+    "accueil": "🛎️", "hotesse": "🛎️", "receptionniste": "🛎️",
+    "administratif": "📋", "secretaire": "⌨️", "bureau": "📋", "assistant": "📎",
+    "jardin": "🌿", "espaces verts": "🌿", "paysagiste": "🌳", "agriculteur": "🌾", "viticulteur": "🍇",
+    "chauffeur": "🚚", "livreur": "🚚", "coursier": "🛵", "taxi": "🚕", "vtc": "🚗", "conducteur": "🚌",
+    "communication": "📣", "marketing": "📈", "commercial": "🤝", "vente": "🛒",
+    "informatique": "💻", "developpeur": "👨‍💻", "webmaster": "🌐", "data": "📊", "reseau": "🖧",
+    "electricien": "⚡", "plombier": "🔧", "peintre": "🖌️", "macon": "🧱", "menuisier": "🪚", "soudeur": "🔥",
+    "mecanicien": "🔩", "carrossier": "🚗", "garagiste": "🔧",
+    "enseignant": "📚", "professeur": "📚", "formateur": "🎓", "educateur": "🧒", "animateur": "🎭",
+    "comptable": "🧮", "rh": "👥", "ressources humaines": "👥", "juriste": "⚖️", "avocat": "⚖️",
+    "coiffeur": "💇", "estheticienne": "💅", "spa": "🧖",
+    "photographe": "📷", "graphiste": "🎨", "designer": "✨", "architecte": "📐",
+    "journaliste": "📰", "traducteur": "🌍", "interprete": "🗣️",
+    "pompier": "🚒", "police": "👮", "militaire": "🎖️", "secouriste": "🚑",
+    "pilote": "✈️", "hote de l'air": "✈️", "marin": "⚓", "pecheur": "🐟",
+    "sport": "⚽", "coach": "🏋️", "educateur sportif": "🏃",
+    "musicien": "🎵", "artiste": "🎨", "comedien": "🎬",
+    "social": "🤲", "assistant social": "🤲", "mediateur": "🕊️",
+    "tourisme": "🧳", "guide": "🗺️", "hotellerie": "🏨",
+    "boulanger": "🥖", "fromager": "🧀", "fleuriste": "💐",
+    "veterinaire": "🐾", "toiletteur": "🐕",
     "default": "💼"
   }
 };
@@ -1818,14 +1921,16 @@ body.padr{padding-right:var(--side-w,380px)}
 
 
 /* Traduction Google */
-.gt-wrap{display:flex;align-items:center;max-width:140px}
+.gt-wrap{display:flex;align-items:center;gap:6px;max-width:200px;background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:2px 8px 2px 6px}
+.gt-wrap .gt-icon{font-size:1.15rem;line-height:1;flex-shrink:0}
 .gt-wrap .goog-te-gadget{font-size:0!important;line-height:1}
-.gt-wrap .goog-te-gadget .goog-te-combo{font-size:.82rem!important;padding:4px 6px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--text);max-width:130px;font-family:inherit}
+.gt-wrap .goog-te-gadget .goog-te-combo{font-size:.82rem!important;padding:4px 6px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--text);max-width:150px;font-family:inherit;cursor:pointer}
 .goog-te-banner-frame{display:none!important}
 body{top:0!important}
 .skiptranslate{display:none!important}
+body.dark .gt-wrap{background:#1a2438;border-color:var(--bd)}
 body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(--text);border-color:var(--bd)}
-@media(max-width:700px){.gt-wrap{max-width:110px}.gt-wrap .goog-te-gadget .goog-te-combo{max-width:100px;font-size:.75rem!important}}
+@media(max-width:700px){.gt-wrap{max-width:150px}.gt-wrap .goog-te-gadget .goog-te-combo{max-width:110px;font-size:.75rem!important}}
 
 </style></head><body>${html}
 <script>window.onload=function(){setTimeout(function(){window.print()},200)}<\/script></body></html>`);
@@ -1887,7 +1992,7 @@ window.googleTranslateElementInit=function(){
   try{
     new google.translate.TranslateElement({
       pageLanguage:"fr",
-      includedLanguages:"fr,en,es,ar,pt,ro,pl,uk,ru,zh-CN,de,it,tr,sq,so,ti,ps,fa,bn,ta,vi,ku",
+      includedLanguages:"fr,en,es,ar,pt,pt-PT,ro,pl,uk,ru,zh-CN,zh-TW,de,it,tr,sq,so,ti,ps,fa,bn,ta,vi,ku,nl,sv,no,da,fi,el,cs,sk,hu,bg,hr,sr,sl,lt,lv,et,he,hi,ur,th,id,ms,ko,ja,sw,am,yo,ig,ha,zu,xh,af,ca,eu,gl,cy,ga,is,mt,mk,be,ka,hy,az,kk,uz,ky,tg,mn,ne,si,my,km,lo,tl,ceb,jv,su,pa,gu,mr,te,kn,ml,or,as",
       layout:google.translate.TranslateElement.InlineLayout.SIMPLE,
       autoDisplay:false
     },"google_translate_element");
@@ -1952,7 +2057,7 @@ const DEF = {
   besoinsTitle: "🔴 De quoi avez-vous besoin ?",
   besoinsSub: "Choisissez votre situation. On vous oriente immédiatement vers les bonnes ressources.",
   carteTitle: "🗺️ Carte des centres d'aide",
-  carteSub: "Zoomez sur votre ville ou tapez-la en haut : les centres réels (OpenStreetMap) et les repères nationaux se chargent automatiquement. Cliquez sur un marqueur pour les détails et l'itinéraire.",
+  carteSub: "Au démarrage, les grandes villes et repères nationaux sont déjà visibles. Toutes les communes de France (y compris les petites villes et villages) sont cherchables : tapez le nom ou le code postal dans la barre en haut, ou zoomez sur la carte — les centres réels (OpenStreetMap) se chargent alors automatiquement. Cliquez sur un marqueur pour les détails et l'itinéraire.",
   presTitle: "🔎 Services publics & associations près de chez vous",
   presSub: "Choisissez d'abord une ville en haut de la page. Les liens ouvrent Google Maps avec les résultats à jour (adresses et horaires).",
   resTitle: "📞 Numéros utiles & sites officiels",
@@ -1980,7 +2085,27 @@ const DEF = {
   resToggle: "▶ Afficher les numéros & sites",
   calm: true, maintenance: false,
   mmsg: "Le site est en maintenance. Retour très bientôt !", urgBar: true,
-  order: Object.keys(SECS), hidden: []
+  order: Object.keys(SECS), hidden: [],
+  customCSS: "",
+  logoEmoji: "🤝",
+  navBesoins: "Besoins",
+  navCarte: "Carte",
+  navRessources: "Numéros",
+  navAssistant: "Assistant",
+  navCv: "CV",
+  navSim: "Démarches",
+  navBene: "Bénévolat",
+  btnLocate: "📍 Autour de moi",
+  btnAddPlace: "+ Lieu",
+  needManger: "J'ai faim|Repas & courses|🥫",
+  needDormir: "Je dors dehors|Hébergement 115|🏠",
+  needSante: "Je dois me soigner|Soins & mutuelle|🩺",
+  needViolence: "Violences / danger|3919 & aide|🛡️",
+  needEtudiant: "Je suis étudiant|CROUS, aides…|🎓",
+  needEmploi: "Je cherche un emploi|CV & insertion|💼",
+  needAdmin: "Papiers & droits|RSA, domiciliation…|📄",
+  needHygiene: "Douche & hygiène|Accueils de jour|🚿",
+  darkDefault: false
 };
 const FONTS = {
   "system-ui": "Système",
@@ -2121,7 +2246,7 @@ function applyCfg() {
     autoLabel.appendChild(document.createTextNode(" " + c.autoLoadLabel));
   }
   const logo = document.querySelector(".logo");
-  if (logo && c.siteName) logo.textContent = "🤝 " + c.siteName;
+  if (logo && c.siteName) logo.textContent = (c.logoEmoji || "🤝") + " " + c.siteName;
   const foot = document.querySelector("footer");
   if (foot && c.footer) {
     if (!foot.dataset.o) foot.dataset.o = foot.innerHTML;
@@ -2160,6 +2285,53 @@ function applyCfg() {
     if (c.hidden && c.hidden.includes(id)) wrap.style.display = "none";
     else wrap.style.display = "";
   });
+
+  // Logo emoji + site name
+  const logo = document.querySelector(".logo");
+  if (logo && c.siteName) logo.textContent = (c.logoEmoji || "🤝") + " " + c.siteName;
+
+  // Nav labels
+  const navMap = {
+    besoins: c.navBesoins, carte: c.navCarte, ressources: c.navRessources,
+    assistant: c.navAssistant, cv: c.navCv, simulateur: c.navSim, benevolat: c.navBene
+  };
+  document.querySelectorAll(".links a[href^='#']").forEach(a => {
+    const id = (a.getAttribute("href")||"").replace("#","");
+    if (navMap[id]) a.textContent = navMap[id];
+  });
+
+  // Quick locate button
+  const locBtn = document.querySelector("[data-a=locate]");
+  if (locBtn && c.btnLocate) locBtn.textContent = c.btnLocate;
+  const addBtn = document.querySelector("[data-a=add]");
+  if (addBtn && c.btnAddPlace) addBtn.textContent = c.btnAddPlace;
+
+  // Need buttons labels (format: Title|subtitle|emoji)
+  const needKeys = ["manger","dormir","sante","violence","etudiant","emploi","admin","hygiene"];
+  const needCfg = {
+    manger: c.needManger, dormir: c.needDormir, sante: c.needSante, violence: c.needViolence,
+    etudiant: c.needEtudiant, emploi: c.needEmploi, admin: c.needAdmin, hygiene: c.needHygiene
+  };
+  needKeys.forEach(k => {
+    const btn = document.querySelector(`.need-btn[data-need="${k}"]`);
+    if (!btn || !needCfg[k]) return;
+    const parts = String(needCfg[k]).split("|");
+    const title = parts[0]||""; const sub = parts[1]||""; const emo = parts[2]||"";
+    const b = btn.querySelector("b"); const sm = btn.querySelector("small");
+    const sp = btn.querySelector("span");
+    if (b && title) b.textContent = title;
+    if (sm && sub) sm.textContent = sub;
+    if (sp && emo) sp.textContent = emo;
+  });
+
+  // Custom CSS injection
+  let st = document.getElementById("sf_custom_css");
+  if (!st) {
+    st = document.createElement("style");
+    st.id = "sf_custom_css";
+    document.head.appendChild(st);
+  }
+  st.textContent = c.customCSS || "";
 }
 
 function panelLogin() {
@@ -2283,8 +2455,11 @@ function panel() {
   const TABS = [
     ["app", "🎨 Apparence"],
     ["txt", "📝 Textes"],
+    ["nav", "🧭 Navigation"],
+    ["need", "🔴 Besoins"],
     ["col", "🌈 Couleurs"],
     ["sec", "📐 Sections"],
+    ["css", "💅 CSS"],
     ["mnt", "🔨 Maintenance"],
     ["code", "</> Code"]
   ];
@@ -2367,7 +2542,37 @@ function panel() {
       <label class="ck"><input type="checkbox" id="cM"${cfg.maintenance?" checked":""}><span>Mode maintenance (bloque le site)</span></label>
       <label>Message de maintenance<textarea id="cMm" class="field" rows="3">${e(cfg.mmsg)}</textarea></label>
       <p class="sub">Attention : active uniquement si vous devez couper l'accès public temporairement.</p>`;
+  } else if (tab === "nav") {
+    h += `
+      <p class="sub">Libellés du menu et boutons principaux.</p>
+      <label>Emoji logo<input id="cLogoEmoji" class="field" value="${e(cfg.logoEmoji || "🤝")}" maxlength="4"></label>
+      <label>Menu — Besoins<input id="cNavBesoins" class="field" value="${e(cfg.navBesoins || "")}" maxlength="30"></label>
+      <label>Menu — Carte<input id="cNavCarte" class="field" value="${e(cfg.navCarte || "")}" maxlength="30"></label>
+      <label>Menu — Numéros<input id="cNavRessources" class="field" value="${e(cfg.navRessources || "")}" maxlength="30"></label>
+      <label>Menu — Assistant<input id="cNavAssistant" class="field" value="${e(cfg.navAssistant || "")}" maxlength="30"></label>
+      <label>Menu — CV<input id="cNavCv" class="field" value="${e(cfg.navCv || "")}" maxlength="30"></label>
+      <label>Menu — Démarches<input id="cNavSim" class="field" value="${e(cfg.navSim || "")}" maxlength="30"></label>
+      <label>Menu — Bénévolat<input id="cNavBene" class="field" value="${e(cfg.navBene || "")}" maxlength="30"></label>
+      <label>Bouton « Autour de moi »<input id="cBtnLocate" class="field" value="${e(cfg.btnLocate || "")}" maxlength="40"></label>
+      <label>Bouton « + Lieu »<input id="cBtnAddPlace" class="field" value="${e(cfg.btnAddPlace || "")}" maxlength="30"></label>`;
+  } else if (tab === "need") {
+    h += `
+      <p class="sub">Chaque besoin : <b>Titre|Sous-titre|Emoji</b> (séparés par |).</p>
+      <label>Manger<input id="cNeedManger" class="field" value="${e(cfg.needManger || "")}" maxlength="80"></label>
+      <label>Dormir<input id="cNeedDormir" class="field" value="${e(cfg.needDormir || "")}" maxlength="80"></label>
+      <label>Santé<input id="cNeedSante" class="field" value="${e(cfg.needSante || "")}" maxlength="80"></label>
+      <label>Violences<input id="cNeedViolence" class="field" value="${e(cfg.needViolence || "")}" maxlength="80"></label>
+      <label>Étudiant<input id="cNeedEtudiant" class="field" value="${e(cfg.needEtudiant || "")}" maxlength="80"></label>
+      <label>Emploi<input id="cNeedEmploi" class="field" value="${e(cfg.needEmploi || "")}" maxlength="80"></label>
+      <label>Admin / papiers<input id="cNeedAdmin" class="field" value="${e(cfg.needAdmin || "")}" maxlength="80"></label>
+      <label>Hygiène<input id="cNeedHygiene" class="field" value="${e(cfg.needHygiene || "")}" maxlength="80"></label>`;
+  } else if (tab === "css") {
+    h += `
+      <p class="sub">CSS personnalisé injecté sur tout le site (avancé). Exemple : <code>body{font-size:18px}</code></p>
+      <label>CSS custom<textarea id="cCustomCSS" class="field" rows="14" style="font-family:monospace;font-size:.78rem">${e(cfg.customCSS || "")}</textarea></label>
+      <p class="sub">Les variables CSS disponibles : --navy, --blue, --green, --amber, --red, --bg, --card, --text, --muted, --bd</p>`;
   } else if (tab === "code") {
+
     h += `
       <p class="sub">Configuration actuelle (JSON). Copiez pour sauvegarder, ou collez une config puis Importer.</p>
       <textarea id="cJson" class="field" rows="10" style="font-family:monospace;font-size:.78rem">${e(JSON.stringify(cfg, null, 2))}</textarea>
@@ -2418,6 +2623,14 @@ function panel() {
   bind("cBtnHere", "btnHere"); bind("cBtnReset", "btnReset"); bind("cBtnMore", "btnMore");
   bind("cResToggle", "resToggle");
   bind("cKpi1", "kpi1"); bind("cKpi2", "kpi2"); bind("cKpi3", "kpi3"); bind("cKpi4", "kpi4");
+  bind("cLogoEmoji", "logoEmoji");
+  bind("cNavBesoins", "navBesoins"); bind("cNavCarte", "navCarte"); bind("cNavRessources", "navRessources");
+  bind("cNavAssistant", "navAssistant"); bind("cNavCv", "navCv"); bind("cNavSim", "navSim"); bind("cNavBene", "navBene");
+  bind("cBtnLocate", "btnLocate"); bind("cBtnAddPlace", "btnAddPlace");
+  bind("cNeedManger", "needManger"); bind("cNeedDormir", "needDormir"); bind("cNeedSante", "needSante");
+  bind("cNeedViolence", "needViolence"); bind("cNeedEtudiant", "needEtudiant"); bind("cNeedEmploi", "needEmploi");
+  bind("cNeedAdmin", "needAdmin"); bind("cNeedHygiene", "needHygiene");
+  bind("cCustomCSS", "customCSS");
 
   $$("[data-hide]").forEach(el => {
     el.onchange = () => {
