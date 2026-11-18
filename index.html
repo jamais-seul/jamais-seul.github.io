@@ -10,7 +10,42 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
 <style>
 :root{--navy:#0f4c81;--blue:#2563eb;--green:#059669;--amber:#d97706;--red:#991b1b;--bg:#f1f5f9;--card:#fff;--text:#0f172a;--muted:#475569;--bd:#cbd5e1;--sh:0 4px 12px rgba(15,23,42,.07)}
-body.dark{--bg:#0b1020;--card:#131b2e;--text:#f1f5f9;--muted:#9fb0c8;--bd:#25314a;--navy:#60a5fa;--blue:#60a5fa;--sh:0 4px 12px rgba(0,0,0,.4)}
+body.dark{--bg:#0a0f1a;--card:#141c2e;--text:#e8eef8;--muted:#94a8c4;--bd:#2a3650;--navy:#7db4f5;--blue:#60a5fa;--green:#34d399;--amber:#fbbf24;--red:#f87171;--sh:0 4px 16px rgba(0,0,0,.45)}
+body.dark .hero{background:linear-gradient(135deg,#0c1a2e,#0a1220)}
+body.dark .search{background:#1a2438;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+body.dark .search input{color:var(--text);background:transparent}
+body.dark .search button{background:var(--amber);color:#0a0f1a}
+body.dark .chip{background:#1a2438}
+body.dark .chip.on,body.dark .chip:hover{background:var(--navy);color:#0a0f1a;border-color:var(--navy)}
+body.dark .need-btn{background:#1a2438}
+body.dark .need-btn.on{background:linear-gradient(135deg,#1e3a5f,#152a45);border-color:var(--navy)}
+body.dark .panel,.body.dark .card,.body.dark .kpi,.body.dark .res{background:var(--card);border-color:var(--bd)}
+body.dark .badge{filter:brightness(1.15)}
+body.dark #map{background:#1a2438;border-color:var(--bd)}
+body.dark .legend{color:var(--muted)}
+body.dark .warn{background:#3d2e0a;border-color:#854d0e;color:#fde68a}
+body.dark .result{background:#1a2438;border-left-color:var(--green)}
+body.dark .bar{background:#1a2438}
+body.dark .btn.l{background:#1a2438;color:var(--text);border-color:var(--bd)}
+body.dark .btn.g{background:var(--green);color:#0a0f1a}
+body.dark .btn.fav{background:#422006;color:#fcd34d;border-color:#854d0e}
+body.dark .btn.rd{background:#450a0a;color:#fca5a5;border-color:#991b1b}
+body.dark .urg{background:#7f1d1d}
+body.dark .urg a{background:#fee2e2;color:#991b1b}
+body.dark nav{background:var(--card);border-color:var(--bd)}
+body.dark .sug{background:var(--card);border:1px solid var(--bd)}
+body.dark .sug button:hover{background:#1a2438}
+body.dark .mbox{background:var(--card)}
+body.dark #side{background:var(--card);border-color:var(--bd)}
+body.dark #side .tabs{background:#1a1528}
+body.dark #side .tabs .chip{background:#3b1f4a;color:#f0abfc;border-color:#86198f;box-shadow:0 2px 0 #701a75}
+body.dark #side .tabs .chip.on{background:#7c3aed;color:#f5f3ff;border-color:#a78bfa;box-shadow:0 2px 0 #5b21b6}
+body.dark .kpi b{color:var(--blue)}
+body.dark a{color:#93c5fd}
+body.dark .meta,.body.dark .sub{color:var(--muted)}
+body.dark .tag{background:#1a2438;color:var(--muted);border-color:var(--bd)}
+body.dark .empty{color:var(--muted)}
+body.dark #cvPreview{background:#fff!important;color:#111!important}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;scroll-padding-top:70px}
 body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
@@ -23,19 +58,6 @@ nav{background:var(--card);border-bottom:1px solid var(--bd);padding:.7rem 1rem;
 .links a{color:var(--text);text-decoration:none;font-weight:600;font-size:.88rem;padding:5px 9px;border-radius:6px;white-space:nowrap}
 .links a:hover{background:var(--bg)}
 .btn{background:var(--navy);color:#fff;border:0;padding:.6rem .95rem;border-radius:8px;font-weight:600;cursor:pointer;font-size:.88rem;text-decoration:none;text-align:center;display:inline-block;font-family:inherit}
-body.dark .btn{color:#0b1020}
-body.dark .btn.g,body.dark .btn.rd,body.dark .btn.fav{color:#fff!important}
-body.dark .btn.l{color:var(--text)!important;background:var(--card);border-color:var(--bd)}
-body.dark .field,body.dark input,body.dark select,body.dark textarea{background:#0f172a;color:var(--text);border-color:var(--bd)}
-body.dark .panel,.body.dark .card,.body.dark .kpi{background:var(--card);border-color:var(--bd)}
-body.dark .warn{background:#422006;border-color:#854d0e;color:#fef3c7}
-body.dark .search{background:var(--card)}
-body.dark .search input{color:var(--text)}
-body.dark .sug{background:var(--card);color:var(--text)}
-body.dark .chip{background:var(--card);color:var(--text);border-color:var(--bd)}
-body.dark .need-btn{background:var(--card);color:var(--text);border-color:var(--bd)}
-body.dark .res{background:var(--card);color:var(--text);border-color:var(--bd)}
-body.dark footer{background:var(--card);border-color:var(--bd)}
 .btn:hover{opacity:.88}.g{background:var(--green);color:#fff!important}.l{background:var(--bg);color:var(--text)!important;border:1px solid var(--bd)}.fav{background:#fef3c7;color:#b45309!important;border:1px solid #fcd34d}.rd{background:#fee2e2;color:#991b1b!important;border:1px solid #fca5a5}
 .hero{background:linear-gradient(135deg,#0f4c81,#093154);color:#fff;padding:2.4rem 1.2rem 2rem;text-align:center}
 .hero h1{font-size:clamp(1.5rem,4vw,2.1rem);max-width:800px;margin:0 auto .6rem}
@@ -58,7 +80,6 @@ h2.t{font-size:1.4rem;margin:2.2rem 0 .3rem;color:var(--navy)}
 .chips{display:flex;flex-wrap:wrap;gap:.45rem;margin:1rem 0}
 .chip{background:var(--card);color:var(--text);border:1px solid var(--bd);padding:.5rem 1rem;border-radius:30px;font-weight:600;font-size:.86rem;cursor:pointer;font-family:inherit}
 .chip.on,.chip:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
-body.dark .chip.on,body.dark .chip:hover{color:#0b1020}
 .panel{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:1.2rem;box-shadow:var(--sh)}
 .mtop{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:.8rem}
 #map{height:520px;border-radius:10px;border:1px solid var(--bd);z-index:1;background:#dbe4ee}
@@ -122,10 +143,20 @@ body.padr{padding-right:var(--side-w,380px)}
 .need-btn b{display:block;font-size:.92rem;margin:.1rem 0}
 .need-btn small{display:block;font-size:.72rem;color:var(--muted);margin-top:.15rem}
 .need-btn.on{border-color:var(--navy);background:linear-gradient(135deg,#eff6ff,#dbeafe)}
-body.dark .need-btn.on{background:linear-gradient(135deg,#1e3a5f,#0f2744)}
 #needResult h3{margin:0 0 .6rem;color:var(--navy)}
 #needResult ul{margin:.4rem 0 .8rem 1.2rem;line-height:1.7}
 #needResult .row{margin-top:.8rem}
+
+
+/* Traduction Google */
+.gt-wrap{display:flex;align-items:center;max-width:140px}
+.gt-wrap .goog-te-gadget{font-size:0!important;line-height:1}
+.gt-wrap .goog-te-gadget .goog-te-combo{font-size:.82rem!important;padding:4px 6px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--text);max-width:130px;font-family:inherit}
+.goog-te-banner-frame{display:none!important}
+body{top:0!important}
+.skiptranslate{display:none!important}
+body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(--text);border-color:var(--bd)}
+@media(max-width:700px){.gt-wrap{max-width:110px}.gt-wrap .goog-te-gadget .goog-te-combo{max-width:100px;font-size:.75rem!important}}
 
 </style>
 </head>
@@ -136,6 +167,7 @@ body.dark .need-btn.on{background:linear-gradient(135deg,#1e3a5f,#0f2744)}
 <nav>
 <a class="logo" href="#top">🤝 Solidarité France</a>
 <div class="links"><a href="#besoins">Besoins</a><a href="#carte">Carte</a><a href="#ressources">Numéros</a><a href="#assistant">Assistant</a><a href="#cv">CV</a><a href="#simulateur">Démarches</a><a href="#benevolat">Bénévolat</a></div>
+<div id="google_translate_element" class="gt-wrap notranslate" title="Traduire le site"></div>
 <button class="btn l" data-a="theme" aria-label="Mode sombre / clair">🌓</button>
 <button class="btn g" data-a="add">+ Lieu</button>
 </nav>
@@ -655,12 +687,35 @@ var SYN={repas:"aliment manger epicerie colis resto",douche:"hygiene bain laveri
 
 var S={c:null,cat:"Tout",show:4,live:{},sug:[],busy:false,pending:false,kw:""};
 var NATIONAL=REFS.map(function(r,i){return{id:"r"+(i+1),src:"ref",n:r[0],c:r[1],la:r[2],ln:r[3],k:r[4],d:r[5],web:r[6],q:r[0]+" "+r[1],a:"",h:"",tel:"",o:""}});
-var GENERATED=genRefs(); // synthetic city markers – shown only when a city is selected
+var GENERATED=genRefs(); // synthetic city markers – always included for max coverage
 var REFITEMS=NATIONAL; // start clean
 var custom=ld("sf_custom_v8",[]),favs=ld("sf_favs_v8",{}),checks=ld("sf_checks_v8",[]),rtab="Numéros";
 var loaded=[],map=null,layer=null,pin=null,markers={},byId={},tm=null,tmv=null,clustered=false;
 var EP=["https://overpass-api.de/api/interpreter","https://overpass.kumi.systems/api/interpreter","https://maps.mail.ru/osm/tools/overpass/api/interpreter"];
-var NAMES="Restos|Secours Populaire|Secours Catholique|Croix.Rouge|Emma.s|Banque alimentaire|CCAS|action sociale|Mission locale|France Travail|P.le emploi|France Services|picerie sociale|picerie solidaire|Entraide|Accueil de jour|Caisse d.Allocations|CROUS|Crous|AGORAé|Agorae|FAGE";
+/* Cache OSM persistant (appareil) : les lieux déjà chargés restent disponibles sans re-télécharger */
+(function restoreOsmCache(){
+  try{
+    var cached=ld("sf_osm_cache_v1",null);
+    if(cached&&cached.live&&typeof cached.live==="object"){
+      S.live=cached.live;
+      if(Array.isArray(cached.loaded)) loaded=cached.loaded;
+    }
+  }catch(e){}
+})();
+function saveOsmCache(){
+  try{
+    var keys=Object.keys(S.live);
+    if(keys.length>12000){
+      var keep={}; keys.slice(-10000).forEach(function(k){keep[k]=S.live[k]});
+      S.live=keep;
+    }
+    sv("sf_osm_cache_v1",{live:S.live,loaded:loaded,ts:Date.now()});
+  }catch(e){}
+}
+var _osmSaveT=null;
+function scheduleOsmSave(){clearTimeout(_osmSaveT);_osmSaveT=setTimeout(saveOsmCache,800)}
+
+var NAMES="Restos|Restos du Cœur|Secours Populaire|Secours Catholique|Croix.Rouge|Croix Rouge|Emma.s|Emmaüs|Banque alimentaire|CCAS|action sociale|Mission locale|France Travail|P.le emploi|France Services|épicerie sociale|épicerie solidaire|Entraide|Accueil de jour|Caisse d.Allocations|CROUS|Crous|AGORAé|Agorae|FAGE|Armée du Salut|Fondation Abbé Pierre|ATD Quart Monde|Petits Frères|ANDES|PASS|Permanence d.accès|Médecins du Monde|Samu Social|CHRS|Point Conseil Budget|Cap Emploi|Info Jeunes|BIJ|CRIJ";
 
 /* ---------- Classement et conversion des données OpenStreetMap ---------- */
 function cls(t){
@@ -682,17 +737,29 @@ function mk(e){
   var a=[((t["addr:housenumber"]||"")+" "+(t["addr:street"]||"")).trim(),((t["addr:postcode"]||"")+" "+(t["addr:city"]||"")).trim()].filter(Boolean).join(", ");
   return{id:e.type[0]+e.id,src:"osm",n:t.name||SFL[t.social_facility]||(t.shop?"Magasin solidaire":"Structure sociale"),k:cls(t),la:la,ln:ln,a:a,c:t["addr:city"]||"",tel:t.phone||t["contact:phone"]||"",web:t.website||t["contact:website"]||"",h:hrs(t.opening_hours),o:t.operator||"",d:""}}
 function buildQuery(b){
-  return"[out:json][timeout:45][bbox:"+b.s+","+b.w+","+b.n+","+b.e+"];("
-  +'nwr["amenity"="social_facility"];nwr["amenity"="social_centre"];nwr["amenity"="food_sharing"];nwr["amenity"="public_bath"];nwr["shop"="charity"];'
-  +'nwr["office"~"^(ngo|association|government|charity|employment_agency|educational_institution)$"]["name"~"'+NAMES+'",i];'
-  +'nwr["amenity"~"^(community_centre|townhall)$"]["name"~"CCAS|action sociale",i];'
-  +'nwr["shop"="second_hand"]["name"~"Emma|Croix|Secours|Resso|solidair|Entraide|Humanit|Recycl",i];'
-  +'nwr["name"~"CROUS|Crous",i];'
+  // Requête Overpass élargie pour maximiser les lieux solidaires (CROUS, Restos, Secours, CCAS, PASS, etc.)
+  return"[out:json][timeout:55][bbox:"+b.s+","+b.w+","+b.n+","+b.e+"];("
+  +'nwr["amenity"="social_facility"];'
+  +'nwr["amenity"="social_centre"];'
+  +'nwr["amenity"="food_sharing"];'
+  +'nwr["amenity"="public_bath"];'
+  +'nwr["amenity"="shelter"];'
+  +'nwr["amenity"="community_centre"];'
+  +'nwr["shop"="charity"];'
+  +'nwr["shop"="second_hand"];'
+  +'nwr["office"~"^(ngo|association|government|charity|employment_agency|educational_institution)$"];'
+  +'nwr["amenity"~"^(townhall|social_facility)$"]["name"~"CCAS|action sociale|centre social",i];'
+  +'nwr["name"~"'+NAMES+'",i];'
+  +'nwr["operator"~"'+NAMES+'",i];'
+  +'nwr["brand"~"Restos du Cœur|Secours Populaire|Secours Catholique|Croix-Rouge|Emmaüs|CROUS",i];'
+  +'nwr["name"~"CROUS|Crous|Resto U|Restaurant universitaire|Cité U|Résidence universitaire",i];'
   +'nwr["operator"~"CROUS|Crous",i];'
   +'nwr["amenity"="university"]["name"~"CROUS|Crous",i];'
   +'nwr["building"="dormitory"]["operator"~"CROUS|Crous",i];'
   +'nwr["amenity"="canteen"]["name"~"CROUS|Crous|Resto U|Restaurant universitaire",i];'
-  +");out center 3000;"}
+  +'nwr["social_facility"~"food_bank|soup_kitchen|shelter|outreach|ambulatory_care|group_home|workshop"];'
+  +'nwr["healthcare"~"centre|clinic"]["name"~"PASS|permanence|santé solidaire|médecins du monde",i];'
+  +");out center 6000;"}
 async function tryEp(url,body){
   var ctl=new AbortController(),to=setTimeout(function(){ctl.abort()},45000);
   try{var r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:body,signal:ctl.signal});
@@ -708,16 +775,17 @@ async function fetchBox(b){
   if(!data){status("❌ Serveur de données occupé ou hors ligne. Les repères nationaux restent affichés. Cliquez sur « Chercher dans cette zone » pour réessayer dans un instant.");if(S.pending){S.pending=false}return}
   var n=0,tot=0;
   (data.elements||[]).forEach(function(e){var p=mk(e);if(p){tot++;if(!S.live[p.id]){S.live[p.id]=p;n++}}});
-  if(Object.keys(S.live).length>8000){var keep={};(data.elements||[]).forEach(function(e){var p=mk(e);if(p)keep[p.id]=p});S.live=keep;loaded=[]}
+  if(Object.keys(S.live).length>15000){var keep={};(data.elements||[]).forEach(function(e){var p=mk(e);if(p)keep[p.id]=p});S.live=keep;loaded=[]}
   loaded.push(b);
-  status("✅ "+tot+" lieu(x) réel(s) trouvé(s) dans cette zone"+(tot>=1900?" (zone très dense : zoomez pour tout voir)":"")+". Total affiché : "+items().length+".");
+  status("✅ "+tot+" lieu(x) réel(s) trouvé(s) dans cette zone"+(tot>=1900?" (zone très dense : zoomez pour tout voir)":"")+". Total affiché : "+items().length+" — enregistré sur cet appareil.");
+  scheduleOsmSave();
   renderAll();
   if(S.pending){S.pending=false;loadView(false)}}
 function covered(v){return loaded.some(function(l){return v.s>=l.s&&v.n<=l.n&&v.w>=l.w&&v.e<=l.e})}
 function r4(x){return Math.round(x*10000)/10000}
 function loadView(force){
   if(!map)return;
-  if(map.getZoom()<9){status("🔍 Zoomez sur une ville (ou choisissez-la en haut) pour charger en plus les centres OpenStreetMap. Pour l'instant : "+items().length+" repères nationaux.");return}
+  if(map.getZoom()<9){status("🔍 Zoomez sur une ville (ou choisissez-la en haut) pour charger les centres OpenStreetMap précis. Affichés : "+items().length+" lieux (repères nationaux + villes).");return}
   var b=map.getBounds(),v={s:b.getSouth(),w:b.getWest(),n:b.getNorth(),e:b.getEast()};
   if(!force&&covered(v))return;
   var dh=(v.n-v.s)*.2,dw=(v.e-v.w)*.2;
@@ -747,7 +815,8 @@ function pick(c){
 
 /* ---------- Données affichées ---------- */
 function items(){
-  var base = S.c ? NATIONAL.concat(GENERATED) : NATIONAL;
+  // Toujours inclure les repères générés (villes) + OSM + personnalisés pour maximiser la couverture
+  var base = NATIONAL.concat(GENERATED);
   return base.concat(custom, Object.keys(S.live).map(function(k){return S.live[k]}));
 }
 function refPt(){if(map&&map.getZoom()>=9){var c=map.getCenter();return{la:c.lat,ln:c.lng}}return S.c?{la:S.c.la,ln:S.c.ln}:null}
@@ -1747,6 +1816,17 @@ body.padr{padding-right:var(--side-w,380px)}
 #side .tabs .chip.on{background:#c084fc;color:#4c1d95;border-color:#a78bfa;box-shadow:0 2px 0 #7c3aed}
 #side .tabs .chip:hover{filter:brightness(1.05)}
 
+
+/* Traduction Google */
+.gt-wrap{display:flex;align-items:center;max-width:140px}
+.gt-wrap .goog-te-gadget{font-size:0!important;line-height:1}
+.gt-wrap .goog-te-gadget .goog-te-combo{font-size:.82rem!important;padding:4px 6px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--text);max-width:130px;font-family:inherit}
+.goog-te-banner-frame{display:none!important}
+body{top:0!important}
+.skiptranslate{display:none!important}
+body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(--text);border-color:var(--bd)}
+@media(max-width:700px){.gt-wrap{max-width:110px}.gt-wrap .goog-te-gadget .goog-te-combo{max-width:100px;font-size:.75rem!important}}
+
 </style></head><body>${html}
 <script>window.onload=function(){setTimeout(function(){window.print()},200)}<\/script></body></html>`);
   w.document.close();
@@ -1762,6 +1842,85 @@ document.getElementById("cvDl")?.addEventListener("click", () => {
 
 if(ld("sf_dark",window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches))document.body.classList.add("dark");
 initMap();renderRes();renderChecks();renderAll();
+if(Object.keys(S.live).length){
+  status("✅ "+Object.keys(S.live).length+" lieux OSM restaurés depuis cet appareil + "+(NATIONAL.length+GENERATED.length).toLocaleString("fr-FR")+" repères. Total : "+items().length.toLocaleString("fr-FR")+".");
+}
+
+/* Préchargement en arrière-plan des grandes villes (OSM) pour maximiser les lieux déjà disponibles */
+var PRELOAD_CITIES=[
+  {nom:"Paris",la:48.86,ln:2.35},{nom:"Lyon",la:45.76,ln:4.84},{nom:"Marseille",la:43.30,ln:5.37},
+  {nom:"Toulouse",la:43.60,ln:1.44},{nom:"Bordeaux",la:44.84,ln:-0.58},{nom:"Lille",la:50.63,ln:3.06},
+  {nom:"Nantes",la:47.22,ln:-1.55},{nom:"Strasbourg",la:48.58,ln:7.75},{nom:"Montpellier",la:43.61,ln:3.88},
+  {nom:"Rennes",la:48.12,ln:-1.68},{nom:"Grenoble",la:45.19,ln:5.72},{nom:"Nice",la:43.70,ln:7.27},
+  {nom:"Rouen",la:49.44,ln:1.10},{nom:"Reims",la:49.26,ln:4.03},{nom:"Toulon",la:43.12,ln:5.93},
+  {nom:"Saint-Étienne",la:45.44,ln:4.39},{nom:"Le Havre",la:49.49,ln:0.11},{nom:"Dijon",la:47.32,ln:5.04},
+  {nom:"Angers",la:47.47,ln:-0.55},{nom:"Clermont-Ferrand",la:45.78,ln:3.08}
+];
+function preloadMajorCities(){
+  if(Object.keys(S.live).length>2500)return; // déjà bien rempli via cache
+  var i=0;
+  function next(){
+    if(i>=PRELOAD_CITIES.length){scheduleOsmSave();status("✅ Préchargement terminé. Total lieux : "+items().length+".");return}
+    var c=PRELOAD_CITIES[i++];
+    var b={s:r4(c.la-0.12),w:r4(c.ln-0.16),n:r4(c.la+0.12),e:r4(c.ln+0.16)};
+    if(covered(b)){setTimeout(next,200);return}
+    // file d'attente simple sans bloquer l'UI
+    var tries=0;
+    function tryOne(){
+      if(S.busy){if(++tries<30)setTimeout(tryOne,1500);else setTimeout(next,500);return}
+      status("⏳ Préchargement : "+c.nom+" ("+i+"/"+PRELOAD_CITIES.length+")…");
+      fetchBox(b).then?null:null;
+      setTimeout(function(){setTimeout(next,1200)},2000);
+    }
+    tryOne();
+  }
+  setTimeout(next,2500);
+}
+// Lancer le préchargement une seule fois par session (ou si cache pauvre)
+if(!sessionStorage.getItem("sf_preloaded")){
+  sessionStorage.setItem("sf_preloaded","1");
+  preloadMajorCities();
+}
+
+/* ---------- Traduction Google (page entière + contenu dynamique) ---------- */
+window.googleTranslateElementInit=function(){
+  try{
+    new google.translate.TranslateElement({
+      pageLanguage:"fr",
+      includedLanguages:"fr,en,es,ar,pt,ro,pl,uk,ru,zh-CN,de,it,tr,sq,so,ti,ps,fa,bn,ta,vi,ku",
+      layout:google.translate.TranslateElement.InlineLayout.SIMPLE,
+      autoDisplay:false
+    },"google_translate_element");
+  }catch(e){console.warn("Traduction non dispo",e)}
+};
+(function loadGT(){
+  var s=document.createElement("script");
+  s.src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+  s.async=true;
+  document.head.appendChild(s);
+})();
+/* Re-déclencher la traduction après mises à jour DOM (cartes, modales, besoins…) */
+var _gtObsT=null;
+function refreshTranslate(){
+  clearTimeout(_gtObsT);
+  _gtObsT=setTimeout(function(){
+    try{
+      var sel=document.querySelector(".goog-te-combo");
+      if(!sel||!sel.value||sel.value==="fr")return;
+      // Force Google Translate to re-scan by toggling briefly (best-effort)
+      var ev=document.createEvent("HTMLEvents");
+      ev.initEvent("change",true,true);
+      sel.dispatchEvent(ev);
+    }catch(e){}
+  },600);
+}
+var _origRenderAll=typeof renderAll==="function"?renderAll:null;
+if(_origRenderAll){
+  renderAll=function(){_origRenderAll();refreshTranslate()};
+}
+document.addEventListener("click",function(e){
+  if(e.target.closest("#needGrid,.need-btn,#mbg,#cards,#resBody,#aiChat,#cvPanel"))refreshTranslate();
+},true);
 </script>
 
 <script type="module">
@@ -1789,25 +1948,36 @@ const DEF = {
   heroTag: "Vous n'êtes pas seul",
   title: "Trouvez de l'aide près de chez vous, gratuitement",
   subtitle: "Banques alimentaires, hébergements, soins, vêtements, démarches… Tapez votre ville ou utilisez votre position.",
+  searchPlaceholder: "Ville ou code postal (ex : Bordeaux, 33000)",
   besoinsTitle: "🔴 De quoi avez-vous besoin ?",
   besoinsSub: "Choisissez votre situation. On vous oriente immédiatement vers les bonnes ressources.",
   carteTitle: "🗺️ Carte des centres d'aide",
-  carteSub: "Zoomez sur votre ville ou tapez-la en haut : les centres réels (OpenStreetMap) et les repères nationaux se chargent automatiquement.",
+  carteSub: "Zoomez sur votre ville ou tapez-la en haut : les centres réels (OpenStreetMap) et les repères nationaux se chargent automatiquement. Cliquez sur un marqueur pour les détails et l'itinéraire.",
   presTitle: "🔎 Services publics & associations près de chez vous",
-  presSub: "Choisissez d'abord une ville en haut de la page. Les liens ouvrent Google Maps avec les résultats à jour.",
+  presSub: "Choisissez d'abord une ville en haut de la page. Les liens ouvrent Google Maps avec les résultats à jour (adresses et horaires).",
   resTitle: "📞 Numéros utiles & sites officiels",
   resSub: "Numéros d'urgence gratuits et sites officiels. Cliquez pour afficher.",
   simTitle: "🧭 Simulateur & démarches",
-  simSub: "Indiquez votre besoin et votre situation pour obtenir des pistes concrètes.",
+  simSub: "Indiquez votre besoin et votre situation pour obtenir des pistes concrètes, puis suivez la checklist des démarches importantes.",
   aiTitle: "🤖 Assistant Solidarité",
-  aiSub: "Posez une question sur vos droits, où trouver de l'aide, les démarches…",
+  aiSub: "Posez une question sur vos droits, où trouver de l'aide, les démarches… L'assistant est spécialisé pour ce site et la solidarité en France.",
   cvTitle: "📄 Créer mon CV",
-  cvSub: "CV professionnels qui attirent l'œil des recruteurs. 100 % privé (stocké uniquement sur votre appareil).",
+  cvSub: "CV professionnels qui attirent l'œil des recruteurs. <b>100 % privé</b> (stocké uniquement sur votre appareil).",
   beneTitle: "🙋 Bénévolat, dons & partage",
   beneSub: "Vous pouvez aussi aider à votre tour : dons matériels, temps ou simple partage de ce portail.",
   footer: "",
-  warnMap: "⚠️ Les lieux « Repère » ont une position approximative (centre-ville). Appelez ou vérifiez avant de vous déplacer.",
+  warnMap: "⚠️ Les lieux « Repère » ont une position approximative (centre-ville) : ils signalent le type de structure présent dans la ville et renvoient vers le site officiel. Les autres viennent d'OpenStreetMap (données collaboratives, parfois incomplètes ou dépassées). Appelez ou vérifiez avant de vous déplacer.",
   urgLabel: "🚨 Gratuit, 24h/24 :",
+  kpi1: "Lieux référencés",
+  kpi2: "Communes cherchables",
+  kpi3: "Vos favoris",
+  kpi4: "Gratuit & sans compte",
+  filterPlaceholder: "Filtrer par mot-clé (ex : repas, douche, Emmaüs)…",
+  autoLoadLabel: "Charger en déplaçant la carte",
+  btnHere: "🔄 Chercher dans cette zone",
+  btnReset: "🇫🇷 Vue France",
+  btnMore: "Voir plus de résultats",
+  resToggle: "▶ Afficher les numéros & sites",
   calm: true, maintenance: false,
   mmsg: "Le site est en maintenance. Retour très bientôt !", urgBar: true,
   order: Object.keys(SECS), hidden: []
@@ -1882,14 +2052,17 @@ function applyCfg() {
     if (c.card) document.body.style.setProperty("--card", c.card);
     if (c.text) document.body.style.setProperty("--text", c.text);
   } else {
-    // Mode sombre : garder les tokens sombres, n'appliquer que navy/accent adaptés
-    document.body.style.setProperty("--navy", "#60a5fa");
+    // Mode sombre : tokens sombres lisibles ; navy/accent restent clairs
+    document.body.style.setProperty("--navy", "#7db4f5");
     document.body.style.setProperty("--blue", "#60a5fa");
-    document.body.style.setProperty("--bg", "#0b1020");
-    document.body.style.setProperty("--card", "#131b2e");
-    document.body.style.setProperty("--text", "#f1f5f9");
-    document.body.style.setProperty("--muted", "#9fb0c8");
-    document.body.style.setProperty("--bd", "#25314a");
+    document.body.style.setProperty("--bg", "#0a0f1a");
+    document.body.style.setProperty("--card", "#141c2e");
+    document.body.style.setProperty("--text", "#e8eef8");
+    document.body.style.setProperty("--muted", "#94a8c4");
+    document.body.style.setProperty("--bd", "#2a3650");
+    document.body.style.setProperty("--green", "#34d399");
+    document.body.style.setProperty("--amber", "#fbbf24");
+    document.body.style.setProperty("--red", "#f87171");
   }
   const setTxt = (sel, val) => { const el = document.querySelector(sel); if (el && val != null && val !== "") el.textContent = val; };
   setTxt("#heroTag", c.heroTag);
@@ -1918,6 +2091,35 @@ function applyCfg() {
   if (beneSub && c.beneSub) beneSub.textContent = c.beneSub;
   const warn = document.querySelector(".warn");
   if (warn && c.warnMap) warn.textContent = c.warnMap;
+  // Placeholders & labels supplémentaires
+  const cityIn = document.getElementById("city");
+  if (cityIn && c.searchPlaceholder) cityIn.placeholder = c.searchPlaceholder;
+  const kwIn = document.getElementById("kw");
+  if (kwIn && c.filterPlaceholder) kwIn.placeholder = c.filterPlaceholder;
+  const autoLab = document.querySelector("label[for], label:has(#auto)");
+  // KPI labels
+  const kpis = document.querySelectorAll(".kpi span");
+  if (kpis[0] && c.kpi1) kpis[0].textContent = c.kpi1;
+  if (kpis[1] && c.kpi2) kpis[1].textContent = c.kpi2;
+  if (kpis[2] && c.kpi3) kpis[2].textContent = c.kpi3;
+  if (kpis[3] && c.kpi4) kpis[3].textContent = c.kpi4;
+  // Boutons carte
+  const btnHere = document.querySelector("[data-a=here]");
+  if (btnHere && c.btnHere) btnHere.textContent = c.btnHere;
+  const btnReset = document.querySelector("[data-a=reset]");
+  if (btnReset && c.btnReset) btnReset.textContent = c.btnReset;
+  const btnMore = document.getElementById("more");
+  if (btnMore && c.btnMore) btnMore.textContent = c.btnMore;
+  const resTog = document.getElementById("resToggle");
+  if (resTog && c.resToggle) resTog.textContent = c.resToggle;
+  // Auto-load label
+  const autoLabel = document.querySelector("#auto")?.parentElement;
+  if (autoLabel && c.autoLoadLabel) {
+    const cb = autoLabel.querySelector("input");
+    autoLabel.textContent = "";
+    if (cb) autoLabel.appendChild(cb);
+    autoLabel.appendChild(document.createTextNode(" " + c.autoLoadLabel));
+  }
   const logo = document.querySelector(".logo");
   if (logo && c.siteName) logo.textContent = "🤝 " + c.siteName;
   const foot = document.querySelector("footer");
@@ -2127,7 +2329,20 @@ function panel() {
       <label>Sous-titre CV<textarea id="cCvSub" class="field" rows="2" maxlength="220">${e(cfg.cvSub || "")}</textarea></label>
       <label>Bénévolat<input id="cBeneTitle" class="field" value="${e(cfg.beneTitle || "")}" maxlength="80"></label>
       <label>Sous-titre bénévolat<textarea id="cBeneSub" class="field" rows="2" maxlength="200">${e(cfg.beneSub || "")}</textarea></label>
-      <label>Pied de page (ligne courte, vide = défaut)<input id="cFoot" class="field" value="${e(cfg.footer || "")}" maxlength="140"></label>`;
+      <label>Pied de page (ligne courte, vide = défaut)<input id="cFoot" class="field" value="${e(cfg.footer || "")}" maxlength="140"></label>
+      <h4 style="margin:.9rem 0 .4rem;color:var(--navy)">Placeholders & boutons</h4>
+      <label>Placeholder recherche ville<input id="cSearchPh" class="field" value="${e(cfg.searchPlaceholder || "")}" maxlength="80"></label>
+      <label>Placeholder filtre carte<input id="cFilterPh" class="field" value="${e(cfg.filterPlaceholder || "")}" maxlength="80"></label>
+      <label>Label « Charger en déplaçant »<input id="cAutoLoad" class="field" value="${e(cfg.autoLoadLabel || "")}" maxlength="60"></label>
+      <label>Bouton chercher zone<input id="cBtnHere" class="field" value="${e(cfg.btnHere || "")}" maxlength="40"></label>
+      <label>Bouton vue France<input id="cBtnReset" class="field" value="${e(cfg.btnReset || "")}" maxlength="30"></label>
+      <label>Bouton voir plus<input id="cBtnMore" class="field" value="${e(cfg.btnMore || "")}" maxlength="40"></label>
+      <label>Bouton afficher numéros<input id="cResToggle" class="field" value="${e(cfg.resToggle || "")}" maxlength="50"></label>
+      <h4 style="margin:.9rem 0 .4rem;color:var(--navy)">Libellés KPI</h4>
+      <label>KPI 1 (lieux)<input id="cKpi1" class="field" value="${e(cfg.kpi1 || "")}" maxlength="40"></label>
+      <label>KPI 2 (communes)<input id="cKpi2" class="field" value="${e(cfg.kpi2 || "")}" maxlength="40"></label>
+      <label>KPI 3 (favoris)<input id="cKpi3" class="field" value="${e(cfg.kpi3 || "")}" maxlength="40"></label>
+      <label>KPI 4 (gratuit)<input id="cKpi4" class="field" value="${e(cfg.kpi4 || "")}" maxlength="40"></label>`;
   } else if (tab === "col") {
     h += `
       <p class="sub">Couleurs exactes (perso sur cet appareil + sauvegarde créateur)</p>
@@ -2198,6 +2413,11 @@ function panel() {
   bind("cAiTitle", "aiTitle"); bind("cAiSub", "aiSub");
   bind("cCvTitle", "cvTitle"); bind("cCvSub", "cvSub");
   bind("cBeneTitle", "beneTitle"); bind("cBeneSub", "beneSub");
+  bind("cSearchPh", "searchPlaceholder"); bind("cFilterPh", "filterPlaceholder");
+  bind("cAutoLoad", "autoLoadLabel");
+  bind("cBtnHere", "btnHere"); bind("cBtnReset", "btnReset"); bind("cBtnMore", "btnMore");
+  bind("cResToggle", "resToggle");
+  bind("cKpi1", "kpi1"); bind("cKpi2", "kpi2"); bind("cKpi3", "kpi3"); bind("cKpi4", "kpi4");
 
   $$("[data-hide]").forEach(el => {
     el.onchange = () => {
