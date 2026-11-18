@@ -6,6 +6,9 @@
 <title>Solidarité France — Toutes les aides près de chez vous</title>
 <meta name="description" content="Centres d'aide, magasins solidaires, banques alimentaires, numéros utiles dans toutes les villes de France.">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Lato:wght@400;700&family=Montserrat:wght@400;600;700&family=Poppins:wght@400;600;700&family=Raleway:wght@400;600;700&family=Oswald:wght@400;600&family=Merriweather:wght@400;700&family=Nunito:wght@400;700&family=Source+Sans+3:wght@400;600;700&family=Inter:wght@400;600;700&family=Manrope:wght@400;600;700&family=Work+Sans:wght@400;600&family=Rubik:wght@400;600&family=Karla:wght@400;700&family=Mulish:wght@400;700&family=Outfit:wght@400;600;700&family=Quicksand:wght@400;600;700&family=Comfortaa:wght@400;700&family=Josefin+Sans:wght@400;600&family=Playfair+Display:wght@400;700&family=Libre+Baskerville:wght@400;700&family=EB+Garamond:wght@400;600&family=Cormorant+Garamond:wght@400;600&family=Spectral:wght@400;600&family=Crimson+Text:wght@400;600&family=Lora:wght@400;600&family=Cardo:wght@400;700&family=Fira+Sans:wght@400;600&family=Fira+Code:wght@400;600&family=JetBrains+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Serif:wght@400;600&family=IBM+Plex+Mono:wght@400;600&family=Space+Grotesk:wght@400;600&family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;600&family=DM+Serif+Display&family=Be+Vietnam+Pro:wght@400;600&family=Lexend:wght@400;600&family=Figtree:wght@400;600&family=Sora:wght@400;600&family=Archivo:wght@400;600&family=Barlow:wght@400;600&family=Exo+2:wght@400;600&family=Titillium+Web:wght@400;600&family=Cabin:wght@400;600&family=Hind:wght@400;600&family=Mukta:wght@400;600&family=Oxygen:wght@400;700&family=Overpass:wght@400;600&family=Public+Sans:wght@400;600&family=Red+Hat+Display:wght@400;600&family=Ubuntu:wght@400;700&family=Ubuntu+Mono:wght@400;700&family=Inconsolata:wght@400;700&family=Dancing+Script:wght@400;700&family=Pacifico&family=Great+Vibes&family=Satisfy&family=Caveat:wght@400;600&family=Permanent+Marker&family=Shadows+Into+Light&family=Indie+Flower&family=Amatic+SC:wght@400;700&family=Bangers&family=Righteous&family=Lobster&family=Abril+Fatface&family=Alfa+Slab+One&family=Cinzel:wght@400;600&family=Philosopher:wght@400;700&family=Vollkorn:wght@400;600&family=Zilla+Slab:wght@400;600&family=Bitter:wght@400;600&family=Domine:wght@400;600&family=Rokkitt:wght@400;600&family=Slabo+27px&family=Noto+Sans:wght@400;600;700&family=Noto+Serif:wght@400;600&family=PT+Sans:wght@400;700&family=PT+Serif:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
 <style>
@@ -161,17 +164,25 @@ body.padr{padding-right:var(--side-w,380px)}
 
 
 /* Traduction Google */
-.gt-wrap{display:flex;align-items:center;gap:6px;max-width:200px;background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:2px 8px 2px 6px}
+.gt-wrap{display:flex;align-items:center;gap:6px;max-width:220px;min-width:120px;background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:2px 8px 2px 6px;cursor:pointer;position:relative;z-index:1100}
 .gt-wrap .gt-icon{font-size:1.15rem;line-height:1;flex-shrink:0}
 .gt-wrap .goog-te-gadget{font-size:0!important;line-height:1}
 .gt-wrap .goog-te-gadget .goog-te-combo{font-size:.82rem!important;padding:4px 6px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--text);max-width:150px;font-family:inherit;cursor:pointer}
 .goog-te-banner-frame{display:none!important}
 body{top:0!important}
-.skiptranslate{display:none!important}
+/* skiptranslate global hide disabled - see gt-wrap rules */
 body.dark .gt-wrap{background:#1a2438;border-color:var(--bd)}
 body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(--text);border-color:var(--bd)}
 @media(max-width:700px){.gt-wrap{max-width:150px}.gt-wrap .goog-te-gadget .goog-te-combo{max-width:110px;font-size:.75rem!important}}
 
+
+.gt-wrap .goog-te-gadget .goog-te-combo{
+  font-size:.82rem!important;padding:4px 8px;border-radius:8px;border:1px solid var(--bd);
+  background:var(--card);color:var(--text);max-width:170px;font-family:inherit;cursor:pointer;
+}
+.gt-wrap .goog-te-gadget{color:transparent!important}
+.gt-wrap .goog-te-gadget > span{display:none!important}
+body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(--text);border-color:var(--bd)}
 </style>
 </head>
 <body>
@@ -1925,13 +1936,13 @@ body.padr{padding-right:var(--side-w,380px)}
 
 
 /* Traduction Google */
-.gt-wrap{display:flex;align-items:center;gap:6px;max-width:200px;background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:2px 8px 2px 6px}
+.gt-wrap{display:flex;align-items:center;gap:6px;max-width:220px;min-width:120px;background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:2px 8px 2px 6px;cursor:pointer;position:relative;z-index:1100}
 .gt-wrap .gt-icon{font-size:1.15rem;line-height:1;flex-shrink:0}
 .gt-wrap .goog-te-gadget{font-size:0!important;line-height:1}
 .gt-wrap .goog-te-gadget .goog-te-combo{font-size:.82rem!important;padding:4px 6px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--text);max-width:150px;font-family:inherit;cursor:pointer}
 .goog-te-banner-frame{display:none!important}
 body{top:0!important}
-.skiptranslate{display:none!important}
+/* skiptranslate global hide disabled - see gt-wrap rules */
 body.dark .gt-wrap{background:#1a2438;border-color:var(--bd)}
 body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(--text);border-color:var(--bd)}
 @media(max-width:700px){.gt-wrap{max-width:150px}.gt-wrap .goog-te-gadget .goog-te-combo{max-width:110px;font-size:.75rem!important}}
@@ -1997,7 +2008,7 @@ window.googleTranslateElementInit=function(){
     new google.translate.TranslateElement({
       pageLanguage:"fr",
       includedLanguages:"fr,en,es,ar,pt,pt-PT,ro,pl,uk,ru,zh-CN,zh-TW,de,it,tr,sq,so,ti,ps,fa,bn,ta,vi,ku,nl,sv,no,da,fi,el,cs,sk,hu,bg,hr,sr,sl,lt,lv,et,he,hi,ur,th,id,ms,ko,ja,sw,am,yo,ig,ha,zu,xh,af,ca,eu,gl,cy,ga,is,mt,mk,be,ka,hy,az,kk,uz,ky,tg,mn,ne,si,my,km,lo,tl,ceb,jv,su,pa,gu,mr,te,kn,ml,or,as",
-      layout:google.translate.TranslateElement.InlineLayout.SIMPLE,
+      layout:google.translate.TranslateElement.InlineLayout.HORIZONTAL,
       autoDisplay:false
     },"google_translate_element");
   }catch(e){console.warn("Traduction non dispo",e)}
@@ -2113,10 +2124,156 @@ const DEF = {
 };
 const FONTS = {
   "system-ui": "Système",
-  "Georgia,serif": "Georgia (serif)",
-  "'Trebuchet MS',sans-serif": "Trebuchet",
-  "Verdana,sans-serif": "Verdana",
-  "'Courier New',monospace": "Machine à écrire"
+  "system-ui,sans-serif": "Système (complet)",
+  "Arial,Helvetica,sans-serif": "Arial",
+  "Helvetica,Arial,sans-serif": "Helvetica",
+  "Verdana,Geneva,sans-serif": "Verdana",
+  "Tahoma,Geneva,sans-serif": "Tahoma",
+  "'Trebuchet MS',Helvetica,sans-serif": "Trebuchet MS",
+  "'Segoe UI',Tahoma,sans-serif": "Segoe UI",
+  "Calibri,Candara,sans-serif": "Calibri",
+  "Candara,Calibri,sans-serif": "Candara",
+  "Geneva,Tahoma,sans-serif": "Geneva",
+  "Optima,sans-serif": "Optima",
+  "Futura,sans-serif": "Futura",
+  "'Century Gothic',sans-serif": "Century Gothic",
+  "'Franklin Gothic Medium',sans-serif": "Franklin Gothic",
+  "'Gill Sans','Gill Sans MT',sans-serif": "Gill Sans",
+  "'Lucida Sans','Lucida Grande',sans-serif": "Lucida Sans",
+  "'Lucida Grande','Lucida Sans',sans-serif": "Lucida Grande",
+  "Arial Narrow,sans-serif": "Arial Narrow",
+  "Impact,Haettenschweiler,sans-serif": "Impact",
+  "'Arial Black',Gadget,sans-serif": "Arial Black",
+  "Georgia,'Times New Roman',serif": "Georgia",
+  "'Times New Roman',Times,serif": "Times New Roman",
+  "Times,serif": "Times",
+  "Garamond,serif": "Garamond",
+  "Palatino,'Palatino Linotype',serif": "Palatino",
+  "'Book Antiqua',Palatino,serif": "Book Antiqua",
+  "'Palatino Linotype',Palatino,serif": "Palatino Linotype",
+  "Baskerville,'Baskerville Old Face',serif": "Baskerville",
+  "'Didot',serif": "Didot",
+  "Cambria,Georgia,serif": "Cambria",
+  "Constantia,Georgia,serif": "Constantia",
+  "'Hoefler Text',Baskerville,serif": "Hoefler Text",
+  "'Iowan Old Style',serif": "Iowan Old Style",
+  "'American Typewriter',serif": "American Typewriter",
+  "Rockwell,serif": "Rockwell",
+  "'Courier New',Courier,monospace": "Courier New",
+  "Courier,monospace": "Courier",
+  "'Lucida Console',Monaco,monospace": "Lucida Console",
+  "Monaco,'Courier New',monospace": "Monaco",
+  "Consolas,monaco,monospace": "Consolas",
+  "'Andale Mono',monospace": "Andale Mono",
+  "Menlo,Monaco,monospace": "Menlo",
+  "monospace": "Monospace générique",
+  "serif": "Serif générique",
+  "sans-serif": "Sans-serif générique",
+  "cursive": "Cursive générique",
+  "fantasy": "Fantasy générique",
+  "'Comic Sans MS','Comic Sans',cursive": "Comic Sans MS",
+  "'Bradley Hand',cursive": "Bradley Hand",
+  "'Brush Script MT',cursive": "Brush Script",
+  "'Segoe Print',cursive": "Segoe Print",
+  "'Segoe Script',cursive": "Segoe Script",
+  "Chalkboard,cursive": "Chalkboard",
+  "'Apple Chancery',cursive": "Apple Chancery",
+  "Papyrus,fantasy": "Papyrus",
+  "Herculanum,fantasy": "Herculanum",
+  "Luminari,fantasy": "Luminari",
+  "Copperplate,fantasy": "Copperplate",
+  "Zapfino,cursive": "Zapfino",
+  "'Trattatello',cursive": "Trattatello",
+  "Avenir,sans-serif": "Avenir",
+  "'Avenir Next',sans-serif": "Avenir Next",
+  "'SF Pro Text',-apple-system,sans-serif": "SF Pro Text",
+  "-apple-system,BlinkMacSystemFont,sans-serif": "Apple System",
+  "Roboto,Arial,sans-serif": "Roboto",
+  "'Open Sans',Arial,sans-serif": "Open Sans",
+  "'Helvetica Neue',Helvetica,sans-serif": "Helvetica Neue",
+  "Ubuntu,Arial,sans-serif": "Ubuntu",
+  "'Noto Sans',Arial,sans-serif": "Noto Sans",
+  "'Noto Serif',Georgia,serif": "Noto Serif",
+  "'PT Sans',Arial,sans-serif": "PT Sans",
+  "'PT Serif',Georgia,serif": "PT Serif",
+  "Lato,Arial,sans-serif": "Lato",
+  "Montserrat,Arial,sans-serif": "Montserrat",
+  "Poppins,Arial,sans-serif": "Poppins",
+  "Raleway,Arial,sans-serif": "Raleway",
+  "Oswald,Arial,sans-serif": "Oswald",
+  "Merriweather,Georgia,serif": "Merriweather",
+  "Nunito,Arial,sans-serif": "Nunito",
+  "'Source Sans Pro',Arial,sans-serif": "Source Sans Pro",
+  "'Source Serif Pro',Georgia,serif": "Source Serif Pro",
+  "'Source Code Pro',monospace": "Source Code Pro",
+  "Inter,Arial,sans-serif": "Inter",
+  "Manrope,Arial,sans-serif": "Manrope",
+  "Work Sans,Arial,sans-serif": "Work Sans",
+  "Rubik,Arial,sans-serif": "Rubik",
+  "Karla,Arial,sans-serif": "Karla",
+  "Mulish,Arial,sans-serif": "Mulish",
+  "Outfit,Arial,sans-serif": "Outfit",
+  "Quicksand,Arial,sans-serif": "Quicksand",
+  "Comfortaa,Arial,sans-serif": "Comfortaa",
+  "Josefin Sans,Arial,sans-serif": "Josefin Sans",
+  "Playfair Display,Georgia,serif": "Playfair Display",
+  "Libre Baskerville,serif": "Libre Baskerville",
+  "EB Garamond,serif": "EB Garamond",
+  "Cormorant Garamond,serif": "Cormorant Garamond",
+  "Spectral,serif": "Spectral",
+  "Crimson Text,serif": "Crimson Text",
+  "Lora,serif": "Lora",
+  "Cardo,serif": "Cardo",
+  "Fira Sans,Arial,sans-serif": "Fira Sans",
+  "Fira Code,monospace": "Fira Code",
+  "JetBrains Mono,monospace": "JetBrains Mono",
+  "IBM Plex Sans,Arial,sans-serif": "IBM Plex Sans",
+  "IBM Plex Serif,Georgia,serif": "IBM Plex Serif",
+  "IBM Plex Mono,monospace": "IBM Plex Mono",
+  "Space Grotesk,Arial,sans-serif": "Space Grotesk",
+  "Space Mono,monospace": "Space Mono",
+  "DM Sans,Arial,sans-serif": "DM Sans",
+  "DM Serif Display,serif": "DM Serif Display",
+  "Be Vietnam Pro,Arial,sans-serif": "Be Vietnam Pro",
+  "Lexend,Arial,sans-serif": "Lexend",
+  "Figtree,Arial,sans-serif": "Figtree",
+  "Sora,Arial,sans-serif": "Sora",
+  "Archivo,Arial,sans-serif": "Archivo",
+  "Barlow,Arial,sans-serif": "Barlow",
+  "Exo 2,Arial,sans-serif": "Exo 2",
+  "Titillium Web,Arial,sans-serif": "Titillium Web",
+  "Cabin,Arial,sans-serif": "Cabin",
+  "Hind,Arial,sans-serif": "Hind",
+  "Mukta,Arial,sans-serif": "Mukta",
+  "Oxygen,Arial,sans-serif": "Oxygen",
+  "Overpass,Arial,sans-serif": "Overpass",
+  "Public Sans,Arial,sans-serif": "Public Sans",
+  "Red Hat Display,Arial,sans-serif": "Red Hat Display",
+  "Ubuntu Mono,monospace": "Ubuntu Mono",
+  "Inconsolata,monospace": "Inconsolata",
+  "Dancing Script,cursive": "Dancing Script",
+  "Pacifico,cursive": "Pacifico",
+  "Great Vibes,cursive": "Great Vibes",
+  "Satisfy,cursive": "Satisfy",
+  "Caveat,cursive": "Caveat",
+  "Permanent Marker,cursive": "Permanent Marker",
+  "Shadows Into Light,cursive": "Shadows Into Light",
+  "Indie Flower,cursive": "Indie Flower",
+  "Amatic SC,cursive": "Amatic SC",
+  "Bangers,cursive": "Bangers",
+  "Righteous,cursive": "Righteous",
+  "Fredoka One,cursive": "Fredoka One",
+  "Lobster,cursive": "Lobster",
+  "Abril Fatface,serif": "Abril Fatface",
+  "Alfa Slab One,serif": "Alfa Slab One",
+  "Cinzel,serif": "Cinzel",
+  "Philosopher,serif": "Philosopher",
+  "Vollkorn,serif": "Vollkorn",
+  "Zilla Slab,serif": "Zilla Slab",
+  "Bitter,serif": "Bitter",
+  "Domine,serif": "Domine",
+  "Rokkitt,serif": "Rokkitt",
+  "Slabo 27px,serif": "Slabo 27px"
 };
 
 let cfg = {...DEF};
