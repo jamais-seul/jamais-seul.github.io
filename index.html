@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Jamais seul — Toutes les aides près de chez vous</title>
+<title>Jamais seul — Aides près de chez vous</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMwQjNENkUiLz4KICA8cGF0aCBmaWxsPSIjRThCOTIzIiBkPSJNMzIgMTRjLTMuNSAwLTYuMiAyLjQtNy4yIDUuNUMyMy44IDE2LjQgMjEuMSAxNCAxNy42IDE0IDEzIDE0IDkuNSAxNy43IDkuNSAyMi41YzAgOS41IDE1LjUgMTguNSAyMi41IDIzLjUgNy01IDIyLjUtMTQgMjIuNS0yMy41QzU0LjUgMTcuNyA1MSAxNCA0Ni40IDE0Yy0zLjUgMC02LjIgMi40LTcuMiA1LjVDMzguMiAxNi40IDM1LjUgMTQgMzIgMTR6Ii8+CiAgPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThCOTIzIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZD0iTTEyIDQyYzgtMTAgMTQtMTQgMjAtMTRzMTIgNCAyMCAxNCIvPgogIDxwYXRoIGZpbGw9IiNFOEI5MjMiIGQ9Ik0xMCA0OGMxMCAyIDE2IDYgMjIgMTAgNi00IDEyLTggMjItMTAtOCA4LTE0IDEyLTIyIDEyUzE4IDU2IDEwIDQ4eiIvPgo8L3N2Zz4=">
 <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMwQjNENkUiLz4KICA8cGF0aCBmaWxsPSIjRThCOTIzIiBkPSJNMzIgMTRjLTMuNSAwLTYuMiAyLjQtNy4yIDUuNUMyMy44IDE2LjQgMjEuMSAxNCAxNy42IDE0IDEzIDE0IDkuNSAxNy43IDkuNSAyMi41YzAgOS41IDE1LjUgMTguNSAyMi41IDIzLjUgNy01IDIyLjUtMTQgMjIuNS0yMy41QzU0LjUgMTcuNyA1MSAxNCA0Ni40IDE0Yy0zLjUgMC02LjIgMi40LTcuMiA1LjVDMzguMiAxNi40IDM1LjUgMTQgMzIgMTR6Ii8+CiAgPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThCOTIzIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZD0iTTEyIDQyYzgtMTAgMTQtMTQgMjAtMTRzMTIgNCAyMCAxNCIvPgogIDxwYXRoIGZpbGw9IiNFOEI5MjMiIGQ9Ik0xMCA0OGMxMCAyIDE2IDYgMjIgMTAgNi00IDEyLTggMjItMTAtOCA4LTE0IDEyLTIyIDEyUzE4IDU2IDEwIDQ4eiIvPgo8L3N2Zz4=">
 <meta name="description" content="Centres d'aide, magasins solidaires, banques alimentaires, numéros utiles dans toutes les villes de France.">
@@ -2375,10 +2375,14 @@ try {
   if (s) {
     const parsed = JSON.parse(s);
     cfg = {...DEF, ...parsed};
-    // Ne pas écraser le logo par défaut avec une chaîne vide
     if (!cfg.logoUrl) cfg.logoUrl = DEF.logoUrl;
+    // Ancien nom par défaut → nouveau nom du site
+    if (!cfg.siteName || /solidarit[eé]\s*france/i.test(cfg.siteName)) {
+      cfg.siteName = DEF.siteName;
+    }
   }
 } catch(err) {}
+document.title = (cfg.siteName || "Jamais seul") + " — Aides près de chez vous";
 let tab = "app";
 let user = null;
 let fbReady = false;
@@ -2551,6 +2555,7 @@ function applyCfg() {
   const logoEmoji = document.getElementById("siteLogoEmoji");
   const logoImg = document.getElementById("siteLogoImg");
   if (logoText && c.siteName) logoText.textContent = c.siteName;
+  if (c.siteName) document.title = c.siteName + " — Aides près de chez vous";
   const url = (c.logoUrl && String(c.logoUrl).trim()) ? c.logoUrl : (DEF.logoUrl || "");
   if (logoImg) {
     if (url) {
