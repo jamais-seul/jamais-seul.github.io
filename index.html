@@ -10,7 +10,9 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
 <style>
 :root{--navy:#0f4c81;--blue:#2563eb;--green:#059669;--amber:#d97706;--red:#991b1b;--bg:#f1f5f9;--card:#fff;--text:#0f172a;--muted:#475569;--bd:#cbd5e1;--sh:0 4px 12px rgba(15,23,42,.07)}
-body.dark{--bg:#0a0f1a;--card:#141c2e;--text:#e8eef8;--muted:#94a8c4;--bd:#2a3650;--navy:#7db4f5;--blue:#60a5fa;--green:#34d399;--amber:#fbbf24;--red:#f87171;--sh:0 4px 16px rgba(0,0,0,.45)}
+body.dark{--bg:#070b14;--card:#121a2b;--text:#e8eef8;--muted:#94a8c4;--bd:#2a3650;--navy:#7db4f5;--blue:#60a5fa;--green:#34d399;--amber:#fbbf24;--red:#f87171;--sh:0 4px 16px rgba(0,0,0,.45)}
+body.dark,html.dark{background:#070b14!important}
+body.dark main,body.dark .wrap{background:transparent}
 body.dark .hero{background:linear-gradient(135deg,#0c1a2e,#0a1220)}
 body.dark .search{background:#1a2438;box-shadow:0 8px 24px rgba(0,0,0,.4)}
 body.dark .search input{color:var(--text);background:transparent}
@@ -19,7 +21,7 @@ body.dark .chip{background:#1a2438}
 body.dark .chip.on,body.dark .chip:hover{background:var(--navy);color:#0a0f1a;border-color:var(--navy)}
 body.dark .need-btn{background:#1a2438}
 body.dark .need-btn.on{background:linear-gradient(135deg,#1e3a5f,#152a45);border-color:var(--navy)}
-body.dark .panel,.body.dark .card,.body.dark .kpi,.body.dark .res{background:var(--card);border-color:var(--bd)}
+body.dark .panel,body.dark .card,body.dark .kpi,body.dark .res{background:var(--card);border-color:var(--bd)}
 body.dark .badge{filter:brightness(1.15)}
 body.dark #map{background:#1a2438;border-color:var(--bd)}
 body.dark .legend{color:var(--muted)}
@@ -42,13 +44,13 @@ body.dark #side .tabs .chip{background:#3b1f4a;color:#f0abfc;border-color:#86198
 body.dark #side .tabs .chip.on{background:#7c3aed;color:#f5f3ff;border-color:#a78bfa;box-shadow:0 2px 0 #5b21b6}
 body.dark .kpi b{color:var(--blue)}
 body.dark a{color:#93c5fd}
-body.dark .meta,.body.dark .sub{color:var(--muted)}
+body.dark .meta,body.dark .sub{color:var(--muted)}
 body.dark .tag{background:#1a2438;color:var(--muted);border-color:var(--bd)}
 body.dark .empty{color:var(--muted)}
 body.dark #cvPreview{background:#fff!important;color:#111!important}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;scroll-padding-top:70px}
-body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
+body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg)!important;color:var(--text);line-height:1.55;min-height:100vh}
 a{color:var(--blue)}
 .urg{background:var(--red);color:#fff;font-size:.85rem;padding:.5rem 1rem;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.6rem}
 .urg a{background:#fff;color:var(--red);padding:2px 10px;border-radius:20px;text-decoration:none;font-weight:800}
@@ -158,6 +160,12 @@ body{top:0!important}
 body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(--text);border-color:var(--bd)}
 @media(max-width:700px){.gt-wrap{max-width:110px}.gt-wrap .goog-te-gadget .goog-te-combo{max-width:100px;font-size:.75rem!important}}
 
+
+.lang-box{display:flex;align-items:center;gap:4px}
+.lang-box .lang-lab{font-size:1rem;line-height:1}
+.lang-box select{font-size:.82rem;padding:4px 6px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--text);font-family:inherit;cursor:pointer}
+body.dark .lang-box select{background:#0f172a;border-color:var(--bd);color:var(--text)}
+
 </style>
 </head>
 <body>
@@ -167,7 +175,25 @@ body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(-
 <nav>
 <a class="logo" href="#top">🤝 Solidarité France</a>
 <div class="links"><a href="#besoins">Besoins</a><a href="#carte">Carte</a><a href="#ressources">Numéros</a><a href="#assistant">Assistant</a><a href="#cv">CV</a><a href="#simulateur">Démarches</a><a href="#benevolat">Bénévolat</a></div>
-<div id="google_translate_element" class="gt-wrap notranslate" title="Traduire le site"></div>
+<div class="lang-box notranslate" title="Traduire le site">
+  <label class="lang-lab" for="langSel">🌐</label>
+  <select id="langSel" aria-label="Langue">
+    <option value="fr">FR</option>
+    <option value="en">EN</option>
+    <option value="es">ES</option>
+    <option value="ar">AR</option>
+    <option value="pt">PT</option>
+    <option value="ro">RO</option>
+    <option value="pl">PL</option>
+    <option value="uk">UK</option>
+    <option value="ru">RU</option>
+    <option value="de">DE</option>
+    <option value="it">IT</option>
+    <option value="tr">TR</option>
+    <option value="zh-CN">中文</option>
+  </select>
+  <div id="google_translate_element" hidden></div>
+</div>
 <button class="btn l" data-a="theme" aria-label="Mode sombre / clair">🌓</button>
 <button class="btn g" data-a="add">+ Lieu</button>
 </nav>
@@ -213,6 +239,7 @@ body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(-
 
 <h2 class="t" id="carte">🗺️ Carte des centres d'aide</h2>
 <p class="sub" id="status" aria-live="polite">Zoomez sur votre ville ou tapez-la en haut : les centres réels (OpenStreetMap) et les repères nationaux se chargent automatiquement. Cliquez sur un marqueur pour les détails et l'itinéraire.</p>
+<p class="sub" id="mapHint" style="margin-top:.35rem">💡 Les grandes villes sont préchargées. Pour toutes les structures d’une ville précise (CROUS, Restos, CCAS…), tapez son nom dans la barre de recherche en haut, puis filtrez (ex. « crous »).</p>
 <div class="chips" id="chips"></div>
 <div class="panel">
 <div class="tools">
@@ -1340,6 +1367,30 @@ const CV_JOBS = [
   {id:"agent_collect", title:"Agent de propreté urbaine / Éboueur", tags:"éboueur collecte déchets propreté urbaine", profile:"Endurant, ponctuel et engagé dans le service public de propreté.", skills:["Ponctualité","Travail en équipe","Rigueur","Polyvalence"], exp:[{poste:"Agent de collecte",emp:"Collectivité / Prestataire",deb:"2021",fin:"Actuel",miss:"Collecte, nettoiement, sécurité"}], form:[]},
   {id:"saisonnier", title:"Employé saisonnier (tourisme / agriculture)", tags:"saisonnier été hiver tourisme agriculture", profile:"Disponible, adaptable et motivé pour les missions saisonnières.", skills:["Polyvalence","Ponctualité","Travail en équipe","Sens du service"], exp:[{poste:"Saisonnier",emp:"Tourisme / Agriculture",deb:"2022",fin:"2023",miss:"Accueil, service, récolte selon saison"}], form:[]},
   {id:"agent_social", title:"Agent d'insertion / Médiateur social", tags:"insertion médiation social accompagnement", profile:"À l'écoute, non-jugeant et engagé dans l'accompagnement des publics fragiles.", skills:["Sens du service","Gestion du stress","Travail en équipe","Rigueur"], exp:[{poste:"Médiateur / Agent d'insertion",emp:"Association",deb:"2021",fin:"Actuel",miss:"Accueil, orientation, ateliers"}], form:[]},
+  {id:"boulanger", title:"Boulanger / Boulangère", tags:"boulanger pain pâtisserie", profile:"Habile, ponctuel(le) et habitué(e) aux horaires matinaux.", skills:["Ponctualité","Rigueur","Travail en équipe","Polyvalence"], exp:[{poste:"Boulanger",emp:"Boulangerie",deb:"2021",fin:"Actuel",miss:"Production, fournil, service"}], form:[]},
+  {id:"electricien", title:"Électricien / Électricienne", tags:"électricien électricité bâtiment", profile:"Rigoureux(se) et respectueux(se) des normes de sécurité électrique.", skills:["Rigueur","Autonomie","Permis B","Polyvalence"], exp:[{poste:"Électricien",emp:"Entreprise",deb:"2021",fin:"Actuel",miss:"Installation, dépannage"}], form:[{dipl:"CAP Électricien",an:"",etab:""}]},
+  {id:"plombier", title:"Plombier / Chauffagiste", tags:"plombier chauffage sanitaire", profile:"Débrouillard(e), ponctuel(le) et à l'aise chez le client.", skills:["Autonomie","Sens du service","Permis B","Rigueur"], exp:[{poste:"Plombier",emp:"Entreprise",deb:"2021",fin:"Actuel",miss:"Dépannage, installation"}], form:[]},
+  {id:"macon", title:"Maçon / Ouvrier du bâtiment", tags:"maçon bâtiment gros oeuvre", profile:"Endurant, précis et respectueux des consignes chantier.", skills:["Rigueur","Travail en équipe","Polyvalence","Ponctualité"], exp:[{poste:"Maçon",emp:"Entreprise BTP",deb:"2021",fin:"Actuel",miss:"Gros œuvre, finitions"}], form:[]},
+  {id:"peintre", title:"Peintre en bâtiment", tags:"peintre bâtiment décoration", profile:"Soigneux(se), propre et organisé(e) sur les chantiers.", skills:["Rigueur","Autonomie","Polyvalence","Ponctualité"], exp:[{poste:"Peintre",emp:"Entreprise",deb:"2021",fin:"Actuel",miss:"Préparation, peinture, finitions"}], form:[]},
+  {id:"coiffeur", title:"Coiffeur / Coiffeuse", tags:"coiffure salon esthétique", profile:"Créatif(ve), à l'écoute et souriant(e) avec la clientèle.", skills:["Sens du service","Travail en équipe","Ponctualité","Gestion du stress"], exp:[{poste:"Coiffeur",emp:"Salon",deb:"2021",fin:"Actuel",miss:"Coupes, colorations, accueil"}], form:[{dipl:"CAP Coiffure",an:"",etab:""}]},
+  {id:"estheticienne", title:"Esthéticienne / Spa", tags:"esthétique beauté spa", profile:"Douce, professionnelle et attentive au bien-être client.", skills:["Sens du service","Rigueur","Ponctualité","Gestion du stress"], exp:[{poste:"Esthéticienne",emp:"Institut",deb:"2021",fin:"Actuel",miss:"Soins visage, corps, ongles"}], form:[]},
+  {id:"enseignant", title:"Enseignant / Formateur", tags:"enseignant professeur formateur education", profile:"Pédagogue, patient(e) et capable de s'adapter aux publics.", skills:["Sens du service","Gestion du stress","Autonomie","Informatique"], exp:[{poste:"Formateur",emp:"Organisme",deb:"2021",fin:"Actuel",miss:"Cours, suivi apprenants"}], form:[{dipl:"Master / titre formateur",an:"",etab:""}]},
+  {id:"educateur", title:"Éducateur / Éducatrice", tags:"éducateur social jeunesse animation", profile:"À l'écoute, patient(e) et engagé(e) auprès des publics.", skills:["Sens du service","Gestion du stress","Travail en équipe","Rigueur"], exp:[{poste:"Éducateur",emp:"Association / Structure",deb:"2021",fin:"Actuel",miss:"Accompagnement, ateliers"}], form:[]},
+  {id:"animateur", title:"Animateur / Animatrice", tags:"animation centre loisirs jeunesse", profile:"Dynamique, créatif(ve) et à l'aise avec les enfants ou adultes.", skills:["Sens du service","Travail en équipe","Polyvalence","Gestion du stress"], exp:[{poste:"Animateur",emp:"Centre de loisirs",deb:"2022",fin:"Actuel",miss:"Activités, sorties, sécurité"}], form:[]},
+  {id:"infirmier", title:"Infirmier / Infirmière", tags:"infirmier soins hopital", profile:"Rigoureux(se), empathique et résistant(e) au stress.", skills:["Rigueur","Gestion du stress","Travail en équipe","Sens du service"], exp:[{poste:"Infirmier",emp:"Établissement de santé",deb:"2021",fin:"Actuel",miss:"Soins, transmissions"}], form:[{dipl:"DE Infirmier",an:"",etab:""}]},
+  {id:"pharmacien", title:"Préparateur en pharmacie", tags:"pharmacie préparateur santé", profile:"Précis, discret et orienté conseil patient.", skills:["Rigueur","Sens du service","Informatique","Ponctualité"], exp:[{poste:"Préparateur",emp:"Pharmacie",deb:"2021",fin:"Actuel",miss:"Délivrance, conseil, stock"}], form:[]},
+  {id:"banque", title:"Conseiller bancaire / Accueil agence", tags:"banque conseiller clientèle finance", profile:"Rigoureux(se), diplomate et à l'aise avec les chiffres.", skills:["Sens du service","Rigueur","Informatique","Gestion du stress"], exp:[{poste:"Conseiller",emp:"Banque",deb:"2021",fin:"Actuel",miss:"Accueil, dossiers, objectifs"}], form:[]},
+  {id:"graphiste", title:"Graphiste / Designer", tags:"graphiste design communication visuel", profile:"Créatif(ve), à l'écoute du brief et soigneux(se) sur les délais.", skills:["Autonomie","Informatique","Rigueur","Sens du service"], exp:[{poste:"Graphiste",emp:"Agence / Freelance",deb:"2021",fin:"Actuel",miss:"Identité visuelle, supports"}], form:[]},
+  {id:"developpeur", title:"Développeur / Développeuse web", tags:"développeur web code informatique", profile:"Curieux(se), méthodique et force de proposition technique.", skills:["Informatique","Autonomie","Rigueur","Travail en équipe"], exp:[{poste:"Développeur",emp:"ESN / Startup",deb:"2021",fin:"Actuel",miss:"Développement, maintenance"}], form:[{dipl:"BTS / Licence info",an:"",etab:""}]},
+  {id:"mecanicien", title:"Mécanicien auto / Moto", tags:"mécanicien garage automobile", profile:"Passionné(e) de technique, soigneux(se) et fiable.", skills:["Rigueur","Autonomie","Polyvalence","Permis B"], exp:[{poste:"Mécanicien",emp:"Garage",deb:"2021",fin:"Actuel",miss:"Entretien, diagnostic, réparation"}], form:[]},
+  {id:"hotellerie", title:"Réceptionniste / Hôtellerie", tags:"réception hôtel tourisme accueil", profile:"Souriant(e), polyglotte apprécié et organisé(e).", skills:["Sens du service","Gestion du stress","Informatique","Anglais"], exp:[{poste:"Réceptionniste",emp:"Hôtel",deb:"2021",fin:"Actuel",miss:"Accueil, réservations, check-in"}], form:[]},
+  {id:"agriculteur", title:"Ouvrier agricole / Maraîcher", tags:"agriculture maraîchage ferme saisonnier", profile:"Endurant, motivé et respectueux de l'environnement.", skills:["Polyvalence","Ponctualité","Travail en équipe","Rigueur"], exp:[{poste:"Ouvrier agricole",emp:"Exploitation",deb:"2022",fin:"Actuel",miss:"Cultures, récolte, entretien"}], form:[]},
+  {id:"fleuriste", title:"Fleuriste", tags:"fleuriste composition végétale", profile:"Créatif(ve), soigneux(se) et à l'écoute des clients.", skills:["Sens du service","Rigueur","Polyvalence","Ponctualité"], exp:[{poste:"Fleuriste",emp:"Boutique",deb:"2021",fin:"Actuel",miss:"Compositions, vente, soins plantes"}], form:[]},
+  {id:"opticien", title:"Opticien / Monteur lunettes", tags:"opticien lunettes vue", profile:"Précis, pédagogue et orienté conseil.", skills:["Rigueur","Sens du service","Informatique","Ponctualité"], exp:[{poste:"Opticien",emp:"Magasin",deb:"2021",fin:"Actuel",miss:"Vente, montage, conseils"}], form:[]},
+  {id:"avocat_assist", title:"Assistant juridique / Clerc", tags:"juridique avocat clerc droit", profile:"Discret, organisé et rigoureux dans les dossiers.", skills:["Rigueur","Informatique","Autonomie","Sens du service"], exp:[{poste:"Assistant juridique",emp:"Cabinet",deb:"2021",fin:"Actuel",miss:"Dossiers, secrétariat, recherches"}], form:[]},
+  {id:"agent_immo", title:"Agent immobilier / Négociateur", tags:"immobilier agent location vente", profile:"Dynamique, diplomate et orienté résultats.", skills:["Sens du service","Autonomie","Permis B","Gestion du stress"], exp:[{poste:"Négociateur",emp:"Agence",deb:"2021",fin:"Actuel",miss:"Visites, mandats, suivi clients"}], form:[]},
+  {id:"pompier", title:"Sapeur-pompier / Sécurité civile", tags:"pompier secours sécurité", profile:"Réactif, courageux et engagé pour le service public.", skills:["Gestion du stress","Travail en équipe","Rigueur","Polyvalence"], exp:[{poste:"Sapeur-pompier",emp:"SDIS / Volontaire",deb:"2020",fin:"Actuel",miss:"Interventions, formation"}], form:[]},
+  {id:"ambulancier", title:"Ambulancier / Auxiliaire ambulancier", tags:"ambulancier secours transport sanitaire", profile:"Calme, empathique et fiable en situation d'urgence.", skills:["Gestion du stress","Sens du service","Permis B","Rigueur"], exp:[{poste:"Ambulancier",emp:"Société d'ambulance",deb:"2021",fin:"Actuel",miss:"Transports, soins de base"}], form:[]},
   {id:"vide", title:"— Formulaire vide —", tags:"vide reset", profile:"", skills:[], exp:[], form:[]}
 ];
 const CV_PRESETS = Object.fromEntries(CV_JOBS.map(j => [j.id, j]));
@@ -1349,8 +1400,14 @@ function renderCvJobChips(filter=""){
   if(!box) return;
   const q = (filter||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
   const list = CV_JOBS.filter(j => j.id !== "vide" && (!q || (j.title+" "+j.tags).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").includes(q)));
-  box.innerHTML = list.slice(0,40).map(j => `<button type="button" class="chip" data-preset="${j.id}">${esc(j.title)}</button>`).join("")
-    || `<span class="sub">Aucun métier trouvé pour « ${esc(filter)} »</span>`;
+  let html = list.slice(0,50).map(j => `<button type="button" class="chip" data-preset="${j.id}">${cvJobIcon(j.title)} ${esc(j.title)}</button>`).join("");
+  if(!list.length && filter.trim()){
+    html = `<button type="button" class="chip on" data-custom-job="${esc(filter.trim())}">✨ Utiliser « ${esc(filter.trim())} » comme titre</button>
+    <span class="sub">Aucun profil type : le titre sera personnalisé.</span>`;
+  } else if(filter.trim() && !list.some(j => j.title.toLowerCase() === filter.trim().toLowerCase())){
+    html = `<button type="button" class="chip" data-custom-job="${esc(filter.trim())}">✨ Titre libre : ${esc(filter.trim())}</button>` + html;
+  }
+  box.innerHTML = html || `<span class="sub">Aucun métier trouvé</span>`;
 }
 renderCvJobChips();
 document.getElementById("cvJobSearch")?.addEventListener("input", e => renderCvJobChips(e.target.value));
@@ -1368,6 +1425,14 @@ document.getElementById("cvPresetVide")?.addEventListener("click", () => {
 });
 
 document.getElementById("cvPresets")?.addEventListener("click", e => {
+  const custom = e.target.closest("[data-custom-job]");
+  if(custom){
+    document.getElementById("cvTitle").value = "";
+    document.getElementById("cvTitleCustom").value = custom.dataset.customJob || "";
+    cvBuild();
+    document.getElementById("cvMsg").textContent = "✅ Titre personnalisé appliqué.";
+    return;
+  }
   const b = e.target.closest("[data-preset]");
   if(!b) return;
   const p = CV_PRESETS[b.dataset.preset];
@@ -1448,29 +1513,39 @@ const CV_ICONS = {
   mail: `<span style="margin-right:8px;font-size:14px;line-height:1">✉️</span>`,
   pin: `<span style="margin-right:8px;font-size:14px;line-height:1">📍</span>`,
   user: `<span style="margin-right:8px;font-size:14px;line-height:1">👤</span>`,
-  // Logos métiers (emoji pro + lisibles à l'impression)
   job: {
-    "aide": "🤝", "domicile": "🤝", "auxiliaire": "🤝", "soignant": "🩺", "santé": "🩺",
-    "serveur": "🍽️", "serveuse": "🍽️", "restaurant": "🍽️", "cuisine": "👨‍🍳", "cuisinier": "👨‍🍳", "commis": "👨‍🍳",
-    "vendeur": "🛒", "vendeuse": "🛒", "commerce": "🛒", "caisse": "🛒",
-    "manutention": "📦", "magasinier": "📦", "logistique": "📦", "préparateur": "📦", "commandes": "📦",
-    "entretien": "🧹", "propreté": "🧹", "nettoyage": "🧹",
-    "sécurité": "🛡️", "agent de sécurité": "🛡️",
-    "accueil": "🛎️", "administratif": "📋", "secrétaire": "📋", "bureau": "📋",
-    "jardin": "🌿", "espaces verts": "🌿",
-    "chauffeur": "🚚", "livreur": "🚚", "coursier": "🛵",
-    "communication": "📣", "marketing": "📈", "commercial": "💼",
-    "informatique": "💻", "développeur": "💻", "electric": "⚡", "électricien": "⚡",
-    "default": "💼"
+    "aide à domicile":"🤝","auxiliaire":"🤝","aide-soignant":"🩺","aide soignant":"🩺","infirmier":"🩺","médecin":"👨‍⚕️","pharmacien":"💊","kiné":"🦴",
+    "serveur":"🍽️","serveuse":"🍽️","restaurant":"🍽️","cuisine":"👨‍🍳","cuisinier":"👨‍🍳","commis":"👨‍🍳","boulanger":"🥖","pâtissier":"🧁","boucher":"🥩","barista":"☕","traiteur":"🍱",
+    "vendeur":"🛒","vendeuse":"🛒","commerce":"🛒","caisse":"🛒","caissier":"🛒","hotesse de caisse":"🛒",
+    "manutention":"📦","magasinier":"📦","logistique":"📦","préparateur":"📦","cariste":"🏗️",
+    "entretien":"🧹","propreté":"🧹","nettoyage":"🧹","éboueur":"🗑️","collecte":"🗑️",
+    "sécurité":"🛡️","gardien":"🛡️","surveillant":"👁️","pompier":"🚒","police":"👮",
+    "accueil":"🛎️","réception":"🛎️","standardiste":"📞","téléconseiller":"📞","conseiller clientèle":"📞",
+    "administratif":"📋","secrétaire":"📋","comptable":"🧮","rh":"👥","paie":"🧮",
+    "jardin":"🌿","espaces verts":"🌿","agriculteur":"🌾","paysagiste":"🌳","viticulteur":"🍇",
+    "chauffeur":"🚚","livreur":"🚚","coursier":"🛵","taxi":"🚕","conducteur":"🚌","routier":"🚛","ambulancier":"🚑",
+    "mécanicien":"🔧","carrossier":"🚗","électricien":"⚡","plombier":"🚰","maçon":"🧱","peintre":"🎨","menuisier":"🪵","soudeur":"🔥","couvreur":"🏠","chauffagiste":"🌡️",
+    "coiffeur":"💇","esthéticienne":"💅","esthétique":"💅",
+    "enseignant":"📚","professeur":"📚","formateur":"📚","éducateur":"🧒","animateur":"🎭","atsem":"🧒",
+    "développeur":"💻","informatique":"💻","helpdesk":"💻","réseau":"🌐","data":"📊",
+    "commercial":"💼","technico-commercial":"💼","marketing":"📈","communication":"📣","graphiste":"🎨","designer":"✨","community":"📱",
+    "juridique":"⚖️","avocat":"⚖️","notaire":"📜","banque":"🏦","assurance":"📑",
+    "social":"🤲","médiateur":"🗣️","insertion":"🤲","psychologue":"🧠","assistant social":"🤲",
+    "saisonnier":"☀️","tourisme":"✈️","hôtel":"🏨","agent d'exploitation":"🛣️","travaux publics":"🚧",
+    "boulanger":"🥖","fleuriste":"💐","opticien":"👓","dentiste":"🦷","vétérinaire":"🐾",
+    "default":"💼"
   }
 };
 function cvJobIcon(title){
   const t = (title||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
   const map = CV_ICONS.job;
+  let best = "default", bestLen = 0;
   for(const k of Object.keys(map)){
-    if(k !== "default" && t.includes(k.normalize("NFD").replace(/[\u0300-\u036f]/g,""))) return map[k];
+    if(k === "default") continue;
+    const kk = k.normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+    if(t.includes(kk) && kk.length > bestLen){ best = k; bestLen = kk.length; }
   }
-  return map.default;
+  return map[best] || map.default;
 }
 function cvContactInline(d){
   const parts = [];
@@ -1827,6 +1902,12 @@ body{top:0!important}
 body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(--text);border-color:var(--bd)}
 @media(max-width:700px){.gt-wrap{max-width:110px}.gt-wrap .goog-te-gadget .goog-te-combo{max-width:100px;font-size:.75rem!important}}
 
+
+.lang-box{display:flex;align-items:center;gap:4px}
+.lang-box .lang-lab{font-size:1rem;line-height:1}
+.lang-box select{font-size:.82rem;padding:4px 6px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--text);font-family:inherit;cursor:pointer}
+body.dark .lang-box select{background:#0f172a;border-color:var(--bd);color:var(--text)}
+
 </style></head><body>${html}
 <script>window.onload=function(){setTimeout(function(){window.print()},200)}<\/script></body></html>`);
   w.document.close();
@@ -1882,45 +1963,124 @@ if(!sessionStorage.getItem("sf_preloaded")){
   preloadMajorCities();
 }
 
-/* ---------- Traduction Google (page entière + contenu dynamique) ---------- */
-window.googleTranslateElementInit=function(){
+/* ---------- Traduction (sélecteur + Google Translate) ---------- */
+var I18N = {
+  fr: {},
+  en: {
+    "Trouvez de l'aide près de chez vous, gratuitement":"Find help near you, for free",
+    "Vous n'êtes pas seul":"You are not alone",
+    "Banques alimentaires, hébergements, soins, vêtements, démarches… Tapez votre ville ou utilisez votre position.":"Food banks, shelters, healthcare, clothing, admin help… Type your city or use your location.",
+    "Besoins":"Needs","Carte":"Map","Numéros":"Numbers","Assistant":"Assistant","Démarches":"Steps","Bénévolat":"Volunteering",
+    "Chercher":"Search","Autour de moi":"Near me","Manger":"Food","Douche":"Shower","Emploi":"Jobs","Étudiant":"Student","Vêtements":"Clothes",
+    "De quoi avez-vous besoin ?":"What do you need?","Lieux référencés":"Listed places","Vos favoris":"Your favorites","Gratuit & sans compte":"Free, no account",
+    "Carte des centres d'aide":"Help centers map","Numéros utiles & sites officiels":"Useful numbers & official sites",
+    "Créer mon CV":"Create my CV","Espace créateur":"Creator space"
+  },
+  es: {
+    "Trouvez de l'aide près de chez vous, gratuitement":"Encuentre ayuda cerca de usted, gratis",
+    "Vous n'êtes pas seul":"No está solo",
+    "Besoins":"Necesidades","Carte":"Mapa","Numéros":"Números","Chercher":"Buscar","Autour de moi":"Cerca de mí",
+    "Manger":"Comer","Douche":"Ducha","Emploi":"Empleo","Étudiant":"Estudiante","Vêtements":"Ropa",
+    "Créer mon CV":"Crear mi CV"
+  },
+  ar: {
+    "Trouvez de l'aide près de chez vous, gratuitement":"اعثر على المساعدة بالقرب منك مجانًا",
+    "Vous n'êtes pas seul":"لست وحدك",
+    "Besoins":"الاحتياجات","Carte":"الخريطة","Numéros":"الأرقام","Chercher":"بحث",
+    "Manger":"طعام","Douche":"دش","Emploi":"عمل","Étudiant":"طالب","Vêtements":"ملابس"
+  }
+};
+
+function applySimpleI18n(lang){
+  document.documentElement.lang = lang || "fr";
+  document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
+  if(!lang || lang === "fr"){
+    // restore from data-orig if present
+    document.querySelectorAll("[data-i18n-orig]").forEach(function(el){
+      el.textContent = el.getAttribute("data-i18n-orig");
+    });
+    return;
+  }
+  var dict = I18N[lang] || {};
+  var walk = function(root){
+    var nodes = root.querySelectorAll("h1,h2,h3,p,span,a,button,label,option,b,small,.sub,.logo");
+    nodes.forEach(function(el){
+      if(el.closest(".notranslate") || el.closest("#cvPreview") || el.closest("#map")) return;
+      if(el.children.length && el.tagName !== "BUTTON" && el.tagName !== "A" && el.tagName !== "LABEL") return;
+      var txt = (el.childNodes.length === 1 && el.childNodes[0].nodeType === 3) ? el.textContent.trim() : null;
+      if(!txt || txt.length < 2) return;
+      if(!el.getAttribute("data-i18n-orig")) el.setAttribute("data-i18n-orig", txt);
+      var orig = el.getAttribute("data-i18n-orig");
+      if(dict[orig]) el.textContent = dict[orig];
+    });
+  };
+  walk(document.body);
+}
+
+function setLanguage(lang){
+  localStorage.setItem("sf_lang", lang);
+  applySimpleI18n(lang);
+  // Also try Google Translate combo if present
+  try{
+    var combo = document.querySelector(".goog-te-combo");
+    if(combo){
+      combo.value = lang === "fr" ? "" : lang;
+      combo.dispatchEvent(new Event("change"));
+    }
+  }catch(e){}
+  // trigger google if available via cookie method
+  if(lang && lang !== "fr"){
+    document.cookie = "googtrans=/fr/" + lang + ";path=/";
+    document.cookie = "googtrans=/fr/" + lang + ";domain=" + location.hostname + ";path=/";
+  } else {
+    document.cookie = "googtrans=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  }
+}
+
+window.googleTranslateElementInit = function(){
   try{
     new google.translate.TranslateElement({
-      pageLanguage:"fr",
-      includedLanguages:"fr,en,es,ar,pt,ro,pl,uk,ru,zh-CN,de,it,tr,sq,so,ti,ps,fa,bn,ta,vi,ku",
-      layout:google.translate.TranslateElement.InlineLayout.SIMPLE,
-      autoDisplay:false
-    },"google_translate_element");
-  }catch(e){console.warn("Traduction non dispo",e)}
+      pageLanguage: "fr",
+      includedLanguages: "fr,en,es,ar,pt,ro,pl,uk,ru,zh-CN,de,it,tr,sq,so,ti,ps,fa,bn,ta,vi,ku",
+      layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
+      autoDisplay: false
+    }, "google_translate_element");
+  }catch(e){ console.warn("GT init", e); }
 };
-(function loadGT(){
-  var s=document.createElement("script");
-  s.src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-  s.async=true;
+
+(function initLang(){
+  var sel = document.getElementById("langSel");
+  var saved = localStorage.getItem("sf_lang") || "fr";
+  if(sel){
+    sel.value = saved;
+    sel.addEventListener("change", function(){ setLanguage(sel.value); });
+  }
+  if(saved !== "fr") setTimeout(function(){ setLanguage(saved); }, 400);
+  // Load Google Translate (works best online / http server)
+  var s = document.createElement("script");
+  s.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+  s.async = true;
+  s.onerror = function(){ console.warn("Google Translate script blocked — sélecteur FR/EN/ES/AR actif"); };
   document.head.appendChild(s);
 })();
-/* Re-déclencher la traduction après mises à jour DOM (cartes, modales, besoins…) */
-var _gtObsT=null;
+
+var _gtObsT = null;
 function refreshTranslate(){
   clearTimeout(_gtObsT);
-  _gtObsT=setTimeout(function(){
+  _gtObsT = setTimeout(function(){
+    var lang = localStorage.getItem("sf_lang") || "fr";
+    if(lang !== "fr") applySimpleI18n(lang);
     try{
-      var sel=document.querySelector(".goog-te-combo");
-      if(!sel||!sel.value||sel.value==="fr")return;
-      // Force Google Translate to re-scan by toggling briefly (best-effort)
-      var ev=document.createEvent("HTMLEvents");
-      ev.initEvent("change",true,true);
-      sel.dispatchEvent(ev);
+      var combo = document.querySelector(".goog-te-combo");
+      if(combo && combo.value && combo.value !== "fr"){
+        combo.dispatchEvent(new Event("change"));
+      }
     }catch(e){}
-  },600);
+  }, 500);
 }
-var _origRenderAll=typeof renderAll==="function"?renderAll:null;
-if(_origRenderAll){
-  renderAll=function(){_origRenderAll();refreshTranslate()};
-}
-document.addEventListener("click",function(e){
-  if(e.target.closest("#needGrid,.need-btn,#mbg,#cards,#resBody,#aiChat,#cvPanel"))refreshTranslate();
-},true);
+document.addEventListener("click", function(e){
+  if(e.target.closest("#needGrid,.need-btn,#mbg,#cards,#resBody,#aiChat,#cvPanel")) refreshTranslate();
+}, true);
 </script>
 
 <script type="module">
@@ -1953,6 +2113,7 @@ const DEF = {
   besoinsSub: "Choisissez votre situation. On vous oriente immédiatement vers les bonnes ressources.",
   carteTitle: "🗺️ Carte des centres d'aide",
   carteSub: "Zoomez sur votre ville ou tapez-la en haut : les centres réels (OpenStreetMap) et les repères nationaux se chargent automatiquement. Cliquez sur un marqueur pour les détails et l'itinéraire.",
+  mapHint: "💡 Les grandes villes sont préchargées. Pour toutes les structures d’une ville précise (CROUS, Restos, CCAS…), tapez son nom dans la barre de recherche en haut, puis filtrez (ex. « crous »).",
   presTitle: "🔎 Services publics & associations près de chez vous",
   presSub: "Choisissez d'abord une ville en haut de la page. Les liens ouvrent Google Maps avec les résultats à jour (adresses et horaires).",
   resTitle: "📞 Numéros utiles & sites officiels",
@@ -1968,16 +2129,13 @@ const DEF = {
   footer: "",
   warnMap: "⚠️ Les lieux « Repère » ont une position approximative (centre-ville) : ils signalent le type de structure présent dans la ville et renvoient vers le site officiel. Les autres viennent d'OpenStreetMap (données collaboratives, parfois incomplètes ou dépassées). Appelez ou vérifiez avant de vous déplacer.",
   urgLabel: "🚨 Gratuit, 24h/24 :",
-  kpi1: "Lieux référencés",
-  kpi2: "Communes cherchables",
-  kpi3: "Vos favoris",
-  kpi4: "Gratuit & sans compte",
+  kpi1: "Lieux référencés", kpi2: "Communes cherchables", kpi3: "Vos favoris", kpi4: "Gratuit & sans compte",
   filterPlaceholder: "Filtrer par mot-clé (ex : repas, douche, Emmaüs)…",
   autoLoadLabel: "Charger en déplaçant la carte",
-  btnHere: "🔄 Chercher dans cette zone",
-  btnReset: "🇫🇷 Vue France",
-  btnMore: "Voir plus de résultats",
+  btnHere: "🔄 Chercher dans cette zone", btnReset: "🇫🇷 Vue France", btnMore: "Voir plus de résultats",
   resToggle: "▶ Afficher les numéros & sites",
+  btnLocate: "📍 Autour de moi", btnAdd: "+ Lieu",
+  navBesoins: "Besoins", navCarte: "Carte", navNumeros: "Numéros", navAssistant: "Assistant", navCv: "CV", navSim: "Démarches", navBene: "Bénévolat",
   calm: true, maintenance: false,
   mmsg: "Le site est en maintenance. Retour très bientôt !", urgBar: true,
   order: Object.keys(SECS), hidden: []
@@ -2052,17 +2210,14 @@ function applyCfg() {
     if (c.card) document.body.style.setProperty("--card", c.card);
     if (c.text) document.body.style.setProperty("--text", c.text);
   } else {
-    // Mode sombre : tokens sombres lisibles ; navy/accent restent clairs
-    document.body.style.setProperty("--navy", "#7db4f5");
+    // Mode sombre : garder les tokens sombres, n'appliquer que navy/accent adaptés
+    document.body.style.setProperty("--navy", "#60a5fa");
     document.body.style.setProperty("--blue", "#60a5fa");
-    document.body.style.setProperty("--bg", "#0a0f1a");
-    document.body.style.setProperty("--card", "#141c2e");
-    document.body.style.setProperty("--text", "#e8eef8");
-    document.body.style.setProperty("--muted", "#94a8c4");
-    document.body.style.setProperty("--bd", "#2a3650");
-    document.body.style.setProperty("--green", "#34d399");
-    document.body.style.setProperty("--amber", "#fbbf24");
-    document.body.style.setProperty("--red", "#f87171");
+    document.body.style.setProperty("--bg", "#0b1020");
+    document.body.style.setProperty("--card", "#131b2e");
+    document.body.style.setProperty("--text", "#f1f5f9");
+    document.body.style.setProperty("--muted", "#9fb0c8");
+    document.body.style.setProperty("--bd", "#25314a");
   }
   const setTxt = (sel, val) => { const el = document.querySelector(sel); if (el && val != null && val !== "") el.textContent = val; };
   setTxt("#heroTag", c.heroTag);
@@ -2091,19 +2246,17 @@ function applyCfg() {
   if (beneSub && c.beneSub) beneSub.textContent = c.beneSub;
   const warn = document.querySelector(".warn");
   if (warn && c.warnMap) warn.textContent = c.warnMap;
-  // Placeholders & labels supplémentaires
+  const mapHint = document.getElementById("mapHint");
+  if (mapHint && c.mapHint) mapHint.textContent = c.mapHint;
   const cityIn = document.getElementById("city");
   if (cityIn && c.searchPlaceholder) cityIn.placeholder = c.searchPlaceholder;
   const kwIn = document.getElementById("kw");
   if (kwIn && c.filterPlaceholder) kwIn.placeholder = c.filterPlaceholder;
-  const autoLab = document.querySelector("label[for], label:has(#auto)");
-  // KPI labels
   const kpis = document.querySelectorAll(".kpi span");
   if (kpis[0] && c.kpi1) kpis[0].textContent = c.kpi1;
   if (kpis[1] && c.kpi2) kpis[1].textContent = c.kpi2;
   if (kpis[2] && c.kpi3) kpis[2].textContent = c.kpi3;
   if (kpis[3] && c.kpi4) kpis[3].textContent = c.kpi4;
-  // Boutons carte
   const btnHere = document.querySelector("[data-a=here]");
   if (btnHere && c.btnHere) btnHere.textContent = c.btnHere;
   const btnReset = document.querySelector("[data-a=reset]");
@@ -2112,7 +2265,16 @@ function applyCfg() {
   if (btnMore && c.btnMore) btnMore.textContent = c.btnMore;
   const resTog = document.getElementById("resToggle");
   if (resTog && c.resToggle) resTog.textContent = c.resToggle;
-  // Auto-load label
+  const btnLoc = document.querySelector("[data-a=locate]");
+  if (btnLoc && c.btnLocate) btnLoc.textContent = c.btnLocate;
+  const btnAdd = document.querySelector("[data-a=add]");
+  if (btnAdd && c.btnAdd) btnAdd.textContent = c.btnAdd;
+  // Nav links
+  const navMap = {besoins:c.navBesoins, carte:c.navCarte, ressources:c.navNumeros, assistant:c.navAssistant, cv:c.navCv, simulateur:c.navSim, benevolat:c.navBene};
+  document.querySelectorAll(".links a[href^='#']").forEach(a => {
+    const id = (a.getAttribute("href")||"").slice(1);
+    if (navMap[id]) a.textContent = navMap[id];
+  });
   const autoLabel = document.querySelector("#auto")?.parentElement;
   if (autoLabel && c.autoLoadLabel) {
     const cb = autoLabel.querySelector("input");
@@ -2330,19 +2492,29 @@ function panel() {
       <label>Bénévolat<input id="cBeneTitle" class="field" value="${e(cfg.beneTitle || "")}" maxlength="80"></label>
       <label>Sous-titre bénévolat<textarea id="cBeneSub" class="field" rows="2" maxlength="200">${e(cfg.beneSub || "")}</textarea></label>
       <label>Pied de page (ligne courte, vide = défaut)<input id="cFoot" class="field" value="${e(cfg.footer || "")}" maxlength="140"></label>
-      <h4 style="margin:.9rem 0 .4rem;color:var(--navy)">Placeholders & boutons</h4>
+      <label>Astuce carte (phrase sous le statut)<textarea id="cMapHint" class="field" rows="2" maxlength="280">${e(cfg.mapHint || "")}</textarea></label>
+      <h4 style="margin:.9rem 0 .4rem;color:var(--navy)">Placeholders, boutons & navigation</h4>
       <label>Placeholder recherche ville<input id="cSearchPh" class="field" value="${e(cfg.searchPlaceholder || "")}" maxlength="80"></label>
       <label>Placeholder filtre carte<input id="cFilterPh" class="field" value="${e(cfg.filterPlaceholder || "")}" maxlength="80"></label>
-      <label>Label « Charger en déplaçant »<input id="cAutoLoad" class="field" value="${e(cfg.autoLoadLabel || "")}" maxlength="60"></label>
-      <label>Bouton chercher zone<input id="cBtnHere" class="field" value="${e(cfg.btnHere || "")}" maxlength="40"></label>
-      <label>Bouton vue France<input id="cBtnReset" class="field" value="${e(cfg.btnReset || "")}" maxlength="30"></label>
+      <label>Label auto-chargement<input id="cAutoLoad" class="field" value="${e(cfg.autoLoadLabel || "")}" maxlength="60"></label>
+      <label>Bouton zone<input id="cBtnHere" class="field" value="${e(cfg.btnHere || "")}" maxlength="40"></label>
+      <label>Bouton France<input id="cBtnReset" class="field" value="${e(cfg.btnReset || "")}" maxlength="30"></label>
       <label>Bouton voir plus<input id="cBtnMore" class="field" value="${e(cfg.btnMore || "")}" maxlength="40"></label>
-      <label>Bouton afficher numéros<input id="cResToggle" class="field" value="${e(cfg.resToggle || "")}" maxlength="50"></label>
+      <label>Bouton numéros<input id="cResToggle" class="field" value="${e(cfg.resToggle || "")}" maxlength="50"></label>
+      <label>Bouton géoloc<input id="cBtnLocate" class="field" value="${e(cfg.btnLocate || "")}" maxlength="40"></label>
+      <label>Bouton + Lieu<input id="cBtnAdd" class="field" value="${e(cfg.btnAdd || "")}" maxlength="20"></label>
+      <label>Nav Besoins<input id="cNavBesoins" class="field" value="${e(cfg.navBesoins || "")}" maxlength="20"></label>
+      <label>Nav Carte<input id="cNavCarte" class="field" value="${e(cfg.navCarte || "")}" maxlength="20"></label>
+      <label>Nav Numéros<input id="cNavNumeros" class="field" value="${e(cfg.navNumeros || "")}" maxlength="20"></label>
+      <label>Nav Assistant<input id="cNavAssistant" class="field" value="${e(cfg.navAssistant || "")}" maxlength="20"></label>
+      <label>Nav CV<input id="cNavCv" class="field" value="${e(cfg.navCv || "")}" maxlength="10"></label>
+      <label>Nav Démarches<input id="cNavSim" class="field" value="${e(cfg.navSim || "")}" maxlength="20"></label>
+      <label>Nav Bénévolat<input id="cNavBene" class="field" value="${e(cfg.navBene || "")}" maxlength="20"></label>
       <h4 style="margin:.9rem 0 .4rem;color:var(--navy)">Libellés KPI</h4>
-      <label>KPI 1 (lieux)<input id="cKpi1" class="field" value="${e(cfg.kpi1 || "")}" maxlength="40"></label>
-      <label>KPI 2 (communes)<input id="cKpi2" class="field" value="${e(cfg.kpi2 || "")}" maxlength="40"></label>
-      <label>KPI 3 (favoris)<input id="cKpi3" class="field" value="${e(cfg.kpi3 || "")}" maxlength="40"></label>
-      <label>KPI 4 (gratuit)<input id="cKpi4" class="field" value="${e(cfg.kpi4 || "")}" maxlength="40"></label>`;
+      <label>KPI 1<input id="cKpi1" class="field" value="${e(cfg.kpi1 || "")}" maxlength="40"></label>
+      <label>KPI 2<input id="cKpi2" class="field" value="${e(cfg.kpi2 || "")}" maxlength="40"></label>
+      <label>KPI 3<input id="cKpi3" class="field" value="${e(cfg.kpi3 || "")}" maxlength="40"></label>
+      <label>KPI 4<input id="cKpi4" class="field" value="${e(cfg.kpi4 || "")}" maxlength="40"></label>`;
   } else if (tab === "col") {
     h += `
       <p class="sub">Couleurs exactes (perso sur cet appareil + sauvegarde créateur)</p>
@@ -2413,10 +2585,13 @@ function panel() {
   bind("cAiTitle", "aiTitle"); bind("cAiSub", "aiSub");
   bind("cCvTitle", "cvTitle"); bind("cCvSub", "cvSub");
   bind("cBeneTitle", "beneTitle"); bind("cBeneSub", "beneSub");
+  bind("cMapHint", "mapHint");
   bind("cSearchPh", "searchPlaceholder"); bind("cFilterPh", "filterPlaceholder");
   bind("cAutoLoad", "autoLoadLabel");
   bind("cBtnHere", "btnHere"); bind("cBtnReset", "btnReset"); bind("cBtnMore", "btnMore");
-  bind("cResToggle", "resToggle");
+  bind("cResToggle", "resToggle"); bind("cBtnLocate", "btnLocate"); bind("cBtnAdd", "btnAdd");
+  bind("cNavBesoins", "navBesoins"); bind("cNavCarte", "navCarte"); bind("cNavNumeros", "navNumeros");
+  bind("cNavAssistant", "navAssistant"); bind("cNavCv", "navCv"); bind("cNavSim", "navSim"); bind("cNavBene", "navBene");
   bind("cKpi1", "kpi1"); bind("cKpi2", "kpi2"); bind("cKpi3", "kpi3"); bind("cKpi4", "kpi4");
 
   $$("[data-hide]").forEach(el => {
