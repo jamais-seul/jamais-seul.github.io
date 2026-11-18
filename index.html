@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Solidarité France — Toutes les aides près de chez vous</title>
+<title>Jamais seul — Toutes les aides près de chez vous</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMwQjNENkUiLz4KICA8cGF0aCBmaWxsPSIjRThCOTIzIiBkPSJNMzIgMTRjLTMuNSAwLTYuMiAyLjQtNy4yIDUuNUMyMy44IDE2LjQgMjEuMSAxNCAxNy42IDE0IDEzIDE0IDkuNSAxNy43IDkuNSAyMi41YzAgOS41IDE1LjUgMTguNSAyMi41IDIzLjUgNy01IDIyLjUtMTQgMjIuNS0yMy41QzU0LjUgMTcuNyA1MSAxNCA0Ni40IDE0Yy0zLjUgMC02LjIgMi40LTcuMiA1LjVDMzguMiAxNi40IDM1LjUgMTQgMzIgMTR6Ii8+CiAgPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThCOTIzIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZD0iTTEyIDQyYzgtMTAgMTQtMTQgMjAtMTRzMTIgNCAyMCAxNCIvPgogIDxwYXRoIGZpbGw9IiNFOEI5MjMiIGQ9Ik0xMCA0OGMxMCAyIDE2IDYgMjIgMTAgNi00IDEyLTggMjItMTAtOCA4LTE0IDEyLTIyIDEyUzE4IDU2IDEwIDQ4eiIvPgo8L3N2Zz4=">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMwQjNENkUiLz4KICA8cGF0aCBmaWxsPSIjRThCOTIzIiBkPSJNMzIgMTRjLTMuNSAwLTYuMiAyLjQtNy4yIDUuNUMyMy44IDE2LjQgMjEuMSAxNCAxNy42IDE0IDEzIDE0IDkuNSAxNy43IDkuNSAyMi41YzAgOS41IDE1LjUgMTguNSAyMi41IDIzLjUgNy01IDIyLjUtMTQgMjIuNS0yMy41QzU0LjUgMTcuNyA1MSAxNCA0Ni40IDE0Yy0zLjUgMC02LjIgMi40LTcuMiA1LjVDMzguMiAxNi40IDM1LjUgMTQgMzIgMTR6Ii8+CiAgPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThCOTIzIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZD0iTTEyIDQyYzgtMTAgMTQtMTQgMjAtMTRzMTIgNCAyMCAxNCIvPgogIDxwYXRoIGZpbGw9IiNFOEI5MjMiIGQ9Ik0xMCA0OGMxMCAyIDE2IDYgMjIgMTAgNi00IDEyLTggMjItMTAtOCA4LTE0IDEyLTIyIDEyUzE4IDU2IDEwIDQ4eiIvPgo8L3N2Zz4=">
 <meta name="description" content="Centres d'aide, magasins solidaires, banques alimentaires, numéros utiles dans toutes les villes de France.">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -190,7 +192,7 @@ body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(-
 <a href="tel:115">115 Hébergement</a><a href="tel:15">15 SAMU</a><a href="tel:17">17 Police</a><a href="tel:112">112 Europe</a><a href="tel:3919">3919 Violences</a><a href="tel:3114">3114 Détresse</a><a href="tel:119">119 Enfance</a></div>
 
 <nav>
-<a class="logo" href="#top" id="siteLogoLink"><img id="siteLogoImg" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMiIgZmlsbD0iIzBCM0Q2RSIvPgogIDxnIGZpbGw9IiNFOEI5MjMiPgogICAgPCEtLSBoZWFydCAtLT4KICAgIDxwYXRoIGQ9Ik0yNTYgMTUwYy0xOC0zNC02Mi0zNC03OCAyLTE4IDQwIDIyIDkwIDc4IDEzMiA1Ni00MiA5Ni05MiA3OC0xMzItMTYtMzYtNjAtMzYtNzgtMnoiLz4KICA8L2c+CiAgPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThCOTIzIiBzdHJva2Utd2lkdGg9IjI4IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPCEtLSBsZWZ0IGFybSBjdXJ2ZSAtLT4KICAgIDxwYXRoIGQ9Ik0xMTAgMzAwYzMwLTcwIDkwLTExMCAxNDYtMTE4Ii8+CiAgICA8cGF0aCBkPSJNMTAwIDM0MGM0MC0zMCA5MC00NSAxNDYtNDAiLz4KICAgIDwhLS0gcmlnaHQgYXJtIGN1cnZlIC0tPgogICAgPHBhdGggZD0iTTQwMiAzMDBjLTMwLTcwLTkwLTExMC0xNDYtMTE4Ii8+CiAgICA8cGF0aCBkPSJNNDEyIDM0MGMtNDAtMzAtOTAtNDUtMTQ2LTQwIi8+CiAgPC9nPgogIDxnIGZpbGw9IiNFOEI5MjMiPgogICAgPCEtLSBsZWZ0IHBhbG0gLS0+CiAgICA8cGF0aCBkPSJNOTYgMzIwYzQwIDggODAgMjAgMTEwIDUwLTUwIDEwLTkwIDUtMTIwLTIwLTE1LTEyLTgtMzUgMTAtMzB6Ii8+CiAgICA8IS0tIHJpZ2h0IHBhbG0gLS0+CiAgICA8cGF0aCBkPSJNNDE2IDMyMGMtNDAgOC04MCAyMC0xMTAgNTAgNTAgMTAgOTAgNSAxMjAtMjAgMTUtMTIgOC0zNS0xMC0zMHoiLz4KICA8L2c+Cjwvc3ZnPg==" alt="Logo Solidarité France" width="32" height="32" style="height:32px;width:32px;min-width:32px;min-height:32px;border-radius:8px;object-fit:contain;object-position:center;flex-shrink:0;display:block;background:transparent"><span id="siteLogoEmoji" hidden aria-hidden="true">🤝</span><span id="siteLogoText">Solidarité France</span></a>
+<a class="logo" href="#top" id="siteLogoLink"><img id="siteLogoImg" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMiIgZmlsbD0iIzBCM0Q2RSIvPgogIDxnIGZpbGw9IiNFOEI5MjMiPgogICAgPCEtLSBoZWFydCAtLT4KICAgIDxwYXRoIGQ9Ik0yNTYgMTUwYy0xOC0zNC02Mi0zNC03OCAyLTE4IDQwIDIyIDkwIDc4IDEzMiA1Ni00MiA5Ni05MiA3OC0xMzItMTYtMzYtNjAtMzYtNzgtMnoiLz4KICA8L2c+CiAgPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThCOTIzIiBzdHJva2Utd2lkdGg9IjI4IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPCEtLSBsZWZ0IGFybSBjdXJ2ZSAtLT4KICAgIDxwYXRoIGQ9Ik0xMTAgMzAwYzMwLTcwIDkwLTExMCAxNDYtMTE4Ii8+CiAgICA8cGF0aCBkPSJNMTAwIDM0MGM0MC0zMCA5MC00NSAxNDYtNDAiLz4KICAgIDwhLS0gcmlnaHQgYXJtIGN1cnZlIC0tPgogICAgPHBhdGggZD0iTTQwMiAzMDBjLTMwLTcwLTkwLTExMC0xNDYtMTE4Ii8+CiAgICA8cGF0aCBkPSJNNDEyIDM0MGMtNDAtMzAtOTAtNDUtMTQ2LTQwIi8+CiAgPC9nPgogIDxnIGZpbGw9IiNFOEI5MjMiPgogICAgPCEtLSBsZWZ0IHBhbG0gLS0+CiAgICA8cGF0aCBkPSJNOTYgMzIwYzQwIDggODAgMjAgMTEwIDUwLTUwIDEwLTkwIDUtMTIwLTIwLTE1LTEyLTgtMzUgMTAtMzB6Ii8+CiAgICA8IS0tIHJpZ2h0IHBhbG0gLS0+CiAgICA8cGF0aCBkPSJNNDE2IDMyMGMtNDAgOC04MCAyMC0xMTAgNTAgNTAgMTAgOTAgNSAxMjAtMjAgMTUtMTIgOC0zNS0xMC0zMHoiLz4KICA8L2c+Cjwvc3ZnPg==" alt="Logo Jamais seul" width="32" height="32" style="height:32px;width:32px;min-width:32px;min-height:32px;border-radius:8px;object-fit:contain;object-position:center;flex-shrink:0;display:block;background:transparent"><span id="siteLogoEmoji" hidden aria-hidden="true">🤝</span><span id="siteLogoText">Jamais seul</span></a>
 <div class="links"><a href="#besoins">Besoins</a><a href="#carte">Carte</a><a href="#ressources">Numéros</a><a href="#assistant">Assistant</a><a href="#cv">CV</a><a href="#simulateur">Démarches</a><a href="#benevolat">Bénévolat</a><a href="#mentions">Mentions</a></div>
 <div class="gt-wrap notranslate" title="Traduire tout le site dans n'importe quelle langue">
   <span class="gt-icon" aria-hidden="true">🌐</span>
@@ -464,7 +466,7 @@ body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(-
     <p style="margin-top:.35rem"><strong>Statut :</strong> <span id="mlStatus">portail citoyen non commercial</span></p>
     <p style="margin-top:.35rem"><strong>Contact :</strong> <span id="mlContact">à renseigner</span></p>
     <p style="margin-top:.35rem"><strong>Hébergeur :</strong> <span id="mlHost">à renseigner</span></p>
-    <p style="margin-top:.35rem"><strong>Site :</strong> <span id="mlSiteName">Solidarité France</span></p>
+    <p style="margin-top:.35rem"><strong>Site :</strong> <span id="mlSiteName">Jamais seul</span></p>
 
     <h3 id="mlPrivacyTitle" style="margin:1.2rem 0 .5rem;color:var(--navy)">Données personnelles</h3>
     <div id="mlPrivacyBody"></div>
@@ -480,7 +482,7 @@ body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(-
 <aside id="side" hidden></aside>
 
 <footer>
-  <strong>Solidarité France</strong> — portail citoyen libre, gratuit et <strong>indépendant</strong>.<br>
+  <strong>Jamais seul</strong> — portail citoyen libre, gratuit et <strong>indépendant</strong>.<br>
   Informations <strong>indicatives</strong> basées sur des sources publiques et collaboratives : des erreurs ou oublis sont possibles. <strong>Seuls les organismes officiels font foi</strong> — vérifiez avant de vous déplacer.<br>
   <a href="#mentions">Mentions légales & avertissement</a><br>
   Données : © contributeurs OpenStreetMap (ODbL) • Communes : geo.api.gouv.fr<br>
@@ -1061,7 +1063,7 @@ $("#kw").addEventListener("input",function(){S.kw=this.value;S.show=4;renderAll(
 
 
 
-/* ===== ASSISTANT IA (spécialisé Solidarité France – avec adresses réelles) ===== */
+/* ===== ASSISTANT IA (spécialisé Jamais seul – avec adresses réelles) ===== */
 const AI_PLACES = {
   "toulouse": {
     "santé": [
@@ -1174,7 +1176,7 @@ const AI_KB = [
   {k:["douche","hygiène","laverie","bagagerie"],r:"Hygiène : filtre « Hygiène & numérique » sur la carte + Soliguide.fr"},
   {k:["étudiant","crous","bourse"],r:"Étudiants : **CROUS** (bourses, repas à 1€, aides d'urgence) + épiceries AGORAé"},
   {k:["cv","curriculum"],r:"Créez votre CV dans la section **« Mon CV »** juste en dessous. Tout reste privé sur votre appareil."},
-  {k:["bonjour","salut","hello","aide"],r:"Bonjour 👋 Je suis l'assistant Solidarité France. Demandez-moi où se soigner, manger, dormir dans une ville (ex : « où se soigner à Toulouse »), ou posez une question sur vos droits."}
+  {k:["bonjour","salut","hello","aide"],r:"Bonjour 👋 Je suis l'assistant Jamais seul. Demandez-moi où se soigner, manger, dormir dans une ville (ex : « où se soigner à Toulouse »), ou posez une question sur vos droits."}
 ];
 
 function aiNorm(s){return (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9\s]/g," ")}
@@ -2142,7 +2144,7 @@ const SECS = {
 const DEF = {
   primary: "#0f4c81", accent: "#2563eb", bg: "#f1f5f9", card: "#ffffff", text: "#0f172a",
   font: "system-ui", size: 16,
-  siteName: "Solidarité France",
+  siteName: "Jamais seul",
   heroTag: "Vous n'êtes pas seul",
   title: "Trouvez de l'aide près de chez vous, gratuitement",
   subtitle: "Banques alimentaires, hébergements, soins, vêtements, démarches… Tapez votre ville ou utilisez votre position.",
@@ -2188,7 +2190,7 @@ const DEF = {
   editorHost: "",
   legalUpdate: "novembre 2026",
   legalWarnTitle: "Avertissement important",
-  legalWarn: "Solidarité France est un portail citoyen indépendant, gratuit et non officiel. Il n'est affilié ni à l'État, ni aux collectivités, ni aux associations ou organismes cités.\n\nCe site répertorie et oriente vers des ressources d'aide. Les informations proviennent notamment d'OpenStreetMap, de sites officiels et de repères approximatifs. Des erreurs ou oublis peuvent exister — vérifiez toujours auprès de l'organisme concerné avant de vous déplacer.\n\nUrgences : 15 • 17 • 18 • 112 • 115 • 3919 • 3114 • 119.",
+  legalWarn: "Jamais seul est un portail citoyen indépendant, gratuit et non officiel. Il n'est affilié ni à l'État, ni aux collectivités, ni aux associations ou organismes cités.\n\nCe site répertorie et oriente vers des ressources d'aide. Les informations proviennent notamment d'OpenStreetMap, de sites officiels et de repères approximatifs. Des erreurs ou oublis peuvent exister — vérifiez toujours auprès de l'organisme concerné avant de vous déplacer.\n\nUrgences : 15 • 17 • 18 • 112 • 115 • 3919 • 3114 • 119.",
   legalPrivacyTitle: "Données personnelles",
   legalPrivacy: "Pas de compte obligatoire. Favoris, lieux ajoutés et CV sont stockés sur votre appareil (navigateur). La traduction et la carte peuvent faire appel à des services tiers (Google Translate, OpenStreetMap…).",
   legalSourcesTitle: "Sources, droit applicable & responsabilité",
@@ -2508,7 +2510,7 @@ function applyCfg() {
   const foot = document.querySelector("footer");
   if (foot && c.footer) {
     if (!foot.dataset.o) foot.dataset.o = foot.innerHTML;
-    foot.innerHTML = `<strong>${e(c.siteName || "Solidarité France")}</strong> — ${e(c.footer)}`;
+    foot.innerHTML = `<strong>${e(c.siteName || "Jamais seul")}</strong> — ${e(c.footer)}`;
   } else if (foot && foot.dataset.o && !c.footer) {
     foot.innerHTML = foot.dataset.o;
   }
@@ -2571,7 +2573,7 @@ function applyCfg() {
     const raw = (val && String(val).trim()) ? String(val) : (fallback || "");
     el.innerHTML = raw.split(/\n+/).filter(Boolean).map(p => "<p style=\"margin:.45rem 0\">"+e(p)+"</p>").join("");
   };
-  setMl("mlSiteName", c.siteName, "Solidarité France");
+  setMl("mlSiteName", c.siteName, "Jamais seul");
   setMl("mlEditor", c.editorName, "à renseigner (Espace créateur → ⚖️ Mentions)");
   setMl("mlStatus", c.editorStatus, "portail citoyen non commercial");
   setMl("mlContact", c.editorEmail, "à renseigner");
