@@ -1431,7 +1431,7 @@ function renderCvJobChips(filter=""){
   const q = (filter||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
   const list = CV_JOBS.filter(j => j.id !== "vide" && (!q || (j.title+" "+j.tags).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").includes(q)));
   box.innerHTML = list.slice(0,60).map(j => {
-      const ic = j.icon || (typeof cvJobIcon==="function" ? cvJobIcon(j.title) : "💼");
+      const ic = j.icon || "💼";
       return `<button type="button" class="chip" data-preset="${j.id}" title="${esc(j.title)}">${ic} ${esc(j.title)}</button>`;
     }).join("")
     || `<span class="sub">Aucun métier trouvé pour « ${esc(filter)} ». Essayez un autre mot-clé.</span>`;
@@ -1575,6 +1575,10 @@ function cvJobIcon(title){
   }
   return map.default;
 }
+// Enrich job icons once CV_ICONS is ready
+CV_JOBS.forEach(j => { if(!j.icon) j.icon = cvJobIcon(j.title); });
+if(typeof renderCvJobChips === "function") renderCvJobChips(document.getElementById("cvJobSearch")?.value || "");
+
 function cvContactInline(d){
   const parts = [];
   if(d.tel) parts.push(`<span style="display:inline-flex;align-items:center;gap:4px;margin:0 .6rem .25rem 0">${CV_ICONS.phone}${esc(d.tel)}</span>`);
@@ -2245,8 +2249,6 @@ function applyCfg() {
     if (cb) autoLabel.appendChild(cb);
     autoLabel.appendChild(document.createTextNode(" " + c.autoLoadLabel));
   }
-  const logo = document.querySelector(".logo");
-  if (logo && c.siteName) logo.textContent = (c.logoEmoji || "🤝") + " " + c.siteName;
   const foot = document.querySelector("footer");
   if (foot && c.footer) {
     if (!foot.dataset.o) foot.dataset.o = foot.innerHTML;
