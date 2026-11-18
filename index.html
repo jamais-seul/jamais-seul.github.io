@@ -454,39 +454,26 @@ body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(-
 </main>
 
 <section id="mentions" class="wrap" style="margin-top:2rem;margin-bottom:1rem">
-  <h2 class="t">⚖️ Mentions légales & avertissement</h2>
-  <p class="sub">À lire avant d'utiliser les informations de ce site.</p>
-  <div class="panel" style="font-size:.92rem;line-height:1.65">
+  <button type="button" class="btn l" id="mentionsToggle" style="width:100%;max-width:420px">⚖️ Mentions légales & avertissement</button>
+  <div id="mentionsBody" hidden class="panel" style="margin-top:.8rem;font-size:.92rem;line-height:1.65">
     <h3 style="margin:0 0 .5rem;color:var(--navy)">Avertissement important</h3>
-    <p><strong>Solidarité France</strong> est un <strong>portail citoyen indépendant</strong>, gratuit et non officiel. Il n'est affilié ni à l'État, ni aux collectivités, ni aux associations ou organismes cités (Restos du Cœur, Secours Populaire, Croix-Rouge, Emmaüs, CROUS, etc.).</p>
-    <p style="margin-top:.6rem">Ce site <strong>répertorie et oriente</strong> vers des ressources d'aide (centres, numéros, démarches, liens utiles). Les informations proviennent notamment de :</p>
-    <ul style="margin:.4rem 0 .6rem 1.2rem">
-      <li><strong>OpenStreetMap</strong> et ses contributeurs (données cartographiques collaboratives) ;</li>
-      <li>sources publiques et sites officiels (liens vers service-public.fr, CAF, ameli.fr, associations, etc.) ;</li>
-      <li>repères nationaux placés de façon <strong>approximative</strong> (souvent au centre-ville) pour signaler un type de structure présent dans une commune.</li>
-    </ul>
-    <p><strong>Des erreurs, des oublis ou des informations obsolètes peuvent exister</strong> (adresses, horaires, existence d'un local, conditions d'accès). Les données collaboratives et les situations locales évoluent. <strong>Avant de vous déplacer ou de prendre une décision importante, vérifiez toujours auprès de l'organisme concerné</strong> (appel téléphonique, site officiel, 115, mairie / CCAS, etc.).</p>
-    <p style="margin-top:.6rem">En cas d'<strong>urgence</strong> : <strong>15</strong> (SAMU), <strong>17</strong> (police), <strong>18</strong> (pompiers), <strong>112</strong> (Europe), <strong>115</strong> (hébergement), <strong>3919</strong> (violences), <strong>3114</strong> (détresse), <strong>119</strong> (enfance).</p>
-    <p style="margin-top:.6rem">Les contenus relatifs aux <strong>droits sociaux</strong> (RSA, santé, logement, emploi…) sont fournis à titre <strong>indicatif et pédagogique</strong>. Seuls les textes officiels et les organismes compétents font foi.</p>
+    <p><strong id="mlSiteName">Solidarité France</strong> est un <strong>portail citoyen indépendant</strong>, gratuit et non officiel. Il n'est affilié ni à l'État, ni aux collectivités, ni aux associations ou organismes cités.</p>
+    <p style="margin-top:.6rem">Ce site <strong>répertorie et oriente</strong> vers des ressources d'aide. Les informations proviennent notamment d'OpenStreetMap, de sites officiels et de repères approximatifs. <strong>Des erreurs ou oublis peuvent exister</strong> — vérifiez toujours auprès de l'organisme concerné avant de vous déplacer.</p>
+    <p style="margin-top:.6rem">Urgences : <strong>15</strong> • <strong>17</strong> • <strong>18</strong> • <strong>112</strong> • <strong>115</strong> • <strong>3919</strong> • <strong>3114</strong> • <strong>119</strong>.</p>
 
     <h3 style="margin:1.2rem 0 .5rem;color:var(--navy)">Mentions légales</h3>
-    <p><strong>Éditeur :</strong> portail citoyen « Solidarité France » — site non commercial, sans compte obligatoire pour l'usage grand public.</p>
-    <p style="margin-top:.4rem"><strong>Objet :</strong> faciliter l'accès à l'information sur les aides et structures de solidarité en France, sans se substituer aux services publics ni aux associations.</p>
-    <p style="margin-top:.4rem"><strong>Hébergement :</strong> selon la plateforme choisie par l'éditeur du site (à compléter avec le nom et l'adresse de votre hébergeur).</p>
-    <p style="margin-top:.4rem"><strong>Contact :</strong> à renseigner par l'éditeur (e-mail de contact).</p>
+    <p><strong>Éditeur :</strong> <span id="mlEditor">à renseigner</span></p>
+    <p style="margin-top:.35rem"><strong>Statut :</strong> <span id="mlStatus">portail citoyen non commercial</span></p>
+    <p style="margin-top:.35rem"><strong>Contact :</strong> <span id="mlContact">à renseigner</span></p>
+    <p style="margin-top:.35rem"><strong>Hébergeur :</strong> <span id="mlHost">à renseigner</span></p>
+    <p style="margin-top:.35rem"><strong>Objet :</strong> faciliter l'accès à l'information sur les aides et structures de solidarité en France.</p>
 
     <h3 style="margin:1.2rem 0 .5rem;color:var(--navy)">Données personnelles</h3>
-    <p>L'usage du site <strong>ne nécessite pas de création de compte</strong> pour le public. Les <strong>favoris</strong>, lieux ajoutés localement et le <strong>CV</strong> sont stockés par défaut <strong>sur votre appareil uniquement</strong> (navigateur / localStorage), et ne sont pas transmis à un serveur du portail de ce seul fait.</p>
-    <p style="margin-top:.4rem">La <strong>traduction</strong> peut faire appel à un service tiers (ex. Google Translate) soumis à ses propres conditions. La <strong>carte</strong> utilise des tuiles et données OpenStreetMap / services associés.</p>
-    <p style="margin-top:.4rem">Conformément au RGPD, pour toute question relative à d'éventuelles données traitées par l'éditeur, contactez l'adresse indiquée ci-dessus. Vous disposez d'un droit d'accès, de rectification et d'effacement dans les conditions prévues par la loi.</p>
+    <p>Pas de compte obligatoire. Favoris, lieux ajoutés et CV sont stockés <strong>sur votre appareil</strong> (navigateur). La traduction et la carte peuvent faire appel à des services tiers (Google Translate, OpenStreetMap…).</p>
 
-    <h3 style="margin:1.2rem 0 .5rem;color:var(--navy)">Propriété intellectuelle & sources</h3>
-    <p>Les marques et noms d'organismes cités restent la propriété de leurs titulaires ; leur mention sert uniquement à l'<strong>information</strong> et à l'<strong>orientation</strong>.</p>
-    <p style="margin-top:.4rem">Données cartographiques : © contributeurs <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> (licence ODbL). Communes / géocodage : API gouvernementales le cas échéant (ex. geo.api.gouv.fr). Bibliothèques cartographiques open source (ex. Leaflet).</p>
-
-    <h3 style="margin:1.2rem 0 .5rem;color:var(--navy)">Limitation de responsabilité</h3>
-    <p>L'éditeur s'efforce de proposer des informations utiles et à jour, mais <strong>ne garantit pas l'exactitude, l'exhaustivité ni la disponibilité</strong> des lieux, horaires, places d'hébergement ou droits affichés. L'utilisation des informations se fait sous la responsabilité de l'utilisateur. L'éditeur ne saurait être tenu responsable des dommages liés à une information inexacte, incomplète ou à une décision prise sur la base de ce site — <strong>d'où l'importance de toujours vérifier auprès des sources officielles</strong>.</p>
-    <p style="margin-top:.8rem;font-size:.85rem;color:var(--muted)">Dernière mise à jour des présentes mentions : novembre 2026. Texte indicatif à adapter (hébergeur, contact, statut de l'éditeur).</p>
+    <h3 style="margin:1.2rem 0 .5rem;color:var(--navy)">Sources & responsabilité</h3>
+    <p>Marques citées = propriété de leurs titulaires (mention à titre informatif). Données cartographiques © contributeurs OpenStreetMap (ODbL). L'éditeur ne garantit pas l'exactitude ni l'exhaustivité des informations ; l'usage se fait sous la responsabilité de l'utilisateur.</p>
+    <p class="sub" style="margin-top:.8rem" id="mlUpdate">Mise à jour : novembre 2026</p>
   </div>
 </section>
 
@@ -2195,7 +2182,12 @@ const DEF = {
   order: Object.keys(SECS), hidden: [],
   customCSS: "",
   logoEmoji: "🤝",
-  logoUrl: "",
+  logoUrl: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4IiB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCI+CiAgPHJlY3Qgd2lkdGg9IjEyOCIgaGVpZ2h0PSIxMjgiIHJ4PSIyOCIgZmlsbD0iIzBmNGM4MSIvPgogIDxwYXRoIGQ9Ik0yOCA3OGM4IDE4IDI0IDI4IDM2IDI4czI4LTEwIDM2LTI4Yy0xMCA4LTIyIDEyLTM2IDEyUzM4IDg2IDI4IDc4eiIgZmlsbD0iI2Y1YzU0MiIgb3BhY2l0eT0iLjk1Ii8+CiAgPHBhdGggZD0iTTM0IDcwYzAtMiAyLTggMTAtMTQgNi01IDEyLTYgMjAtNnMxNCAxIDIwIDZjOCA2IDEwIDEyIDEwIDE0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmNWM1NDIiIHN0cm9rZS13aWR0aD0iNyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTQwIDYyYzQtMTAgMTItMTggMjQtMThzMjAgOCAyNCAxOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZlMDhhIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iLjkiLz4KICA8cGF0aCBkPSJNNjQgNDhjLTYgMC0xMCA1LTEwIDExIDAgOCAxMCAxNCAxMCAxNHMxMC02IDEwLTE0YzAtNi00LTExLTEwLTExeiIgZmlsbD0iI2ZmZDM0ZSIvPgo8L3N2Zz4=",
+  editorName: "",
+  editorStatus: "Portail citoyen indépendant, non commercial",
+  editorEmail: "",
+  editorHost: "",
+  legalUpdate: "novembre 2026",
   navBesoins: "Besoins",
   navCarte: "Carte",
   navRessources: "Numéros",
@@ -2551,6 +2543,14 @@ function applyCfg() {
     if (c.logoUrl) { logoImg.hidden = false; logoImg.src = c.logoUrl; }
     else { logoImg.hidden = true; logoImg.removeAttribute("src"); }
   }
+  const setMl = (id, val, fallback) => { const el = document.getElementById(id); if (el) el.textContent = (val && String(val).trim()) ? val : fallback; };
+  setMl("mlSiteName", c.siteName, "Solidarité France");
+  setMl("mlEditor", c.editorName, "à renseigner (Espace créateur → Textes)");
+  setMl("mlStatus", c.editorStatus, "portail citoyen non commercial");
+  setMl("mlContact", c.editorEmail, "à renseigner");
+  setMl("mlHost", c.editorHost, "à renseigner");
+  setMl("mlUpdate", c.legalUpdate ? ("Mise à jour : " + c.legalUpdate) : "", "Mise à jour : novembre 2026");
+
 
   // Nav labels
   const navMap = {
@@ -2743,6 +2743,13 @@ function panel() {
       <p class="sub">Tous les textes principaux du site. Modifiez puis cliquez sur <b>Sauvegarder</b>.</p>
       <h4 style="margin:.8rem 0 .4rem;color:var(--navy)">Identité & accueil</h4>
       <label>Nom du site<input id="cSiteName" class="field" value="${e(cfg.siteName || "")}" maxlength="60"></label>
+      <h4 style="margin:.9rem 0 .4rem;color:var(--navy)">Mentions légales (vos infos)</h4>
+      <p class="sub">Affichées dans la section Mentions légales du site.</p>
+      <label>Nom de l'éditeur (vous ou votre structure)<input id="cEditorName" class="field" value="${e(cfg.editorName || "")}" placeholder="Prénom Nom / Association…" maxlength="120"></label>
+      <label>Statut / qualité<input id="cEditorStatus" class="field" value="${e(cfg.editorStatus || "")}" placeholder="Particulier, association loi 1901…" maxlength="120"></label>
+      <label>E-mail de contact<input id="cEditorEmail" class="field" value="${e(cfg.editorEmail || "")}" placeholder="contact@…" maxlength="120"></label>
+      <label>Hébergeur (nom + adresse)<textarea id="cEditorHost" class="field" rows="2" maxlength="300" placeholder="Ex : OVH, 2 rue Kellermann, 59100 Roubaix">${e(cfg.editorHost || "")}</textarea></label>
+      <label>Date de mise à jour des mentions<input id="cLegalUpdate" class="field" value="${e(cfg.legalUpdate || "")}" placeholder="novembre 2026" maxlength="40"></label>
       <label>Phrase rassurante (au-dessus du titre)<input id="cHeroTag" class="field" value="${e(cfg.heroTag || "")}" maxlength="80"></label>
       <label>Grand titre<input id="cT" class="field" value="${e(cfg.title || "")}" maxlength="140"></label>
       <label>Sous-titre / description<textarea id="cSub" class="field" rows="3" maxlength="320">${e(cfg.subtitle || "")}</textarea></label>
@@ -2874,6 +2881,9 @@ function panel() {
   bind("cCard", "card"); bind("cTx", "text");
   bind("cM", "maintenance", "b"); bind("cMm", "mmsg");
   bind("cSiteName", "siteName"); bind("cSub", "subtitle"); bind("cFoot", "footer");
+  bind("cEditorName", "editorName"); bind("cEditorStatus", "editorStatus");
+  bind("cEditorEmail", "editorEmail"); bind("cEditorHost", "editorHost");
+  bind("cLegalUpdate", "legalUpdate");
   bind("cHeroTag", "heroTag"); bind("cUrgLabel", "urgLabel");
   bind("cBesoinsTitle", "besoinsTitle"); bind("cBesoinsSub", "besoinsSub");
   bind("cCarteTitle", "carteTitle"); bind("cCarteSub", "carteSub"); bind("cWarnMap", "warnMap");
@@ -3173,6 +3183,16 @@ function showNeed(need) {
 document.getElementById("needGrid")?.addEventListener("click", e => {
   const b = e.target.closest(".need-btn");
   if (b) showNeed(b.dataset.need);
+});
+
+document.getElementById("mentionsToggle")?.addEventListener("click", () => {
+  const body = document.getElementById("mentionsBody");
+  const btn = document.getElementById("mentionsToggle");
+  if (!body) return;
+  const open = body.hidden;
+  body.hidden = !open;
+  if (btn) btn.textContent = open ? "⚖️ Masquer les mentions légales" : "⚖️ Mentions légales & avertissement";
+  if (open) body.scrollIntoView({behavior:"smooth", block:"nearest"});
 });
 
 applyCfg();
