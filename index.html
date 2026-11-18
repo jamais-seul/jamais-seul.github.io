@@ -456,23 +456,22 @@ body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(-
 <section id="mentions" class="wrap" style="margin-top:2rem;margin-bottom:1rem">
   <button type="button" class="btn l" id="mentionsToggle" style="width:100%;max-width:420px">⚖️ Mentions légales & avertissement</button>
   <div id="mentionsBody" hidden class="panel" style="margin-top:.8rem;font-size:.92rem;line-height:1.65">
-    <h3 style="margin:0 0 .5rem;color:var(--navy)">Avertissement important</h3>
-    <p><strong id="mlSiteName">Solidarité France</strong> est un <strong>portail citoyen indépendant</strong>, gratuit et non officiel. Il n'est affilié ni à l'État, ni aux collectivités, ni aux associations ou organismes cités.</p>
-    <p style="margin-top:.6rem">Ce site <strong>répertorie et oriente</strong> vers des ressources d'aide. Les informations proviennent notamment d'OpenStreetMap, de sites officiels et de repères approximatifs. <strong>Des erreurs ou oublis peuvent exister</strong> — vérifiez toujours auprès de l'organisme concerné avant de vous déplacer.</p>
-    <p style="margin-top:.6rem">Urgences : <strong>15</strong> • <strong>17</strong> • <strong>18</strong> • <strong>112</strong> • <strong>115</strong> • <strong>3919</strong> • <strong>3114</strong> • <strong>119</strong>.</p>
+    <h3 id="mlWarnTitle" style="margin:0 0 .5rem;color:var(--navy)">Avertissement important</h3>
+    <div id="mlWarnBody"></div>
 
-    <h3 style="margin:1.2rem 0 .5rem;color:var(--navy)">Mentions légales</h3>
+    <h3 style="margin:1.2rem 0 .5rem;color:var(--navy)">Mentions légales (éditeur)</h3>
     <p><strong>Éditeur :</strong> <span id="mlEditor">à renseigner</span></p>
     <p style="margin-top:.35rem"><strong>Statut :</strong> <span id="mlStatus">portail citoyen non commercial</span></p>
     <p style="margin-top:.35rem"><strong>Contact :</strong> <span id="mlContact">à renseigner</span></p>
     <p style="margin-top:.35rem"><strong>Hébergeur :</strong> <span id="mlHost">à renseigner</span></p>
-    <p style="margin-top:.35rem"><strong>Objet :</strong> faciliter l'accès à l'information sur les aides et structures de solidarité en France.</p>
+    <p style="margin-top:.35rem"><strong>Site :</strong> <span id="mlSiteName">Solidarité France</span></p>
 
-    <h3 style="margin:1.2rem 0 .5rem;color:var(--navy)">Données personnelles</h3>
-    <p>Pas de compte obligatoire. Favoris, lieux ajoutés et CV sont stockés <strong>sur votre appareil</strong> (navigateur). La traduction et la carte peuvent faire appel à des services tiers (Google Translate, OpenStreetMap…).</p>
+    <h3 id="mlPrivacyTitle" style="margin:1.2rem 0 .5rem;color:var(--navy)">Données personnelles</h3>
+    <div id="mlPrivacyBody"></div>
 
-    <h3 style="margin:1.2rem 0 .5rem;color:var(--navy)">Sources & responsabilité</h3>
-    <p>Marques citées = propriété de leurs titulaires (mention à titre informatif). Données cartographiques © contributeurs OpenStreetMap (ODbL). L'éditeur ne garantit pas l'exactitude ni l'exhaustivité des informations ; l'usage se fait sous la responsabilité de l'utilisateur.</p>
+    <h3 id="mlSourcesTitle" style="margin:1.2rem 0 .5rem;color:var(--navy)">Sources, droit applicable & responsabilité</h3>
+    <div id="mlSourcesBody"></div>
+    <div id="mlExtraBody" style="margin-top:.6rem"></div>
     <p class="sub" style="margin-top:.8rem" id="mlUpdate">Mise à jour : novembre 2026</p>
   </div>
 </section>
@@ -2188,6 +2187,13 @@ const DEF = {
   editorEmail: "",
   editorHost: "",
   legalUpdate: "novembre 2026",
+  legalWarnTitle: "Avertissement important",
+  legalWarn: "Solidarité France est un portail citoyen indépendant, gratuit et non officiel. Il n'est affilié ni à l'État, ni aux collectivités, ni aux associations ou organismes cités.\n\nCe site répertorie et oriente vers des ressources d'aide. Les informations proviennent notamment d'OpenStreetMap, de sites officiels et de repères approximatifs. Des erreurs ou oublis peuvent exister — vérifiez toujours auprès de l'organisme concerné avant de vous déplacer.\n\nUrgences : 15 • 17 • 18 • 112 • 115 • 3919 • 3114 • 119.",
+  legalPrivacyTitle: "Données personnelles",
+  legalPrivacy: "Pas de compte obligatoire. Favoris, lieux ajoutés et CV sont stockés sur votre appareil (navigateur). La traduction et la carte peuvent faire appel à des services tiers (Google Translate, OpenStreetMap…).",
+  legalSourcesTitle: "Sources, droit applicable & responsabilité",
+  legalSources: "Ce portail d'information s'inscrit dans le cadre de la liberté d'expression et de communication (article 11 de la Déclaration des droits de l'homme et du citoyen de 1789 ; article 10 de la Convention européenne des droits de l'homme).\n\nLes numéros d'urgence et les liens vers des services publics relèvent d'informations publiques. Les données cartographiques sont utilisées sous licence ODbL (© contributeurs OpenStreetMap).\n\nConformément à la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique (LCEN), notamment son article 6, l'éditeur du site est identifié dans les présentes mentions.\n\nLes marques et noms d'organismes cités restent la propriété de leurs titulaires ; leur mention sert uniquement à l'information et à l'orientation.\n\nL'éditeur s'efforce de proposer des informations utiles mais ne garantit pas l'exactitude, l'exhaustivité ni la disponibilité des lieux, horaires ou droits affichés. L'utilisation des informations se fait sous la responsabilité de l'utilisateur. Seuls les organismes officiels font foi.",
+  legalExtra: "",
   navBesoins: "Besoins",
   navCarte: "Carte",
   navRessources: "Numéros",
@@ -2559,12 +2565,25 @@ function applyCfg() {
     else { logoEmoji.hidden = false; logoEmoji.textContent = c.logoEmoji || "🤝"; }
   }
   const setMl = (id, val, fallback) => { const el = document.getElementById(id); if (el) el.textContent = (val && String(val).trim()) ? val : fallback; };
+  const setMlHtml = (id, val, fallback) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const raw = (val && String(val).trim()) ? String(val) : (fallback || "");
+    el.innerHTML = raw.split(/\n+/).filter(Boolean).map(p => "<p style=\"margin:.45rem 0\">"+e(p)+"</p>").join("");
+  };
   setMl("mlSiteName", c.siteName, "Solidarité France");
-  setMl("mlEditor", c.editorName, "à renseigner (Espace créateur → Textes)");
+  setMl("mlEditor", c.editorName, "à renseigner (Espace créateur → ⚖️ Mentions)");
   setMl("mlStatus", c.editorStatus, "portail citoyen non commercial");
   setMl("mlContact", c.editorEmail, "à renseigner");
   setMl("mlHost", c.editorHost, "à renseigner");
   setMl("mlUpdate", c.legalUpdate ? ("Mise à jour : " + c.legalUpdate) : "", "Mise à jour : novembre 2026");
+  setMl("mlWarnTitle", c.legalWarnTitle, "Avertissement important");
+  setMl("mlPrivacyTitle", c.legalPrivacyTitle, "Données personnelles");
+  setMl("mlSourcesTitle", c.legalSourcesTitle, "Sources, droit applicable & responsabilité");
+  setMlHtml("mlWarnBody", c.legalWarn, DEF.legalWarn);
+  setMlHtml("mlPrivacyBody", c.legalPrivacy, DEF.legalPrivacy);
+  setMlHtml("mlSourcesBody", c.legalSources, DEF.legalSources);
+  setMlHtml("mlExtraBody", c.legalExtra, "");
 
 
   // Nav labels
@@ -2822,13 +2841,22 @@ function panel() {
       <p class="sub">Attention : active uniquement si vous devez couper l'accès public temporairement.</p>`;
   } else if (tab === "legal") {
     h += `
-      <p class="sub">Ces infos s'affichent dans <b>Mentions légales</b> en bas du site. Remplissez puis <b>Sauvegarder</b>.</p>
-      <label>Nom de l'éditeur (vous ou votre structure)<input id="cEditorName" class="field" value="${e(cfg.editorName || "")}" placeholder="Prénom Nom / Association…" maxlength="120"></label>
+      <p class="sub">Tout le contenu des <b>Mentions légales</b> est modifiable ici. Pensez à <b>Sauvegarder</b>.</p>
+      <h4 style="margin:.6rem 0 .35rem;color:var(--navy)">Identité de l'éditeur</h4>
+      <label>Nom de l'éditeur<input id="cEditorName" class="field" value="${e(cfg.editorName || "")}" placeholder="Prénom Nom / Association…" maxlength="120"></label>
       <label>Statut / qualité<input id="cEditorStatus" class="field" value="${e(cfg.editorStatus || "")}" placeholder="Particulier, association loi 1901…" maxlength="120"></label>
       <label>E-mail de contact<input id="cEditorEmail" class="field" value="${e(cfg.editorEmail || "")}" placeholder="contact@email.com" maxlength="120"></label>
-      <label>Hébergeur (nom + adresse complète)<textarea id="cEditorHost" class="field" rows="3" maxlength="300" placeholder="Ex : GitHub Pages / OVH, adresse…">${e(cfg.editorHost || "")}</textarea></label>
-      <label>Date de mise à jour des mentions<input id="cLegalUpdate" class="field" value="${e(cfg.legalUpdate || "")}" placeholder="novembre 2026" maxlength="40"></label>
-      <p class="sub" style="margin-top:.8rem">Le texte d'avertissement (erreurs possibles, sources OSM, etc.) reste standard pour votre protection.</p>`;
+      <label>Hébergeur (nom + adresse)<textarea id="cEditorHost" class="field" rows="2" maxlength="300" placeholder="GitHub Pages / OVH…">${e(cfg.editorHost || "")}</textarea></label>
+      <label>Date de mise à jour<input id="cLegalUpdate" class="field" value="${e(cfg.legalUpdate || "")}" placeholder="novembre 2026" maxlength="40"></label>
+      <h4 style="margin:.9rem 0 .35rem;color:var(--navy)">Textes affichés (modifiables)</h4>
+      <label>Titre avertissement<input id="cLegalWarnTitle" class="field" value="${e(cfg.legalWarnTitle || "")}" maxlength="80"></label>
+      <label>Texte d'avertissement<textarea id="cLegalWarn" class="field" rows="6" maxlength="2500">${e(cfg.legalWarn || "")}</textarea></label>
+      <label>Titre données personnelles<input id="cLegalPrivacyTitle" class="field" value="${e(cfg.legalPrivacyTitle || "")}" maxlength="80"></label>
+      <label>Texte données personnelles<textarea id="cLegalPrivacy" class="field" rows="4" maxlength="1500">${e(cfg.legalPrivacy || "")}</textarea></label>
+      <label>Titre sources / droit / responsabilité<input id="cLegalSourcesTitle" class="field" value="${e(cfg.legalSourcesTitle || "")}" maxlength="100"></label>
+      <label>Texte sources, articles de loi & responsabilité<textarea id="cLegalSources" class="field" rows="10" maxlength="4000">${e(cfg.legalSources || "")}</textarea></label>
+      <label>Texte libre supplémentaire (optionnel)<textarea id="cLegalExtra" class="field" rows="3" maxlength="1500" placeholder="Paragraphe en plus…">${e(cfg.legalExtra || "")}</textarea></label>
+      <p class="sub">Astuce : un saut de ligne = nouveau paragraphe sur le site.</p>`;
   } else if (tab === "nav") {
     h += `
       <p class="sub">Libellés du menu et boutons principaux.</p>
@@ -2902,6 +2930,10 @@ function panel() {
   bind("cEditorName", "editorName"); bind("cEditorStatus", "editorStatus");
   bind("cEditorEmail", "editorEmail"); bind("cEditorHost", "editorHost");
   bind("cLegalUpdate", "legalUpdate");
+  bind("cLegalWarnTitle", "legalWarnTitle"); bind("cLegalWarn", "legalWarn");
+  bind("cLegalPrivacyTitle", "legalPrivacyTitle"); bind("cLegalPrivacy", "legalPrivacy");
+  bind("cLegalSourcesTitle", "legalSourcesTitle"); bind("cLegalSources", "legalSources");
+  bind("cLegalExtra", "legalExtra");
   bind("cHeroTag", "heroTag"); bind("cUrgLabel", "urgLabel");
   bind("cBesoinsTitle", "besoinsTitle"); bind("cBesoinsSub", "besoinsSub");
   bind("cCarteTitle", "carteTitle"); bind("cCarteSub", "carteSub"); bind("cWarnMap", "warnMap");
