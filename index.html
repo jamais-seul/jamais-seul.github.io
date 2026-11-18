@@ -68,7 +68,7 @@ a{color:var(--blue)}
 .urg{background:var(--red);color:#fff;font-size:.85rem;padding:.5rem 1rem;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.6rem}
 .urg a{background:#fff;color:var(--red);padding:2px 10px;border-radius:20px;text-decoration:none;font-weight:800}
 nav{background:var(--card);border-bottom:1px solid var(--bd);padding:.7rem 1rem;display:flex;align-items:center;gap:.8rem;position:sticky;top:0;z-index:1000}
-.logo{font-weight:800;font-size:1.15rem;color:var(--navy);text-decoration:none;white-space:nowrap}
+.logo{font-weight:800;font-size:1.15rem;color:var(--navy);text-decoration:none;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}.logo img{flex-shrink:0}
 .links{display:flex;gap:.2rem;overflow-x:auto;flex:1}
 .links a{color:var(--text);text-decoration:none;font-weight:600;font-size:.88rem;padding:5px 9px;border-radius:6px;white-space:nowrap}
 .links a:hover{background:var(--bg)}
@@ -190,7 +190,7 @@ body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(-
 <a href="tel:115">115 Hébergement</a><a href="tel:15">15 SAMU</a><a href="tel:17">17 Police</a><a href="tel:112">112 Europe</a><a href="tel:3919">3919 Violences</a><a href="tel:3114">3114 Détresse</a><a href="tel:119">119 Enfance</a></div>
 
 <nav>
-<a class="logo" href="#top">🤝 Solidarité France</a>
+<a class="logo" href="#top" id="siteLogoLink"><img id="siteLogoImg" alt="" hidden style="height:28px;width:28px;border-radius:6px;object-fit:cover;vertical-align:middle;margin-right:6px"><span id="siteLogoEmoji">🤝</span> <span id="siteLogoText">Solidarité France</span></a>
 <div class="links"><a href="#besoins">Besoins</a><a href="#carte">Carte</a><a href="#ressources">Numéros</a><a href="#assistant">Assistant</a><a href="#cv">CV</a><a href="#simulateur">Démarches</a><a href="#benevolat">Bénévolat</a></div>
 <div class="gt-wrap notranslate" title="Traduire tout le site dans n'importe quelle langue">
   <span class="gt-icon" aria-hidden="true">🌐</span>
@@ -860,7 +860,24 @@ function list(){
   l.forEach(function(p){p.dist=rp?dist(rp.la,rp.ln,p.la,p.ln):null});
   if(rp)l.sort(function(a,b){return a.dist-b.dist});
   return l}
-function gps(p){return"https://www.google.com/maps/dir/?api=1&destination="+p.la+","+p.ln}
+function gps(p, provider){
+  var dest=p.la+","+p.ln;
+  var q=encodeURIComponent((p.a||p.n||"")+(p.c?" "+p.c:""));
+  provider=provider||"choice";
+  if(provider==="google") return "https://www.google.com/maps/dir/?api=1&destination="+dest;
+  if(provider==="osm") return "https://www.openstreetmap.org/directions?engine=fossgis_osrm_car&route=%3B"+dest+"#map=16/"+p.la+"/"+p.ln;
+  if(provider==="apple") return "https://maps.apple.com/?daddr="+dest;
+  if(provider==="geo") return "geo:"+dest+"?q="+dest;
+  // default: open detail modal with choices
+  return "#itin-"+p.id;
+}
+function itinLinks(p){
+  return '<div class="row" style="margin-top:.4rem;gap:6px;flex-wrap:wrap">'+
+    '<a class="btn l" href="'+gps(p,"google")+'" target="_blank" rel="noopener">🗺️ Google</a>'+
+    '<a class="btn l" href="'+gps(p,"osm")+'" target="_blank" rel="noopener">🌍 OSM</a>'+
+    '<a class="btn l" href="'+gps(p,"apple")+'" target="_blank" rel="noopener">🍎 Apple</a>'+
+  '</div>';
+}
 function get(id){return byId[id]||favs[id]}
 
 function renderChips(){
@@ -891,7 +908,7 @@ function renderMarkers(l){
   var arr=[];
   l.slice(0,15000).forEach(function(p){
     var ic=L.divIcon({className:"",iconSize:[20,20],iconAnchor:[10,10],popupAnchor:[0,-10],html:'<div style="background:'+CATS[p.k]+';width:20px;height:20px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.45)"></div>'});
-    var m=L.marker([p.la,p.ln],{icon:ic}).bindPopup("<strong>"+esc(p.n)+"</strong><br><small>"+esc(p.k)+(p.src==="ref"?" • repère (position approx.)":"")+"</small>"+(p.a?"<br><small>"+esc(p.a)+"</small>":"")+(p.h?"<br><small>🕒 "+esc(p.h)+"</small>":"")+'<br><a href="'+gps(p)+'" target="_blank" rel="noopener">🧭 Itinéraire</a> · <a href="#" data-a="detail" data-id="'+esc(p.id)+'">Détails</a>');
+    var m=L.marker([p.la,p.ln],{icon:ic}).bindPopup("<strong>"+esc(p.n)+"</strong><br><small>"+esc(p.k)+(p.src==="ref"?" • repère (position approx.)":"")+"</small>"+(p.a?"<br><small>"+esc(p.a)+"</small>":"")+(p.h?"<br><small>🕒 "+esc(p.h)+"</small>":"")+'<br><a href="#" data-a="detail" data-id="'+esc(p.id)+'">🧭 Itinéraire & détails</a>');
     markers[p.id]=m;arr.push(m)});
   if(clustered)layer.addLayers(arr);else arr.forEach(function(m){m.addTo(layer)})}
 function renderAll(){renderChips();var l=list();renderList(l);renderMarkers(l)}
@@ -908,7 +925,16 @@ document.getElementById("resToggle")?.addEventListener("click", function(){
 });
 function renderRes(){
   $("#rtabs").innerHTML=Object.keys(R).map(function(t){return'<button class="chip'+(t===rtab?" on":"")+'" data-a="rtab" data-v="'+esc(t)+'">'+esc(t)+"</button>"}).join("");
-  $("#rgrid").innerHTML=R[rtab].map(function(r){var tel=r[2].indexOf("tel:")===0;return'<a class="res'+(tel?" tel":"")+'" href="'+r[2]+'"'+(tel?"":' target="_blank" rel="noopener"')+"><b>"+(tel?"📞 ":"🌐 ")+esc(r[0])+"</b><span>"+esc(r[1])+"</span></a>"}).join("")}
+  $("#rgrid").innerHTML=R[rtab].map(function(r){
+    var tel=r[2].indexOf("tel:")===0;
+    if(tel){
+      var num=r[2].replace(/^tel:/,"");
+      return '<div class="res tel" role="button" tabindex="0" data-a="call" data-tel="'+esc(num)+'" title="Appeler ou copier">'
+        +'<b>📞 '+esc(r[0])+'</b><span>'+esc(r[1])+'</span>'
+        +'<span style="font-size:.8rem;color:var(--muted);margin-top:.2rem">Appuyer pour appeler · maintien pour copier</span></div>';
+    }
+    return '<a class="res" href="'+r[2]+'" target="_blank" rel="noopener"><b>🌐 '+esc(r[0])+'</b><span>'+esc(r[1])+'</span></a>';
+  }).join("")}
 function renderChecks(){
   $("#checks").innerHTML=CHECK.map(function(t,i){var d=checks.indexOf(i)>-1;return'<label class="ck'+(d?" done":"")+'"><input type="checkbox" data-a="check" data-id="'+i+'"'+(d?" checked":"")+"><span>"+esc(t)+"</span></label>"}).join("");
   $("#pbar").style.width=Math.round(checks.length/CHECK.length*100)+"%";
@@ -945,7 +971,7 @@ function closeModal(){$("#mbg").classList.remove("open")}
 function detail(id){
   var p=get(id);if(!p)return;var w=safeUrl(p.web),T={n:"node",w:"way",r:"relation"};
   var note=p.src==="ref"?"Repère national : position approximative, consultez le site pour l'adresse et les horaires exacts.":p.src==="user"?"Lieu ajouté par vous (visible uniquement sur votre appareil).":"Informations collaboratives (OpenStreetMap) : à vérifier avant de venir.";
-  openModal('<span class="badge" style="background:'+CATS[p.k]+'">'+esc(p.k)+'</span><h2 style="margin:.5rem 0">'+esc(p.n)+'</h2><div class="result" style="margin:0 0 1rem">'+(p.o?"🏢 <b>Géré par :</b> "+esc(p.o)+"<br>":"")+(p.c?"🏙️ <b>Ville :</b> "+esc(p.c)+"<br>":"")+(p.a?"📍 <b>Adresse :</b> "+esc(p.a)+"<br>":"")+(p.h?"🕒 <b>Horaires :</b> "+esc(p.h)+"<br>":"")+(p.tel?'📞 <b>Tél :</b> <a href="tel:'+esc(p.tel.replace(/[^\d+]/g,""))+'">'+esc(p.tel)+"</a><br>":"")+(p.d?"<br>"+esc(p.d)+"<br>":"")+"<br><small>"+esc(note)+"</small></div>"+'<div class="row"><a class="btn" href="'+gps(p)+'" target="_blank" rel="noopener">🧭 Itinéraire</a>'+(w?'<a class="btn g" href="'+esc(w)+'" target="_blank" rel="noopener">🌐 Site</a>':"")+(p.src==="ref"&&p.q?'<a class="btn l" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(p.q)+'" target="_blank" rel="noopener">🔎 Adresse exacte</a>':"")+(p.src==="osm"?'<a class="btn l" href="https://www.openstreetmap.org/'+T[p.id[0]]+"/"+esc(p.id.slice(1))+'" target="_blank" rel="noopener">✏️ Corriger sur OSM</a>':"")+(p.src==="user"?'<button class="btn rd" data-a="del" data-id="'+esc(p.id)+'">🗑️ Supprimer</button>':"")+"</div>")}
+  openModal('<span class="badge" style="background:'+CATS[p.k]+'">'+esc(p.k)+'</span><h2 style="margin:.5rem 0">'+esc(p.n)+'</h2><div class="result" style="margin:0 0 1rem">'+(p.o?"🏢 <b>Géré par :</b> "+esc(p.o)+"<br>":"")+(p.c?"🏙️ <b>Ville :</b> "+esc(p.c)+"<br>":"")+(p.a?"📍 <b>Adresse :</b> "+esc(p.a)+"<br>":"")+(p.h?"🕒 <b>Horaires :</b> "+esc(p.h)+"<br>":"")+(p.tel?'📞 <b>Tél :</b> <a href="tel:'+esc(p.tel.replace(/[^\d+]/g,""))+'">'+esc(p.tel)+"</a><br>":"")+(p.d?"<br>"+esc(p.d)+"<br>":"")+"<br><small>"+esc(note)+"</small></div>"+'<div class="row"><a class="btn" href="'+gps(p,"google")+'" target="_blank" rel="noopener">🗺️ Google Maps</a><a class="btn l" href="'+gps(p,"osm")+'" target="_blank" rel="noopener">🌍 OpenStreetMap</a><a class="btn l" href="'+gps(p,"apple")+'" target="_blank" rel="noopener">🍎 Apple Plans</a>'+(w?'<a class="btn g" href="'+esc(w)+'" target="_blank" rel="noopener">🌐 Site</a>':"")+(p.src==="ref"&&p.q?'<a class="btn l" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(p.q)+'" target="_blank" rel="noopener">🔎 Adresse exacte</a>':"")+(p.src==="osm"?'<a class="btn l" href="https://www.openstreetmap.org/'+T[p.id[0]]+"/"+esc(p.id.slice(1))+'" target="_blank" rel="noopener">✏️ Corriger sur OSM</a>':"")+(p.src==="user"?'<button class="btn rd" data-a="del" data-id="'+esc(p.id)+'">🗑️ Supprimer</button>':"")+"</div>")}
 function addForm(){
   openModal('<h2 style="margin-bottom:.8rem">➕ Ajouter un lieu</h2><input id="f-n" class="field" placeholder="Nom *" maxlength="100"><input id="f-c" class="field" placeholder="Ville *" maxlength="60"><select id="f-k" class="field">'+Object.keys(CATS).map(function(k){return"<option>"+esc(k)+"</option>"}).join("")+'</select><input id="f-h" class="field" placeholder="Horaires" maxlength="80"><input id="f-d" class="field" placeholder="Description / conditions" maxlength="250"><input id="f-u" class="field" placeholder="Site web (https://…)"><button class="btn g" style="width:100%" data-a="save" id="f-b">Publier sur la carte</button><p class="sub" style="margin-top:.6rem">Visible uniquement sur votre appareil. Pour que tout le monde le voie, ajoutez-le sur openstreetmap.org.</p>')}
 async function savePlace(){
@@ -969,6 +995,17 @@ document.addEventListener("click",function(e){
   if(a==="detail"){e.preventDefault();detail(id)}
   else if(a==="close")closeModal();
   else if(a==="theme")setTheme(!document.body.classList.contains("dark"));
+  else if(a==="call"){
+    var num=t.getAttribute("data-tel")||"";
+    if(!num)return;
+    // Essai d'appel ; sur ordinateur le navigateur peut ouvrir une page vide : on propose aussi la copie
+    var isMobile=/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+    if(isMobile){ location.href="tel:"+num; }
+    else {
+      openModal("<h2 style=\"margin:0 0 .6rem\">📞 "+esc(num)+"</h2><p class=\"sub\">Sur ordinateur, le lien téléphone peut ouvrir une page vide (normal si aucun logiciel d'appel n'est installé).</p><div class=\"row\" style=\"margin-top:1rem\"><a class=\"btn g\" href=\"tel:"+esc(num)+"\">Appeler</a><button class=\"btn l\" id=\"copyTel\">📋 Copier le numéro</button></div>");
+      setTimeout(function(){ var b=document.getElementById("copyTel"); if(b)b.onclick=function(){ navigator.clipboard&&navigator.clipboard.writeText(num); b.textContent="✅ Copié"; }; },50);
+    }
+  }
   else if(a==="add")addForm();
   else if(a==="save")savePlace();
   else if(a==="del"){custom=custom.filter(function(p){return p.id!==id});delete favs[id];sv("sf_custom_v8",custom);sv("sf_favs_v8",favs);closeModal();renderAll()}
@@ -1467,8 +1504,9 @@ document.getElementById("cvPresets")?.addEventListener("click", e => {
   if(!b) return;
   const p = CV_PRESETS[b.dataset.preset];
   if(!p) return;
-  document.getElementById("cvTitle").value = p.title || "";
-  document.getElementById("cvTitleCustom").value = "";
+  // Titre métier dans le champ libre (le <select> n'a pas tous les métiers)
+  document.getElementById("cvTitle").value = "";
+  document.getElementById("cvTitleCustom").value = p.title || "";
   document.getElementById("cvProfile").value = p.profile || "";
   document.querySelectorAll("#cvSkillChecks input").forEach(c => { c.checked = (p.skills||[]).includes(c.value); });
   document.getElementById("cvExps").innerHTML = "";
@@ -1575,7 +1613,8 @@ const CV_ICONS = {
     "tourisme": "🧳", "guide": "🗺️", "hotellerie": "🏨",
     "boulanger": "🥖", "fromager": "🧀", "fleuriste": "💐",
     "veterinaire": "🐾", "toiletteur": "🐕",
-    "default": "💼"
+    "default": "📄",
+    "curriculum": "📄", "vitae": "📄", "cv": "📄"
   }
 };
 function cvJobIcon(title){
@@ -1961,6 +2000,17 @@ document.getElementById("cvDl")?.addEventListener("click", () => {
 });
 
 if(ld("sf_dark",window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches))document.body.classList.add("dark");
+/* Sur ordinateur : éviter les pages vides sur tel: */
+document.querySelector(".urg")?.addEventListener("click",function(ev){
+  var a=ev.target.closest("a[href^=tel]");
+  if(!a)return;
+  if(/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent))return; // mobile: laisser faire
+  ev.preventDefault();
+  var num=(a.getAttribute("href")||"").replace(/^tel:/,"");
+  openModal("<h2 style=\"margin:0 0 .6rem\">📞 "+esc(num)+"</h2><p class=\"sub\">Sur ordinateur, le navigateur peut afficher une page vide si aucun logiciel d'appel n'est configuré. Utilisez votre téléphone ou copiez le numéro.</p><div class=\"row\" style=\"margin-top:1rem\"><a class=\"btn g\" href=\"tel:"+esc(num)+"\">Tenter l'appel</a><button class=\"btn l\" id=\"copyTel2\">📋 Copier "+esc(num)+"</button></div>");
+  setTimeout(function(){ var b=document.getElementById("copyTel2"); if(b)b.onclick=function(){ navigator.clipboard&&navigator.clipboard.writeText(num); b.textContent="✅ Copié"; }; },50);
+},true);
+
 initMap();renderRes();renderChecks();renderAll();
 if(Object.keys(S.live).length){
   status("✅ "+Object.keys(S.live).length+" lieux OSM restaurés depuis cet appareil + "+(NATIONAL.length+GENERATED.length).toLocaleString("fr-FR")+" repères. Total : "+items().length.toLocaleString("fr-FR")+".");
@@ -2103,6 +2153,7 @@ const DEF = {
   order: Object.keys(SECS), hidden: [],
   customCSS: "",
   logoEmoji: "🤝",
+  logoUrl: "",
   navBesoins: "Besoins",
   navCarte: "Carte",
   navRessources: "Numéros",
@@ -2445,9 +2496,19 @@ function applyCfg() {
     else wrap.style.display = "";
   });
 
-  // Logo emoji + site name
-  const logo = document.querySelector(".logo");
-  if (logo && c.siteName) logo.textContent = (c.logoEmoji || "🤝") + " " + c.siteName;
+  // Logo (emoji ou image) + nom
+  const logoText = document.getElementById("siteLogoText");
+  const logoEmoji = document.getElementById("siteLogoEmoji");
+  const logoImg = document.getElementById("siteLogoImg");
+  if (logoText && c.siteName) logoText.textContent = c.siteName;
+  if (logoEmoji) {
+    if (c.logoUrl) { logoEmoji.hidden = true; }
+    else { logoEmoji.hidden = false; logoEmoji.textContent = c.logoEmoji || "🤝"; }
+  }
+  if (logoImg) {
+    if (c.logoUrl) { logoImg.hidden = false; logoImg.src = c.logoUrl; }
+    else { logoImg.hidden = true; logoImg.removeAttribute("src"); }
+  }
 
   // Nav labels
   const navMap = {
@@ -2705,6 +2766,9 @@ function panel() {
     h += `
       <p class="sub">Libellés du menu et boutons principaux.</p>
       <label>Emoji logo<input id="cLogoEmoji" class="field" value="${e(cfg.logoEmoji || "🤝")}" maxlength="4"></label>
+      <label>Logo image (URL)<input id="cLogoUrl" class="field" value="${e(cfg.logoUrl || "")}" placeholder="https://…/logo.png" maxlength="300"></label>
+      <label>Ou importer un logo<input type="file" id="cLogoFile" accept="image/*" class="field" style="padding:.4rem"></label>
+      <p class="sub">Le logo importé est stocké sur cet appareil (localStorage). L'emoji est utilisé si aucune image n'est définie.</p>
       <label>Menu — Besoins<input id="cNavBesoins" class="field" value="${e(cfg.navBesoins || "")}" maxlength="30"></label>
       <label>Menu — Carte<input id="cNavCarte" class="field" value="${e(cfg.navCarte || "")}" maxlength="30"></label>
       <label>Menu — Numéros<input id="cNavRessources" class="field" value="${e(cfg.navRessources || "")}" maxlength="30"></label>
@@ -2782,7 +2846,7 @@ function panel() {
   bind("cBtnHere", "btnHere"); bind("cBtnReset", "btnReset"); bind("cBtnMore", "btnMore");
   bind("cResToggle", "resToggle");
   bind("cKpi1", "kpi1"); bind("cKpi2", "kpi2"); bind("cKpi3", "kpi3"); bind("cKpi4", "kpi4");
-  bind("cLogoEmoji", "logoEmoji");
+  bind("cLogoEmoji", "logoEmoji"); bind("cLogoUrl", "logoUrl");
   bind("cNavBesoins", "navBesoins"); bind("cNavCarte", "navCarte"); bind("cNavRessources", "navRessources");
   bind("cNavAssistant", "navAssistant"); bind("cNavCv", "navCv"); bind("cNavSim", "navSim"); bind("cNavBene", "navBene");
   bind("cBtnLocate", "btnLocate"); bind("cBtnAddPlace", "btnAddPlace");
@@ -2843,6 +2907,22 @@ function panel() {
     a.download = "solidarite-france-config.json";
     a.click();
     $("#aMsg").textContent = "⬇️ Téléchargé";
+  };
+
+  
+  const logoFile = $("#cLogoFile");
+  if (logoFile) logoFile.onchange = () => {
+    const f = logoFile.files && logoFile.files[0];
+    if (!f) return;
+    if (f.size > 800000) { $("#aMsg").textContent = "Logo trop lourd (max ~800 Ko)"; return; }
+    const reader = new FileReader();
+    reader.onload = () => {
+      cfg.logoUrl = reader.result;
+      localStorage.setItem("sf_cfg", JSON.stringify(cfg));
+      applyCfg();
+      $("#aMsg").textContent = "✅ Logo importé";
+    };
+    reader.readAsDataURL(f);
   };
 
   $("#aSave").onclick = () => {
