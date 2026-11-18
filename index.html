@@ -85,15 +85,25 @@ footer{background:var(--card);border-top:1px solid var(--bd);text-align:center;p
 /* Espace créateur */
 #lockBtn{position:fixed;left:14px;bottom:18px;z-index:9999;width:48px;height:48px;border-radius:50%;border:0;background:var(--navy,#0f4c81);color:#fff;font-size:1.35rem;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center}
 #lockBtn:hover{transform:scale(1.06)}
-#side{position:fixed;top:0;right:0;width:min(380px,100vw);height:100vh;background:var(--card,#fff);border-left:1px solid var(--bd,#e2e8f0);z-index:10000;display:flex;flex-direction:column;box-shadow:-8px 0 24px rgba(0,0,0,.12);overflow:hidden}
+#side{position:fixed;top:0;right:0;width:var(--side-w,380px);max-width:96vw;height:100vh;background:var(--card,#fff);border-left:1px solid var(--bd,#e2e8f0);z-index:10000;display:flex;flex-direction:column;box-shadow:-8px 0 24px rgba(0,0,0,.12);overflow:hidden;transition:width .15s ease}
 #side[hidden]{display:none!important}
-#side.min{width:48px}
-#side .sh{display:flex;justify-content:space-between;align-items:center;padding:.85rem 1rem;border-bottom:1px solid var(--bd,#e2e8f0);font-weight:700;gap:.5rem}
+#side.min{width:48px!important;--side-w:48px}
+#side .sh{display:flex;justify-content:space-between;align-items:center;padding:.85rem 1rem;border-bottom:1px solid var(--bd,#e2e8f0);font-weight:700;gap:.5rem;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff}
+#side .sh b{color:#fff}
+#side .sh .btn{background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.35)}
+#side .sh .btn.rd{background:#f43f5e;border-color:#f43f5e}
 #side .sb{padding:1rem;overflow-y:auto;flex:1}
 #side .sf{padding:.8rem 1rem;border-top:1px solid var(--bd,#e2e8f0);display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
-#sArrow{position:absolute;left:-14px;top:50%;transform:translateY(-50%);width:28px;height:48px;border:1px solid var(--bd,#e2e8f0);background:var(--card,#fff);border-radius:8px 0 0 8px;cursor:pointer;font-size:.85rem}
-body.padr{padding-right:min(380px,100vw)}
-@media(max-width:700px){body.padr{padding-right:0}#side{width:100vw}}
+#sArrow{position:absolute;left:-14px;top:50%;transform:translateY(-50%);width:28px;height:48px;border:1px solid var(--bd,#e2e8f0);background:var(--card,#fff);border-radius:8px 0 0 8px;cursor:pointer;font-size:.85rem;z-index:2}
+#sResize{position:absolute;left:0;top:0;bottom:0;width:8px;cursor:ew-resize;z-index:3;background:transparent}
+#sResize:hover,#sResize.dragging{background:rgba(124,58,237,.25)}
+body.padr{padding-right:var(--side-w,380px)}
+@media(max-width:700px){body.padr{padding-right:0}#side{width:100vw!important;--side-w:100vw}#sResize{display:none}}
+/* Tabs créateur style capture */
+#side .tabs{display:flex;flex-wrap:wrap;gap:.4rem;padding:.7rem 1rem;border-bottom:1px solid var(--bd);background:#f5f3ff}
+#side .tabs .chip{background:#fce7f3;color:#9d174d;border:2px solid #f9a8d4;border-radius:999px;padding:.4rem .85rem;font-weight:700;font-size:.82rem;box-shadow:0 2px 0 #f472b6;cursor:pointer}
+#side .tabs .chip.on{background:#c084fc;color:#4c1d95;border-color:#a78bfa;box-shadow:0 2px 0 #7c3aed}
+#side .tabs .chip:hover{filter:brightness(1.05)}
 
 </style>
 </head>
@@ -209,12 +219,27 @@ body.padr{padding-right:min(380px,100vw)}
     <button class="chip" data-model="timeline">⏳ Timeline</button>
     <button class="chip" data-model="banner">🖼️ Bannière</button>
   </div>
-  <div id="cvColorRow" style="margin-top:.7rem;display:flex;flex-wrap:wrap;gap:.6rem;align-items:center">
-    <label style="font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:.5rem">
-      Couleur de la barre / thème du CV
-      <input type="color" id="cvAccentColor" value="#2c3e50" style="width:44px;height:32px;border:1px solid var(--bd);border-radius:8px;padding:0;cursor:pointer">
-    </label>
-    <span class="sub" style="margin:0">Change la couleur du modèle choisi (perso)</span>
+  <div id="cvColorRow" style="margin-top:.9rem">
+    <p style="font-size:.88rem;font-weight:700;margin-bottom:.5rem">🎨 Couleurs du CV (plusieurs zones)</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.6rem;margin-bottom:.7rem">
+      <label style="font-size:.8rem;font-weight:600">Principale / barre
+        <input type="color" id="cvAccentColor" value="#2c3e50" style="width:100%;height:34px;border:1px solid var(--bd);border-radius:8px;padding:2px;cursor:pointer;margin-top:3px">
+      </label>
+      <label style="font-size:.8rem;font-weight:600">Titres / accents
+        <input type="color" id="cvTitleColor" value="#0f4c81" style="width:100%;height:34px;border:1px solid var(--bd);border-radius:8px;padding:2px;cursor:pointer;margin-top:3px">
+      </label>
+      <label style="font-size:.8rem;font-weight:600">Fond latéral / header
+        <input type="color" id="cvSideColor" value="#f8fafc" style="width:100%;height:34px;border:1px solid var(--bd);border-radius:8px;padding:2px;cursor:pointer;margin-top:3px">
+      </label>
+      <label style="font-size:.8rem;font-weight:600">Texte principal
+        <input type="color" id="cvTextColor" value="#1e293b" style="width:100%;height:34px;border:1px solid var(--bd);border-radius:8px;padding:2px;cursor:pointer;margin-top:3px">
+      </label>
+    </div>
+    <p style="font-size:.78rem;color:var(--muted);margin-bottom:.4rem">Palettes rapides (cliquez pour appliquer) :</p>
+    <div id="cvSwatches" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:.4rem">
+      <!-- filled by JS -->
+    </div>
+    <span class="sub" style="margin:0">Les couleurs s’appliquent selon le modèle (barre, titres, fond, texte…).</span>
   </div>
   <label style="font-weight:700;margin-top:.9rem;display:block">Profil type (remplit en 1 clic)</label>
   <div class="chips" id="cvPresets">
@@ -1072,12 +1097,55 @@ document.getElementById("cvModels")?.addEventListener("click", e => {
   cvModel = b.dataset.model;
   cvBuild();
 });
-const cvCol = document.getElementById("cvAccentColor");
-if(cvCol){
-  const saved = localStorage.getItem("sf_cv_color");
-  if(saved) cvCol.value = saved;
-  cvCol.oninput = () => { localStorage.setItem("sf_cv_color", cvCol.value); cvBuild(); };
+// Multi-couleurs CV + palettes
+const CV_COLOR_KEYS = ["cvAccentColor","cvTitleColor","cvSideColor","cvTextColor"];
+const CV_COLOR_LS = ["sf_cv_color","sf_cv_title","sf_cv_side","sf_cv_text"];
+const CV_PALETTES = [
+  {name:"Marine", colors:["#0f4c81","#1e40af","#e0f2fe","#0f172a"]},
+  {name:"Émeraude", colors:["#047857","#059669","#ecfdf5","#064e3b"]},
+  {name:"Bordeaux", colors:["#9f1239","#be123c","#fff1f2","#1c1917"]},
+  {name:"Indigo", colors:["#4338ca","#6366f1","#eef2ff","#1e1b4b"]},
+  {name:"Ambre", colors:["#b45309","#d97706","#fffbeb","#292524"]},
+  {name:"Ardoise", colors:["#334155","#475569","#f1f5f9","#0f172a"]},
+  {name:"Violet", colors:["#6d28d9","#7c3aed","#f5f3ff","#1e1b4b"]},
+  {name:"Corail", colors:["#c2410c","#ea580c","#fff7ed","#1c1917"]},
+  {name:"Sarcelle", colors:["#0f766e","#14b8a6","#f0fdfa","#134e4a"]},
+  {name:"Rose", colors:["#be185d","#db2777","#fdf2f8","#1f2937"]},
+  {name:"Forêt", colors:["#166534","#16a34a","#f0fdf4","#14532d"]},
+  {name:"Nuit", colors:["#1e293b","#334155","#0f172a","#f8fafc"]}
+];
+function loadCvColors(){
+  CV_COLOR_KEYS.forEach((id,i)=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    const saved = localStorage.getItem(CV_COLOR_LS[i]);
+    if(saved) el.value = saved;
+    el.oninput = () => { localStorage.setItem(CV_COLOR_LS[i], el.value); cvBuild(); };
+  });
+  // Swatches
+  const box = document.getElementById("cvSwatches");
+  if(box){
+    box.innerHTML = CV_PALETTES.map((p,idx)=>`
+      <button type="button" data-pal="${idx}" title="${p.name}" style="display:flex;flex-direction:column;align-items:center;gap:2px;border:1px solid var(--bd);border-radius:10px;padding:5px 7px;background:var(--card);cursor:pointer;font-size:.68rem;color:var(--muted)">
+        <span style="display:flex;gap:2px">
+          ${p.colors.map(c=>`<span style="width:14px;height:14px;border-radius:4px;background:${c};border:1px solid rgba(0,0,0,.12)"></span>`).join("")}
+        </span>
+        ${p.name}
+      </button>`).join("");
+    box.querySelectorAll("[data-pal]").forEach(btn=>{
+      btn.onclick = ()=>{
+        const pal = CV_PALETTES[+btn.dataset.pal];
+        if(!pal) return;
+        CV_COLOR_KEYS.forEach((id,i)=>{
+          const el = document.getElementById(id);
+          if(el){ el.value = pal.colors[i]; localStorage.setItem(CV_COLOR_LS[i], pal.colors[i]); }
+        });
+        cvBuild();
+      };
+    });
+  }
 }
+loadCvColors();
 
 /* Profils types – remplissage ultra-rapide */
 const CV_PRESETS = {
@@ -1188,10 +1256,19 @@ function cvGetData(){
 }
 
 
-function getCvColor(){
-  const el = document.getElementById("cvAccentColor");
-  return (el && el.value) || localStorage.getItem("sf_cv_color") || "#2c3e50";
+function getCvColors(){
+  const g = (id, ls, def) => {
+    const el = document.getElementById(id);
+    return (el && el.value) || localStorage.getItem(ls) || def;
+  };
+  return {
+    accent: g("cvAccentColor", "sf_cv_color", "#2c3e50"),
+    title:  g("cvTitleColor",  "sf_cv_title", "#0f4c81"),
+    side:   g("cvSideColor",   "sf_cv_side",  "#f8fafc"),
+    text:   g("cvTextColor",   "sf_cv_text",  "#1e293b")
+  };
 }
+function getCvColor(){ return getCvColors().accent; } // compatibilité
 /* Petites icônes SVG pour téléphone / mail / lieu */
 const CV_ICONS = {
   phone: `<span style="margin-right:8px;font-size:14px;line-height:1">📞</span>`,
@@ -1275,15 +1352,16 @@ function cvBuild(){
   const name = [d.first, d.last].filter(Boolean).join(" ").toUpperCase() || "PRÉNOM NOM";
   const title = d.title || "Curriculum Vitae";
   const contactLines = [d.city, d.tel, d.email, d.age ? d.age+" ans" : ""].filter(Boolean);
+  const cols = getCvColors();
   let html = "";
 
   // ========== PRO (style PDF : barre latérale sombre + photo) ==========
     // ========== CANVA CRÈME (style capture Célia) ==========
   /*canva*/ if(cvModel === "canva"){
-    const c = getCvColor();
-    const side = "#f3efe6"; // crème chaleureux
-    const ink = "#3d3429";
-    const accent = c;
+    const c = cols.accent;
+    const side = cols.side || "#f3efe6";
+    const ink = cols.text || "#3d3429";
+    const accent = cols.title || c;
     html = `<div style="font-family:'Segoe UI',Georgia,serif;display:flex;max-width:800px;margin:0 auto;min-height:100vh;background:#fffaf5;color:${ink};align-items:stretch">
       <div style="width:34%;background:${side};padding:1.8rem 1.2rem;min-height:100vh;box-sizing:border-box;position:relative">
         <div style="text-align:center;margin-bottom:1.4rem">
@@ -1315,14 +1393,15 @@ function cvBuild(){
   }
   // ========== CANVA PHOTO (style Sacha) ==========
   else if(cvModel === "canva2"){
-    const c = getCvColor();
-    const ink = "#3d3429";
-    html = `<div style="font-family:'Segoe UI',system-ui,sans-serif;max-width:800px;margin:0 auto;min-height:100vh;background:#faf6f0;color:${ink};padding:1.5rem 1.6rem;box-sizing:border-box">
-      <div style="display:flex;gap:1.3rem;align-items:center;margin-bottom:1.3rem;padding-bottom:1.1rem;border-bottom:2px solid #e8dfd0">
+    const c = cols.accent;
+    const ink = cols.text || "#3d3429";
+    const titleC = cols.title || c;
+    html = `<div style="font-family:'Segoe UI',system-ui,sans-serif;max-width:800px;margin:0 auto;min-height:100vh;background:${cols.side || "#faf6f0"};color:${ink};padding:1.5rem 1.6rem;box-sizing:border-box">
+      <div style="display:flex;gap:1.3rem;align-items:center;margin-bottom:1.3rem;padding-bottom:1.1rem;border-bottom:2px solid ${c}33">
         ${d.photo?`<img src="${d.photo}" style="width:100px;height:100px;border-radius:12px;object-fit:cover;flex-shrink:0;box-shadow:0 3px 12px rgba(0,0,0,.1)">`:`<div style="width:100px;height:100px;border-radius:12px;background:#e8dfd0;display:flex;align-items:center;justify-content:center;font-size:2.2rem;flex-shrink:0">👤</div>`}
         <div style="min-width:0">
           <h1 style="margin:0;font-size:1.75rem;font-weight:700;letter-spacing:.04em;color:${ink}">${esc(name)}</h1>
-          <p style="margin:.3rem 0 0;font-size:1rem;color:${c};font-weight:600;text-transform:uppercase;letter-spacing:.04em">${cvJobIcon(title)} ${esc(title)}</p>
+          <p style="margin:.3rem 0 0;font-size:1rem;color:${titleC};font-weight:600;text-transform:uppercase;letter-spacing:.04em">${cvJobIcon(title)} ${esc(title)}</p>
           ${d.profile?`<p style="margin:.45rem 0 0;font-size:.88rem;line-height:1.45;color:#6b5f52">${esc(d.profile)}</p>`:""}
         </div>
       </div>
@@ -1351,15 +1430,16 @@ function cvBuild(){
   }
   // ========== PRO barre colorée ==========
   else if(cvModel === "pro"){
-    html = cvBuildSidebar(d, name, title, contactLines, getCvColor(), getCvColor());
+    html = cvBuildSidebar(d, name, title, contactLines, cols.accent, cols.title || cols.accent);
   }
   // ========== ÉLÉGANT ==========
   else if(cvModel === "elegant"){
-    const c = getCvColor();
-    html = `<div style="font-family:Georgia,serif;max-width:780px;margin:0 auto;background:#fff;min-height:100vh;color:#1a1a1a">
+    const c = cols.accent;
+    const ink = cols.text || "#1a1a1a";
+    html = `<div style="font-family:Georgia,serif;max-width:780px;margin:0 auto;background:${cols.side || "#fff"};min-height:100vh;color:${ink}">
       <div style="display:flex;justify-content:space-between;padding:1.5rem 1.6rem 1rem;border-bottom:3px solid ${c}">
         <div>
-          <h1 style="margin:0;font-size:1.8rem">${esc(name)}</h1>
+          <h1 style="margin:0;font-size:1.8rem;color:${cols.title || ink}">${esc(name)}</h1>
           <p style="margin:.35rem 0 0;color:${c};font-style:italic">${cvJobIcon(title)} ${esc(title)}</p>
           <div style="margin:.5rem 0 0;font-size:.85rem">${cvContactInline(d)}</div>
         </div>
@@ -1376,9 +1456,10 @@ function cvBuild(){
   }
   // ========== MODERNE ==========
   else if(cvModel === "modern"){
-    const c = getCvColor();
-    html = `<div style="font-family:system-ui,sans-serif;max-width:760px;margin:0 auto;background:#fff;min-height:100vh">
-      <div style="background:linear-gradient(135deg,${c},#0f4c81);color:#fff;padding:1.5rem 1.6rem;display:flex;justify-content:space-between;align-items:center;gap:1rem">
+    const c = cols.accent;
+    const ink = cols.text || "#1e293b";
+    html = `<div style="font-family:system-ui,sans-serif;max-width:760px;margin:0 auto;background:${cols.side || "#fff"};min-height:100vh;color:${ink}">
+      <div style="background:linear-gradient(135deg,${c},${cols.title || "#0f4c81"});color:#fff;padding:1.5rem 1.6rem;display:flex;justify-content:space-between;align-items:center;gap:1rem">
         <div style="min-width:0">
           <h1 style="margin:0;font-size:1.6rem;word-break:break-word">${esc(name)}</h1>
           <p style="margin:.3rem 0 0;opacity:.95">${cvJobIcon(title)} ${esc(title)}</p>
@@ -1397,9 +1478,10 @@ function cvBuild(){
   }
   // ========== DÉGRADÉ ==========
   else if(cvModel === "gradient"){
-    const c = getCvColor();
-    html = `<div style="font-family:system-ui,sans-serif;max-width:760px;margin:0 auto;background:#fff;min-height:100vh">
-      <div style="background:linear-gradient(125deg,${c} 0%,#db2777 50%,#f59e0b 100%);color:#fff;padding:1.6rem;display:flex;justify-content:space-between;align-items:center;gap:1rem">
+    const c = cols.accent;
+    const ink = cols.text || "#1e293b";
+    html = `<div style="font-family:system-ui,sans-serif;max-width:760px;margin:0 auto;background:${cols.side || "#fff"};min-height:100vh;color:${ink}">
+      <div style="background:linear-gradient(125deg,${c} 0%,${cols.title || "#db2777"} 50%,#f59e0b 100%);color:#fff;padding:1.6rem;display:flex;justify-content:space-between;align-items:center;gap:1rem">
         <div style="min-width:0">
           <h1 style="margin:0;font-size:1.55rem">${esc(name)}</h1>
           <p style="margin:.3rem 0 0">${cvJobIcon(title)} ${esc(title)}</p>
@@ -1418,23 +1500,26 @@ function cvBuild(){
   }
   // ========== MINIMAL / CLASSIC / TIMELINE / BANNER ==========
   else if(cvModel === "minimal"){
-    html = `<div style="font-family:system-ui,sans-serif;max-width:700px;margin:0 auto;padding:1.6rem;background:#fff;min-height:100vh">
-      <h1 style="margin:0;font-size:1.5rem">${esc(name)}</h1>
-      <p style="margin:.25rem 0;color:#555">${cvJobIcon(title)} ${esc(title)}</p>
+    const c = cols.accent;
+    const ink = cols.text || "#1e293b";
+    html = `<div style="font-family:system-ui,sans-serif;max-width:700px;margin:0 auto;padding:1.6rem;background:${cols.side || "#fff"};min-height:100vh;color:${ink}">
+      <h1 style="margin:0;font-size:1.5rem;color:${cols.title || ink}">${esc(name)}</h1>
+      <p style="margin:.25rem 0;color:${c}">${cvJobIcon(title)} ${esc(title)}</p>
       <div style="margin:.4rem 0 1rem;font-size:.85rem;color:#666">${cvContactInline(d)}</div>
       ${d.profile?`<p style="margin:0 0 1rem">${esc(d.profile)}</p>`:""}
-      ${d.exps.length?`<h2 style="font-size:.8rem;text-transform:uppercase;color:#888;letter-spacing:.1em">Expérience</h2>${d.exps.map(e=>`<div style="margin:.4rem 0"><b>${esc(e.poste)}</b>${e.emp?", "+esc(e.emp):""} <span style="color:#999;font-size:.8rem">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span></div>`).join("")}`:""}
-      ${d.forms.length?`<h2 style="font-size:.8rem;text-transform:uppercase;color:#888;letter-spacing:.1em;margin-top:1rem">Formation</h2>${d.forms.map(f=>`<div style="margin:.3rem 0"><b>${esc(f.dipl)}</b> ${esc(f.an)}</div>`).join("")}`:""}
-      ${d.skills.length?`<h2 style="font-size:.8rem;text-transform:uppercase;color:#888;margin-top:1rem">Compétences</h2><p>${d.skills.map(esc).join(" · ")}</p>`:""}
+      ${d.exps.length?`<h2 style="font-size:.8rem;text-transform:uppercase;color:${c};letter-spacing:.1em">Expérience</h2>${d.exps.map(e=>`<div style="margin:.4rem 0"><b>${esc(e.poste)}</b>${e.emp?", "+esc(e.emp):""} <span style="color:#999;font-size:.8rem">${esc(e.deb)}${e.fin?" – "+esc(e.fin):""}</span></div>`).join("")}`:""}
+      ${d.forms.length?`<h2 style="font-size:.8rem;text-transform:uppercase;color:${c};letter-spacing:.1em;margin-top:1rem">Formation</h2>${d.forms.map(f=>`<div style="margin:.3rem 0"><b>${esc(f.dipl)}</b> ${esc(f.an)}</div>`).join("")}`:""}
+      ${d.skills.length?`<h2 style="font-size:.8rem;text-transform:uppercase;color:${c};margin-top:1rem">Compétences</h2><p>${d.skills.map(esc).join(" · ")}</p>`:""}
       <p style="margin:.7rem 0 0;font-size:.85rem"><b>Langues</b> — ${esc(d.lang)}</p>
     </div>`;
   }
   else if(cvModel === "timeline"){
-    const c = getCvColor();
-    html = `<div style="font-family:system-ui,sans-serif;max-width:720px;margin:0 auto;padding:1.5rem;background:#fff;min-height:100vh">
+    const c = cols.accent;
+    const ink = cols.text || "#1e293b";
+    html = `<div style="font-family:system-ui,sans-serif;max-width:720px;margin:0 auto;padding:1.5rem;background:${cols.side || "#fff"};min-height:100vh;color:${ink}">
       <div style="text-align:center;margin-bottom:1.2rem">
         ${d.photo?`<img src="${d.photo}" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid ${c}">`:`<div style="width:88px;height:88px;border-radius:50%;background:${c};color:#fff;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:1.8rem">👤</div>`}
-        <h1 style="margin:.6rem 0 0">${esc(name)}</h1>
+        <h1 style="margin:.6rem 0 0;color:${cols.title || ink}">${esc(name)}</h1>
         <p style="color:${c};font-weight:600">${cvJobIcon(title)} ${esc(title)}</p>
         <div style="font-size:.85rem;color:#666;margin-top:.4rem">${cvContactInline(d)}</div>
       </div>
@@ -1444,8 +1529,9 @@ function cvBuild(){
     </div>`;
   }
   else if(cvModel === "banner"){
-    const c = getCvColor();
-    html = `<div style="font-family:system-ui,sans-serif;max-width:760px;margin:0 auto;background:#fff;min-height:100vh">
+    const c = cols.accent;
+    const ink = cols.text || "#1e293b";
+    html = `<div style="font-family:system-ui,sans-serif;max-width:760px;margin:0 auto;background:${cols.side || "#fff"};min-height:100vh;color:${ink}">
       <div style="background:${c};color:#fff;padding:1.8rem 1.5rem;text-align:center">
         ${d.photo?`<img src="${d.photo}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid #fff;margin-bottom:.6rem">`:`<div style="width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.2);margin:0 auto .6rem;display:flex;align-items:center;justify-content:center;font-size:1.8rem">👤</div>`}
         <h1 style="margin:0;font-size:1.55rem">${esc(name)}</h1>
@@ -1462,10 +1548,11 @@ function cvBuild(){
   }
   // fallback classique
   else {
-    const c = getCvColor();
-    html = `<div style="font-family:Georgia,serif;max-width:700px;margin:0 auto;padding:1.5rem;background:#fff;min-height:100vh;text-align:center">
-      <h1 style="margin:0;font-size:1.6rem">${esc(name)}</h1>
-      <p style="margin:.3rem 0;color:#333">${cvJobIcon(title)} ${esc(title)}</p>
+    const c = cols.accent;
+    const ink = cols.text || "#1e293b";
+    html = `<div style="font-family:Georgia,serif;max-width:700px;margin:0 auto;padding:1.5rem;background:${cols.side || "#fff"};min-height:100vh;text-align:center;color:${ink}">
+      <h1 style="margin:0;font-size:1.6rem;color:${cols.title || ink}">${esc(name)}</h1>
+      <p style="margin:.3rem 0;color:${c}">${cvJobIcon(title)} ${esc(title)}</p>
       <div style="font-size:.85rem;color:#555;margin:.4rem 0 1rem">${cvContactInline(d)}</div>
       <div style="text-align:left">
         ${d.profile?`<p style="font-style:italic">${esc(d.profile)}</p>`:""}
@@ -1536,15 +1623,25 @@ body>div{min-height:100vh}img{max-width:100%;height:auto}
 /* Espace créateur */
 #lockBtn{position:fixed;left:14px;bottom:18px;z-index:9999;width:48px;height:48px;border-radius:50%;border:0;background:var(--navy,#0f4c81);color:#fff;font-size:1.35rem;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center}
 #lockBtn:hover{transform:scale(1.06)}
-#side{position:fixed;top:0;right:0;width:min(380px,100vw);height:100vh;background:var(--card,#fff);border-left:1px solid var(--bd,#e2e8f0);z-index:10000;display:flex;flex-direction:column;box-shadow:-8px 0 24px rgba(0,0,0,.12);overflow:hidden}
+#side{position:fixed;top:0;right:0;width:var(--side-w,380px);max-width:96vw;height:100vh;background:var(--card,#fff);border-left:1px solid var(--bd,#e2e8f0);z-index:10000;display:flex;flex-direction:column;box-shadow:-8px 0 24px rgba(0,0,0,.12);overflow:hidden;transition:width .15s ease}
 #side[hidden]{display:none!important}
-#side.min{width:48px}
-#side .sh{display:flex;justify-content:space-between;align-items:center;padding:.85rem 1rem;border-bottom:1px solid var(--bd,#e2e8f0);font-weight:700;gap:.5rem}
+#side.min{width:48px!important;--side-w:48px}
+#side .sh{display:flex;justify-content:space-between;align-items:center;padding:.85rem 1rem;border-bottom:1px solid var(--bd,#e2e8f0);font-weight:700;gap:.5rem;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff}
+#side .sh b{color:#fff}
+#side .sh .btn{background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.35)}
+#side .sh .btn.rd{background:#f43f5e;border-color:#f43f5e}
 #side .sb{padding:1rem;overflow-y:auto;flex:1}
 #side .sf{padding:.8rem 1rem;border-top:1px solid var(--bd,#e2e8f0);display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
-#sArrow{position:absolute;left:-14px;top:50%;transform:translateY(-50%);width:28px;height:48px;border:1px solid var(--bd,#e2e8f0);background:var(--card,#fff);border-radius:8px 0 0 8px;cursor:pointer;font-size:.85rem}
-body.padr{padding-right:min(380px,100vw)}
-@media(max-width:700px){body.padr{padding-right:0}#side{width:100vw}}
+#sArrow{position:absolute;left:-14px;top:50%;transform:translateY(-50%);width:28px;height:48px;border:1px solid var(--bd,#e2e8f0);background:var(--card,#fff);border-radius:8px 0 0 8px;cursor:pointer;font-size:.85rem;z-index:2}
+#sResize{position:absolute;left:0;top:0;bottom:0;width:8px;cursor:ew-resize;z-index:3;background:transparent}
+#sResize:hover,#sResize.dragging{background:rgba(124,58,237,.25)}
+body.padr{padding-right:var(--side-w,380px)}
+@media(max-width:700px){body.padr{padding-right:0}#side{width:100vw!important;--side-w:100vw}#sResize{display:none}}
+/* Tabs créateur style capture */
+#side .tabs{display:flex;flex-wrap:wrap;gap:.4rem;padding:.7rem 1rem;border-bottom:1px solid var(--bd);background:#f5f3ff}
+#side .tabs .chip{background:#fce7f3;color:#9d174d;border:2px solid #f9a8d4;border-radius:999px;padding:.4rem .85rem;font-weight:700;font-size:.82rem;box-shadow:0 2px 0 #f472b6;cursor:pointer}
+#side .tabs .chip.on{background:#c084fc;color:#4c1d95;border-color:#a78bfa;box-shadow:0 2px 0 #7c3aed}
+#side .tabs .chip:hover{filter:brightness(1.05)}
 
 </style></head><body>${html}
 <script>window.onload=function(){setTimeout(function(){window.print()},200)}<\/script></body></html>`);
@@ -1582,7 +1679,8 @@ const SECS = {
 };
 const DEF = {
   primary: "#0f4c81", accent: "#2563eb", bg: "#f1f5f9", card: "#ffffff", text: "#0f172a",
-  font: "system-ui", size: 16, title: "", calm: true, maintenance: false,
+  font: "system-ui", size: 16, title: "", siteName: "Solidarité France", subtitle: "", footer: "",
+  calm: true, maintenance: false,
   mmsg: "Le site est en maintenance. Retour très bientôt !", urgBar: true,
   order: Object.keys(SECS), hidden: []
 };
@@ -1661,6 +1759,21 @@ function applyCfg() {
     if (!h1.dataset.o) h1.dataset.o = h1.textContent;
     h1.textContent = c.title || h1.dataset.o;
   }
+  const heroP = document.querySelector(".hero p");
+  if (heroP) {
+    if (!heroP.dataset.o) heroP.dataset.o = heroP.textContent;
+    if (c.subtitle) heroP.textContent = c.subtitle;
+    else heroP.textContent = heroP.dataset.o;
+  }
+  const logo = document.querySelector(".logo");
+  if (logo && c.siteName) logo.textContent = "🤝 " + c.siteName;
+  const foot = document.querySelector("footer");
+  if (foot && c.footer) {
+    if (!foot.dataset.o) foot.dataset.o = foot.innerHTML;
+    foot.innerHTML = `<strong>${e(c.siteName || "Solidarité France")}</strong> — ${e(c.footer)}`;
+  } else if (foot && foot.dataset.o && !c.footer) {
+    foot.innerHTML = foot.dataset.o;
+  }
   const urg = document.querySelector(".urg");
   if (urg) urg.style.display = c.urgBar ? "" : "none";
   const calm = document.getElementById("calm");
@@ -1693,7 +1806,7 @@ function applyCfg() {
 function panelLogin() {
   const S = $("#side");
   S.innerHTML = `
-    <div class="sh"><b>🔒 Connexion créateur</b><span><button class="btn rd" id="sX">✕</button></span></div>
+    <div class="sh"><b>🔒 Connexion créateur</b><span><button class="btn rd" id="sX">✕ Fermer</button></span></div>
     <div class="sb">
       <p class="sub">Réservé à l'administrateur. Entrez votre e-mail et mot de passe.</p>
       <label>E-mail</label>
@@ -1744,16 +1857,60 @@ function panel() {
   if (!user) user = { email: "admin", local: true };
 
   const min = S.classList.contains("min");
+  const sideW = localStorage.getItem("sf_side_w") || "400";
+  if (!min) {
+    S.style.setProperty("--side-w", sideW + "px");
+    document.body.style.setProperty("--side-w", sideW + "px");
+  }
   S.innerHTML = `
+    <div id="sResize" title="Glisser pour élargir / réduire"></div>
     <button id="sArrow" aria-label="Réduire">${min ? "◀" : "▶"}</button>
-    <div class="sh"><b>⚙️ Espace créateur</b><span><button class="btn l" id="sLogout" style="padding:.3rem .6rem;font-size:.8rem">Déconnexion</button> <button class="btn rd" id="sX">✕</button></span></div>
+    <div class="sh"><b>✏️ Espace créateur</b><span><button class="btn l" id="sLogout" style="padding:.3rem .6rem;font-size:.8rem">Déconnexion</button> <button class="btn rd" id="sX">✕ Fermer</button></span></div>
     <div id="sBody" style="display:contents"></div>`;
+
+  // Resize handle (drag left edge)
+  const res = $("#sResize");
+  if (res) {
+    let startX = 0, startW = 0;
+    const onMove = (ev) => {
+      const dx = startX - (ev.clientX || (ev.touches && ev.touches[0].clientX) || 0);
+      let nw = Math.max(280, Math.min(720, startW + dx));
+      S.style.setProperty("--side-w", nw + "px");
+      document.body.style.setProperty("--side-w", nw + "px");
+      localStorage.setItem("sf_side_w", String(nw));
+    };
+    const onUp = () => {
+      res.classList.remove("dragging");
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+      window.removeEventListener("touchmove", onMove);
+      window.removeEventListener("touchend", onUp);
+    };
+    const onDown = (ev) => {
+      if (S.classList.contains("min")) return;
+      startX = ev.clientX || (ev.touches && ev.touches[0].clientX) || 0;
+      startW = S.getBoundingClientRect().width;
+      res.classList.add("dragging");
+      window.addEventListener("mousemove", onMove);
+      window.addEventListener("mouseup", onUp);
+      window.addEventListener("touchmove", onMove, {passive:false});
+      window.addEventListener("touchend", onUp);
+      ev.preventDefault();
+    };
+    res.addEventListener("mousedown", onDown);
+    res.addEventListener("touchstart", onDown, {passive:false});
+  }
 
   $("#sArrow").onclick = () => {
     const m = !S.classList.contains("min");
     S.classList.toggle("min", m);
     document.body.classList.toggle("padr", !m);
     $("#sArrow").textContent = m ? "◀" : "▶";
+    if (!m) {
+      const w = localStorage.getItem("sf_side_w") || "400";
+      S.style.setProperty("--side-w", w + "px");
+      document.body.style.setProperty("--side-w", w + "px");
+    }
   };
   $("#sX").onclick = () => { S.hidden = true; document.body.classList.remove("padr"); };
   $("#sLogout").onclick = async () => {
@@ -1766,12 +1923,13 @@ function panel() {
   const B = $("#sBody");
   const TABS = [
     ["app", "🎨 Apparence"],
+    ["txt", "📝 Textes"],
     ["col", "🌈 Couleurs"],
     ["sec", "📐 Sections"],
     ["mnt", "🔨 Maintenance"],
     ["code", "</> Code"]
   ];
-  let h = `<div class="tabs" style="display:flex;flex-wrap:wrap;gap:.35rem;padding:.6rem 1rem;border-bottom:1px solid var(--bd)">${TABS.map(t =>
+  let h = `<div class="tabs">${TABS.map(t =>
     `<button class="chip${t[0]===tab?" on":""}" data-t="${t[0]}">${t[1]}</button>`
   ).join("")}</div><div class="sb">`;
 
@@ -1780,10 +1938,17 @@ function panel() {
       <label>Police<select id="cF" class="field">${Object.entries(FONTS).map(([k,v])=>`<option value="${e(k)}"${k===cfg.font?" selected":""}>${v}</option>`).join("")}</select></label>
       <label>Taille du texte : <b id="cSv">${cfg.size}</b> px
         <input id="cS" type="range" min="13" max="22" value="${cfg.size}" style="width:100%"></label>
-      <label>Titre d'accueil (vide = d'origine)<input id="cT" class="field" value="${e(cfg.title)}" maxlength="120"></label>
       <label class="ck"><input type="checkbox" id="cC"${cfg.calm?" checked":""}><span>Bandeau rassurant 💙</span></label>
       <label class="ck"><input type="checkbox" id="cU"${cfg.urgBar?" checked":""}><span>Barre d'urgences en haut</span></label>
-      <p class="sub">Connecté : ${e(user.email || "admin")}${user.local ? " (local)" : ""}</p>`;
+      <p class="sub">Connecté : ${e(user.email || "admin")}${user.local ? " (local)" : ""}</p>
+      <p class="sub" style="margin-top:.8rem">💡 Glissez le bord gauche du panneau (zone violette) pour l’élargir ou le réduire. La flèche ▶ réduit en mode compact.</p>`;
+  } else if (tab === "txt") {
+    h += `
+      <p class="sub">Textes modifiables du site (sauvegardés localement).</p>
+      <label>Nom du site<input id="cSiteName" class="field" value="${e(cfg.siteName || "Solidarité France")}" maxlength="60"></label>
+      <label>Grand titre (accueil)<input id="cT" class="field" value="${e(cfg.title)}" maxlength="120" placeholder="Laisser vide = titre d'origine"></label>
+      <label>Sous-titre / phrase d'accueil<textarea id="cSub" class="field" rows="3" maxlength="280">${e(cfg.subtitle || "")}</textarea></label>
+      <label>Texte pied de page (ligne courte)<input id="cFoot" class="field" value="${e(cfg.footer || "")}" maxlength="120" placeholder="Laissez vide pour le texte par défaut"></label>`;
   } else if (tab === "col") {
     h += `
       <p class="sub">Couleurs exactes (perso sur cet appareil + sauvegarde créateur)</p>
@@ -1793,7 +1958,7 @@ function panel() {
       <label>Cartes (zones blanches) <input id="cCard" type="color" class="field" value="${cfg.card || "#ffffff"}"></label>
       <label>Texte <input id="cTx" type="color" class="field" value="${cfg.text || "#0f172a"}"></label>`;
   } else if (tab === "sec") {
-    h += `<p class="sub">Cochez pour masquer une section. Glissez l'ordre avec les flèches.</p>`;
+    h += `<p class="sub">Cochez pour masquer une section. Utilisez les flèches pour l'ordre d'affichage.</p>`;
     const order = cfg.order || Object.keys(SECS);
     order.forEach((id, i) => {
       const hidden = (cfg.hidden || []).includes(id);
@@ -1839,6 +2004,7 @@ function panel() {
   bind("cP", "primary"); bind("cA", "accent"); bind("cBg", "bg");
   bind("cCard", "card"); bind("cTx", "text");
   bind("cM", "maintenance", "b"); bind("cMm", "mmsg");
+  bind("cSiteName", "siteName"); bind("cSub", "subtitle"); bind("cFoot", "footer");
 
   $$("[data-hide]").forEach(el => {
     el.onchange = () => {
@@ -1905,6 +2071,9 @@ $("#lockBtn")?.addEventListener("click", () => {
   const S = $("#side");
   S.hidden = false;
   S.classList.remove("min");
+  const w = localStorage.getItem("sf_side_w") || "400";
+  S.style.setProperty("--side-w", w + "px");
+  document.body.style.setProperty("--side-w", w + "px");
   document.body.classList.add("padr");
   if (user || sessionStorage.getItem("sf_creator_ok") === "1") panel();
   else panelLogin();
