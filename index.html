@@ -48,6 +48,8 @@ body.dark .meta,body.dark .sub{color:var(--muted)}
 body.dark .tag{background:#1a2438;color:var(--muted);border-color:var(--bd)}
 body.dark .empty{color:var(--muted)}
 body.dark #cvPreview{background:#fff!important;color:#111!important}
+body.dark .field,body.dark input,body.dark select,body.dark textarea{background:#0c1220;color:var(--text);border-color:var(--bd)}
+body.dark footer{background:var(--card);border-color:var(--bd)}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;scroll-padding-top:70px}
 body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg)!important;color:var(--text);line-height:1.55;min-height:100vh}
@@ -165,6 +167,7 @@ body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(-
 .lang-box .lang-lab{font-size:1rem;line-height:1}
 .lang-box select{font-size:.82rem;padding:4px 6px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--text);font-family:inherit;cursor:pointer}
 body.dark .lang-box select{background:#0f172a;border-color:var(--bd);color:var(--text)}
+.gt-hidden-host{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
 
 </style>
 </head>
@@ -192,7 +195,7 @@ body.dark .lang-box select{background:#0f172a;border-color:var(--bd);color:var(-
     <option value="tr">TR</option>
     <option value="zh-CN">中文</option>
   </select>
-  <div id="google_translate_element" hidden></div>
+  <div id="google_translate_element" class="gt-hidden-host" aria-hidden="true"></div>
 </div>
 <button class="btn l" data-a="theme" aria-label="Mode sombre / clair">🌓</button>
 <button class="btn g" data-a="add">+ Lieu</button>
@@ -957,7 +960,7 @@ async function savePlace(){
 function simulate(){
   var n=$("#sn").value,s=$("#sp").value;
   $("#sres").innerHTML='<div class="result"><b>Pistes pour vous :</b><ul>'+ADV[n].map(function(a){return"<li>"+esc(a)+"</li>"}).join("")+"</ul>"+(BON[s]?"<p>"+esc(BON[s])+"</p>":"")+'<p style="margin-top:.6rem"><a href="https://www.mesdroitssociaux.gouv.fr" target="_blank" rel="noopener">Simulateur officiel →</a> · <a href="#pres">Près de chez vous</a></p></div>'}
-function setTheme(d){document.body.classList.toggle("dark",d);sv("sf_dark",d);if(typeof applyCfg==="function")applyCfg()}
+function setTheme(d){document.body.classList.toggle("dark",d);document.documentElement.classList.toggle("dark",d);sv("sf_dark",d);if(typeof applyCfg==="function")applyCfg()}
 
 /* ---------- Événements (phase de capture : fonctionne aussi dans les popups de la carte) ---------- */
 document.addEventListener("click",function(e){
@@ -1907,6 +1910,7 @@ body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(-
 .lang-box .lang-lab{font-size:1rem;line-height:1}
 .lang-box select{font-size:.82rem;padding:4px 6px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--text);font-family:inherit;cursor:pointer}
 body.dark .lang-box select{background:#0f172a;border-color:var(--bd);color:var(--text)}
+.gt-hidden-host{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
 
 </style></head><body>${html}
 <script>window.onload=function(){setTimeout(function(){window.print()},200)}<\/script></body></html>`);
@@ -1921,7 +1925,7 @@ document.getElementById("cvDl")?.addEventListener("click", () => {
   a.click();
 });
 
-if(ld("sf_dark",window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches))document.body.classList.add("dark");
+if(ld("sf_dark",window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)){document.body.classList.add("dark");document.documentElement.classList.add("dark");}
 initMap();renderRes();renderChecks();renderAll();
 if(Object.keys(S.live).length){
   status("✅ "+Object.keys(S.live).length+" lieux OSM restaurés depuis cet appareil + "+(NATIONAL.length+GENERATED.length).toLocaleString("fr-FR")+" repères. Total : "+items().length.toLocaleString("fr-FR")+".");
@@ -1963,90 +1967,46 @@ if(!sessionStorage.getItem("sf_preloaded")){
   preloadMajorCities();
 }
 
-/* ---------- Traduction (sélecteur + Google Translate) ---------- */
-var I18N = {
-  fr: {},
-  en: {
-    "Trouvez de l'aide près de chez vous, gratuitement":"Find help near you, for free",
-    "Vous n'êtes pas seul":"You are not alone",
-    "Banques alimentaires, hébergements, soins, vêtements, démarches… Tapez votre ville ou utilisez votre position.":"Food banks, shelters, healthcare, clothing, admin help… Type your city or use your location.",
-    "Besoins":"Needs","Carte":"Map","Numéros":"Numbers","Assistant":"Assistant","Démarches":"Steps","Bénévolat":"Volunteering",
-    "Chercher":"Search","Autour de moi":"Near me","Manger":"Food","Douche":"Shower","Emploi":"Jobs","Étudiant":"Student","Vêtements":"Clothes",
-    "De quoi avez-vous besoin ?":"What do you need?","Lieux référencés":"Listed places","Vos favoris":"Your favorites","Gratuit & sans compte":"Free, no account",
-    "Carte des centres d'aide":"Help centers map","Numéros utiles & sites officiels":"Useful numbers & official sites",
-    "Créer mon CV":"Create my CV","Espace créateur":"Creator space"
-  },
-  es: {
-    "Trouvez de l'aide près de chez vous, gratuitement":"Encuentre ayuda cerca de usted, gratis",
-    "Vous n'êtes pas seul":"No está solo",
-    "Besoins":"Necesidades","Carte":"Mapa","Numéros":"Números","Chercher":"Buscar","Autour de moi":"Cerca de mí",
-    "Manger":"Comer","Douche":"Ducha","Emploi":"Empleo","Étudiant":"Estudiante","Vêtements":"Ropa",
-    "Créer mon CV":"Crear mi CV"
-  },
-  ar: {
-    "Trouvez de l'aide près de chez vous, gratuitement":"اعثر على المساعدة بالقرب منك مجانًا",
-    "Vous n'êtes pas seul":"لست وحدك",
-    "Besoins":"الاحتياجات","Carte":"الخريطة","Numéros":"الأرقام","Chercher":"بحث",
-    "Manger":"طعام","Douche":"دش","Emploi":"عمل","Étudiant":"طالب","Vêtements":"ملابس"
-  }
-};
-
-function applySimpleI18n(lang){
-  document.documentElement.lang = lang || "fr";
-  document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
-  if(!lang || lang === "fr"){
-    // restore from data-orig if present
-    document.querySelectorAll("[data-i18n-orig]").forEach(function(el){
-      el.textContent = el.getAttribute("data-i18n-orig");
-    });
-    return;
-  }
-  var dict = I18N[lang] || {};
-  var walk = function(root){
-    var nodes = root.querySelectorAll("h1,h2,h3,p,span,a,button,label,option,b,small,.sub,.logo");
-    nodes.forEach(function(el){
-      if(el.closest(".notranslate") || el.closest("#cvPreview") || el.closest("#map")) return;
-      if(el.children.length && el.tagName !== "BUTTON" && el.tagName !== "A" && el.tagName !== "LABEL") return;
-      var txt = (el.childNodes.length === 1 && el.childNodes[0].nodeType === 3) ? el.textContent.trim() : null;
-      if(!txt || txt.length < 2) return;
-      if(!el.getAttribute("data-i18n-orig")) el.setAttribute("data-i18n-orig", txt);
-      var orig = el.getAttribute("data-i18n-orig");
-      if(dict[orig]) el.textContent = dict[orig];
-    });
-  };
-  walk(document.body);
-}
-
-function setLanguage(lang){
-  localStorage.setItem("sf_lang", lang);
-  applySimpleI18n(lang);
-  // Also try Google Translate combo if present
-  try{
-    var combo = document.querySelector(".goog-te-combo");
-    if(combo){
-      combo.value = lang === "fr" ? "" : lang;
-      combo.dispatchEvent(new Event("change"));
-    }
-  }catch(e){}
-  // trigger google if available via cookie method
-  if(lang && lang !== "fr"){
-    document.cookie = "googtrans=/fr/" + lang + ";path=/";
-    document.cookie = "googtrans=/fr/" + lang + ";domain=" + location.hostname + ";path=/";
-  } else {
-    document.cookie = "googtrans=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-  }
-}
-
+/* ---------- Traduction (sélecteur + Google Translate page entière) ---------- */
 window.googleTranslateElementInit = function(){
   try{
     new google.translate.TranslateElement({
       pageLanguage: "fr",
-      includedLanguages: "fr,en,es,ar,pt,ro,pl,uk,ru,zh-CN,de,it,tr,sq,so,ti,ps,fa,bn,ta,vi,ku",
-      layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
+      includedLanguages: "fr,en,es,ar,pt,ro,pl,uk,ru,zh-CN,de,it,tr,sq,so,ti,fa,vi",
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
       autoDisplay: false
     }, "google_translate_element");
   }catch(e){ console.warn("GT init", e); }
 };
+
+function setLanguage(lang){
+  lang = lang || "fr";
+  localStorage.setItem("sf_lang", lang);
+  var sel = document.getElementById("langSel");
+  if(sel) sel.value = lang;
+  // Cookie Google Translate = traduit TOUTE la page (y compris blocs dynamiques) après rechargement
+  var host = location.hostname || "localhost";
+  if(lang === "fr"){
+    document.cookie = "googtrans=;path=/;max-age=0";
+    document.cookie = "googtrans=;path=/;domain=" + host + ";max-age=0";
+  } else {
+    document.cookie = "googtrans=/fr/" + lang + ";path=/";
+    document.cookie = "googtrans=/fr/" + lang + ";path=/;domain=" + host;
+  }
+  // Si Google est déjà chargé, tenter sans reload
+  var combo = document.querySelector(".goog-te-combo");
+  if(combo){
+    combo.value = (lang === "fr" ? "fr" : lang);
+    combo.dispatchEvent(new Event("change"));
+    return;
+  }
+  // Sinon recharger pour appliquer la cookie (nécessite d'être en http/https, pas toujours file://)
+  if(location.protocol !== "file:"){
+    location.reload();
+  } else {
+    alert("Pour la traduction complète, ouvrez le site via un serveur local (http), pas en fichier. Le sélecteur est prêt.");
+  }
+}
 
 (function initLang(){
   var sel = document.getElementById("langSel");
@@ -2055,32 +2015,12 @@ window.googleTranslateElementInit = function(){
     sel.value = saved;
     sel.addEventListener("change", function(){ setLanguage(sel.value); });
   }
-  if(saved !== "fr") setTimeout(function(){ setLanguage(saved); }, 400);
-  // Load Google Translate (works best online / http server)
   var s = document.createElement("script");
   s.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
   s.async = true;
-  s.onerror = function(){ console.warn("Google Translate script blocked — sélecteur FR/EN/ES/AR actif"); };
+  s.onerror = function(){ console.warn("Google Translate indisponible (réseau / file://)"); };
   document.head.appendChild(s);
 })();
-
-var _gtObsT = null;
-function refreshTranslate(){
-  clearTimeout(_gtObsT);
-  _gtObsT = setTimeout(function(){
-    var lang = localStorage.getItem("sf_lang") || "fr";
-    if(lang !== "fr") applySimpleI18n(lang);
-    try{
-      var combo = document.querySelector(".goog-te-combo");
-      if(combo && combo.value && combo.value !== "fr"){
-        combo.dispatchEvent(new Event("change"));
-      }
-    }catch(e){}
-  }, 500);
-}
-document.addEventListener("click", function(e){
-  if(e.target.closest("#needGrid,.need-btn,#mbg,#cards,#resBody,#aiChat,#cvPanel")) refreshTranslate();
-}, true);
 </script>
 
 <script type="module">
@@ -2210,14 +2150,23 @@ function applyCfg() {
     if (c.card) document.body.style.setProperty("--card", c.card);
     if (c.text) document.body.style.setProperty("--text", c.text);
   } else {
-    // Mode sombre : garder les tokens sombres, n'appliquer que navy/accent adaptés
-    document.body.style.setProperty("--navy", "#60a5fa");
+    // Mode sombre : fond d'écran sombre, cartes un peu plus claires
+    document.documentElement.classList.add("dark");
+    document.body.style.setProperty("--navy", "#7db4f5");
     document.body.style.setProperty("--blue", "#60a5fa");
-    document.body.style.setProperty("--bg", "#0b1020");
-    document.body.style.setProperty("--card", "#131b2e");
-    document.body.style.setProperty("--text", "#f1f5f9");
-    document.body.style.setProperty("--muted", "#9fb0c8");
-    document.body.style.setProperty("--bd", "#25314a");
+    document.body.style.setProperty("--bg", "#070b14");
+    document.body.style.setProperty("--card", "#121a2b");
+    document.body.style.setProperty("--text", "#e8eef8");
+    document.body.style.setProperty("--muted", "#94a8c4");
+    document.body.style.setProperty("--bd", "#2a3650");
+    document.body.style.setProperty("--green", "#34d399");
+    document.body.style.setProperty("--amber", "#fbbf24");
+    document.body.style.setProperty("--red", "#f87171");
+    document.body.style.backgroundColor = "#070b14";
+  }
+  if (!document.body.classList.contains("dark")) {
+    document.documentElement.classList.remove("dark");
+    document.body.style.backgroundColor = "";
   }
   const setTxt = (sel, val) => { const el = document.querySelector(sel); if (el && val != null && val !== "") el.textContent = val; };
   setTxt("#heroTag", c.heroTag);
