@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
 <style>
 :root{--navy:#0f4c81;--blue:#2563eb;--green:#059669;--amber:#d97706;--red:#991b1b;--bg:#f1f5f9;--card:#fff;--text:#0f172a;--muted:#475569;--bd:#cbd5e1;--sh:0 4px 12px rgba(15,23,42,.07)}
-body.dark{--bg:#0b1020;--card:#131b2e;--text:#f1f5f9;--muted:#9fb0c8;--bd:#25314a;--navy:#60a5fa;--sh:0 4px 12px rgba(0,0,0,.4)}
+body.dark{--bg:#0b1020;--card:#131b2e;--text:#f1f5f9;--muted:#9fb0c8;--bd:#25314a;--navy:#60a5fa;--blue:#60a5fa;--sh:0 4px 12px rgba(0,0,0,.4)}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;scroll-padding-top:70px}
 body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
@@ -24,6 +24,18 @@ nav{background:var(--card);border-bottom:1px solid var(--bd);padding:.7rem 1rem;
 .links a:hover{background:var(--bg)}
 .btn{background:var(--navy);color:#fff;border:0;padding:.6rem .95rem;border-radius:8px;font-weight:600;cursor:pointer;font-size:.88rem;text-decoration:none;text-align:center;display:inline-block;font-family:inherit}
 body.dark .btn{color:#0b1020}
+body.dark .btn.g,body.dark .btn.rd,body.dark .btn.fav{color:#fff!important}
+body.dark .btn.l{color:var(--text)!important;background:var(--card);border-color:var(--bd)}
+body.dark .field,body.dark input,body.dark select,body.dark textarea{background:#0f172a;color:var(--text);border-color:var(--bd)}
+body.dark .panel,.body.dark .card,.body.dark .kpi{background:var(--card);border-color:var(--bd)}
+body.dark .warn{background:#422006;border-color:#854d0e;color:#fef3c7}
+body.dark .search{background:var(--card)}
+body.dark .search input{color:var(--text)}
+body.dark .sug{background:var(--card);color:var(--text)}
+body.dark .chip{background:var(--card);color:var(--text);border-color:var(--bd)}
+body.dark .need-btn{background:var(--card);color:var(--text);border-color:var(--bd)}
+body.dark .res{background:var(--card);color:var(--text);border-color:var(--bd)}
+body.dark footer{background:var(--card);border-color:var(--bd)}
 .btn:hover{opacity:.88}.g{background:var(--green);color:#fff!important}.l{background:var(--bg);color:var(--text)!important;border:1px solid var(--bd)}.fav{background:#fef3c7;color:#b45309!important;border:1px solid #fcd34d}.rd{background:#fee2e2;color:#991b1b!important;border:1px solid #fca5a5}
 .hero{background:linear-gradient(135deg,#0f4c81,#093154);color:#fff;padding:2.4rem 1.2rem 2rem;text-align:center}
 .hero h1{font-size:clamp(1.5rem,4vw,2.1rem);max-width:800px;margin:0 auto .6rem}
@@ -270,15 +282,9 @@ body.dark .need-btn.on{background:linear-gradient(135deg,#1e3a5f,#0f2744)}
     <span class="sub" style="margin:0">Les couleurs s’appliquent selon le modèle (barre, titres, fond, texte…).</span>
   </div>
   <label style="font-weight:700;margin-top:.9rem;display:block">Profil type (remplit en 1 clic)</label>
-  <div class="chips" id="cvPresets">
-    <button class="chip" data-preset="aide">🤝 Aide à domicile</button>
-    <button class="chip" data-preset="restau">🍽️ Restauration</button>
-    <button class="chip" data-preset="vente">🛒 Vente</button>
-    <button class="chip" data-preset="logistique">📦 Logistique</button>
-    <button class="chip" data-preset="proprete">🧹 Propreté</button>
-    <button class="chip" data-preset="admin">📋 Administratif</button>
-    <button class="chip" data-preset="vide">↺ Vide</button>
-  </div>
+  <input type="search" id="cvJobSearch" class="field" placeholder="🔍 Chercher un métier (ex : cuisinier, agent d'accueil, chauffeur…)" style="margin-bottom:.5rem" autocomplete="off">
+  <div class="chips" id="cvPresets" style="max-height:160px;overflow-y:auto"></div>
+  <button class="chip" data-preset="vide" id="cvPresetVide" style="margin-top:.35rem">↺ Vider le formulaire</button>
 </div>
 <div class="two">
   <div class="panel">
@@ -420,6 +426,44 @@ var REFS=[
 ["Épicerie sociale & solidaire","Strasbourg",48.573,7.752,"Alimentaire","Courses à prix réduit après orientation d'une assistante sociale.","https://www.andes-france.fr"],
 ["Chantier d'insertion (SIAE)","Montpellier",43.611,3.877,"Emploi & insertion","Contrat de travail + accompagnement. Accès via France Travail ou Mission Locale.","https://emplois.inclusion.beta.gouv.fr"],
 ["CROUS — aide sociale étudiante","Grenoble",45.188,5.724,"Étudiants","Bourses, aides d'urgence, logement, repas à 1 € pour étudiants éligibles.","https://www.etudiant.gouv.fr"],
+/* ---- CROUS & services étudiants (repères académies / grandes villes) ---- */
+["CROUS Paris","Paris",48.846,2.343,"Étudiants","Bourses, logement, resto U, aides d'urgence, accompagnement social.","https://www.crous-paris.fr"],
+["CROUS Créteil","Créteil",48.789,2.444,"Étudiants","Académie Créteil : bourses, cités U, restos U, aides sociales.","https://www.crous-creteil.fr"],
+["CROUS Versailles","Versailles",48.801,2.130,"Étudiants","Académie Versailles : bourses, logements, restauration, aides.","https://www.crous-versailles.fr"],
+["CROUS Lyon","Lyon",45.748,4.846,"Étudiants","Bourses, cités universitaires, restos U, aides d'urgence.","https://www.crous-lyon.fr"],
+["CROUS Aix-Marseille","Marseille",43.304,5.381,"Étudiants","Bourses, logements, restauration, action sociale étudiante.","https://www.crous-aix-marseille.fr"],
+["CROUS Toulouse","Toulouse",43.605,1.444,"Étudiants","Bourses, cités U, restos U, aides financières d'urgence.","https://www.crous-toulouse.fr"],
+["CROUS Bordeaux","Bordeaux",44.838,-0.584,"Étudiants","Bourses, logements, restauration universitaire, social.","https://www.crous-bordeaux.fr"],
+["CROUS Lille","Lille",50.636,3.063,"Étudiants","Bourses, cités U, restos U, accompagnement social.","https://www.crous-lille.fr"],
+["CROUS Nantes","Nantes",47.218,-1.553,"Étudiants","Bourses, logements, restauration, aides d'urgence.","https://www.crous-nantes.fr"],
+["CROUS Rennes","Rennes",48.115,-1.677,"Étudiants","Bourses, cités U, restos U, action sociale.","https://www.crous-rennes.fr"],
+["CROUS Strasbourg","Strasbourg",48.583,7.748,"Étudiants","Bourses, logements, restauration, aides sociales.","https://www.crous-strasbourg.fr"],
+["CROUS Montpellier","Montpellier",43.611,3.877,"Étudiants","Bourses, cités U, restos U, accompagnement.","https://www.crous-montpellier.fr"],
+["CROUS Nice","Nice",43.710,7.262,"Étudiants","Bourses, logements, restauration, aides d'urgence.","https://www.crous-nice.fr"],
+["CROUS Nancy-Metz","Nancy",48.693,6.183,"Étudiants","Bourses, cités U, restos U (académie Nancy-Metz).","https://www.crous-nancy-metz.fr"],
+["CROUS Clermont-Ferrand","Clermont-Ferrand",45.777,3.082,"Étudiants","Bourses, logements, restauration, social étudiant.","https://www.crous-clermont.fr"],
+["CROUS Dijon","Dijon",47.322,5.041,"Étudiants","Bourses, cités U, restos U, aides.","https://www.crous-dijon.fr"],
+["CROUS Orléans-Tours","Orléans",47.902,1.909,"Étudiants","Bourses, logements, restauration (Orléans-Tours).","https://www.crous-orleans-tours.fr"],
+["CROUS Poitiers","Poitiers",46.580,0.340,"Étudiants","Bourses, cités U, restos U, action sociale.","https://www.crous-poitiers.fr"],
+["CROUS Limoges","Limoges",45.835,1.262,"Étudiants","Bourses, logements, restauration.","https://www.crous-limoges.fr"],
+["CROUS Reims","Reims",49.258,4.032,"Étudiants","Bourses, cités U, restos U.","https://www.crous-reims.fr"],
+["CROUS Amiens","Amiens",49.894,2.296,"Étudiants","Bourses, logements, restauration, aides.","https://www.crous-amiens.fr"],
+["CROUS Rouen","Rouen",49.443,1.099,"Étudiants","Bourses, cités U, restos U, social.","https://www.crous-rouen.fr"],
+["CROUS Caen","Caen",49.183,-0.371,"Étudiants","Bourses, logements, restauration.","https://www.crous-caen.fr"],
+["CROUS Besançon","Besançon",47.238,6.024,"Étudiants","Bourses, cités U, restos U.","https://www.crous-besancon.fr"],
+["CROUS Grenoble-Alpes","Grenoble",45.189,5.724,"Étudiants","Bourses, logements, restos U, aides d'urgence.","https://www.crous-grenoble.fr"],
+["CROUS Antilles-Guyane","Fort-de-France",14.603,-61.070,"Étudiants","Bourses et services étudiants Antilles-Guyane.","https://www.crous-antillesguyane.fr"],
+["CROUS Réunion","Saint-Denis (Réunion)",-20.878,55.448,"Étudiants","Bourses, logements, restauration universitaire.","https://www.crous-reunion.fr"],
+["AGORAé Lyon","Lyon",45.760,4.860,"Étudiants","Épicerie solidaire étudiante (FAGE) — produits à prix très réduits.","https://www.fage.org"],
+["AGORAé Paris","Paris",48.846,2.343,"Étudiants","Épicerie solidaire étudiante — accès sous conditions de ressources.","https://www.fage.org"],
+["AGORAé Toulouse","Toulouse",43.604,1.444,"Étudiants","Épicerie solidaire étudiante FAGE.","https://www.fage.org"],
+["AGORAé Bordeaux","Bordeaux",44.838,-0.580,"Étudiants","Épicerie solidaire étudiante.","https://www.fage.org"],
+["AGORAé Lille","Lille",50.630,3.060,"Étudiants","Épicerie solidaire étudiante.","https://www.fage.org"],
+["AGORAé Nantes","Nantes",47.218,-1.555,"Étudiants","Épicerie solidaire étudiante.","https://www.fage.org"],
+["AGORAé Rennes","Rennes",48.115,-1.680,"Étudiants","Épicerie solidaire étudiante.","https://www.fage.org"],
+["AGORAé Strasbourg","Strasbourg",48.580,7.750,"Étudiants","Épicerie solidaire étudiante.","https://www.fage.org"],
+["AGORAé Montpellier","Montpellier",43.610,3.875,"Étudiants","Épicerie solidaire étudiante.","https://www.fage.org"],
+["AGORAé Marseille","Marseille",43.300,5.380,"Étudiants","Épicerie solidaire étudiante.","https://www.fage.org"],
 ["France Services","Rouen",49.443,1.099,"Aides & accueil social","Aide gratuite pour CAF, impôts, retraite, France Travail, démarches en ligne.","https://france-services.gouv.fr"],
 ["Secours Catholique — accueil","Dijon",47.322,5.041,"Alimentaire","Accueil, aide alimentaire, accompagnement, aide aux démarches.","https://www.secours-catholique.org"],
 ["Réseau Cocagne — jardins solidaires","Angers",47.478,-0.563,"Emploi & insertion","Paniers de légumes bio et emploi d'insertion.","https://www.reseaucocagne.asso.fr"],
@@ -616,12 +660,12 @@ var REFITEMS=NATIONAL; // start clean
 var custom=ld("sf_custom_v8",[]),favs=ld("sf_favs_v8",{}),checks=ld("sf_checks_v8",[]),rtab="Numéros";
 var loaded=[],map=null,layer=null,pin=null,markers={},byId={},tm=null,tmv=null,clustered=false;
 var EP=["https://overpass-api.de/api/interpreter","https://overpass.kumi.systems/api/interpreter","https://maps.mail.ru/osm/tools/overpass/api/interpreter"];
-var NAMES="Restos|Secours Populaire|Secours Catholique|Croix.Rouge|Emma.s|Banque alimentaire|CCAS|action sociale|Mission locale|France Travail|P.le emploi|France Services|picerie sociale|picerie solidaire|Entraide|Accueil de jour|Caisse d.Allocations";
+var NAMES="Restos|Secours Populaire|Secours Catholique|Croix.Rouge|Emma.s|Banque alimentaire|CCAS|action sociale|Mission locale|France Travail|P.le emploi|France Services|picerie sociale|picerie solidaire|Entraide|Accueil de jour|Caisse d.Allocations|CROUS|Crous|AGORAé|Agorae|FAGE";
 
 /* ---------- Classement et conversion des données OpenStreetMap ---------- */
 function cls(t){
-  var n=t.name||"",sf=t.social_facility||"";
-  if(/tudiant|crous|fage|agora/i.test(n))return"Étudiants";
+  var n=t.name||"",sf=t.social_facility||"",op=t.operator||"";
+  if(/tudiant|crous|fage|agora|resto.?u|cit.?.u|r.sidence.?universitaire/i.test(n+op))return"Étudiants";
   if(/picerie (sociale|solidaire)|restos|banque alimentaire/i.test(n)||sf==="food_bank"||sf==="soup_kitchen"||t.amenity==="food_sharing")return"Alimentaire";
   if(/mission locale|insertion|chantier|cocagne|france travail|p.le emploi/i.test(n)||sf==="workshop"||t.office==="employment_agency")return"Emploi & insertion";
   if(t.amenity==="public_bath"||/douche|bagagerie|laverie/i.test(n))return"Hygiène & numérique";
@@ -638,13 +682,17 @@ function mk(e){
   var a=[((t["addr:housenumber"]||"")+" "+(t["addr:street"]||"")).trim(),((t["addr:postcode"]||"")+" "+(t["addr:city"]||"")).trim()].filter(Boolean).join(", ");
   return{id:e.type[0]+e.id,src:"osm",n:t.name||SFL[t.social_facility]||(t.shop?"Magasin solidaire":"Structure sociale"),k:cls(t),la:la,ln:ln,a:a,c:t["addr:city"]||"",tel:t.phone||t["contact:phone"]||"",web:t.website||t["contact:website"]||"",h:hrs(t.opening_hours),o:t.operator||"",d:""}}
 function buildQuery(b){
-  
-  return"[out:json][timeout:40][bbox:"+b.s+","+b.w+","+b.n+","+b.e+"];("
+  return"[out:json][timeout:45][bbox:"+b.s+","+b.w+","+b.n+","+b.e+"];("
   +'nwr["amenity"="social_facility"];nwr["amenity"="social_centre"];nwr["amenity"="food_sharing"];nwr["amenity"="public_bath"];nwr["shop"="charity"];'
-  +'nwr["office"~"^(ngo|association|government|charity|employment_agency)$"]["name"~"'+NAMES+'",i];'
+  +'nwr["office"~"^(ngo|association|government|charity|employment_agency|educational_institution)$"]["name"~"'+NAMES+'",i];'
   +'nwr["amenity"~"^(community_centre|townhall)$"]["name"~"CCAS|action sociale",i];'
   +'nwr["shop"="second_hand"]["name"~"Emma|Croix|Secours|Resso|solidair|Entraide|Humanit|Recycl",i];'
-  +");out center 2000;"}
+  +'nwr["name"~"CROUS|Crous",i];'
+  +'nwr["operator"~"CROUS|Crous",i];'
+  +'nwr["amenity"="university"]["name"~"CROUS|Crous",i];'
+  +'nwr["building"="dormitory"]["operator"~"CROUS|Crous",i];'
+  +'nwr["amenity"="canteen"]["name"~"CROUS|Crous|Resto U|Restaurant universitaire",i];'
+  +");out center 3000;"}
 async function tryEp(url,body){
   var ctl=new AbortController(),to=setTimeout(function(){ctl.abort()},45000);
   try{var r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:body,signal:ctl.signal});
@@ -813,7 +861,7 @@ async function savePlace(){
 function simulate(){
   var n=$("#sn").value,s=$("#sp").value;
   $("#sres").innerHTML='<div class="result"><b>Pistes pour vous :</b><ul>'+ADV[n].map(function(a){return"<li>"+esc(a)+"</li>"}).join("")+"</ul>"+(BON[s]?"<p>"+esc(BON[s])+"</p>":"")+'<p style="margin-top:.6rem"><a href="https://www.mesdroitssociaux.gouv.fr" target="_blank" rel="noopener">Simulateur officiel →</a> · <a href="#pres">Près de chez vous</a></p></div>'}
-function setTheme(d){document.body.classList.toggle("dark",d);sv("sf_dark",d)}
+function setTheme(d){document.body.classList.toggle("dark",d);sv("sf_dark",d);if(typeof applyCfg==="function")applyCfg()}
 
 /* ---------- Événements (phase de capture : fonctionne aussi dans les popups de la carte) ---------- */
 document.addEventListener("click",function(e){
@@ -1176,51 +1224,79 @@ function loadCvColors(){
 loadCvColors();
 
 /* Profils types – remplissage ultra-rapide */
-const CV_PRESETS = {
-  aide: {
-    title: "Aide à domicile / Auxiliaire de vie",
-    profile: "Personne de confiance, à l'écoute et respectueuse. J'aime accompagner les personnes âgées ou en situation de handicap dans leur quotidien, avec patience et bienveillance. Je recherche un poste stable en aide à domicile.",
-    skills: ["Ponctualité","Sens du service","Travail en équipe","Rigueur","Autonomie","Gestion du stress"],
-    exp: [{poste:"Aide à domicile", emp:"Association / Particuliers", deb:"2021", fin:"Actuel", miss:"Aide à la toilette, courses, repas, compagnie, ménage léger"}],
-    form: [{dipl:"Diplôme d'État d'Accompagnant Éducatif et Social (DEAES) ou équivalent", an:"2020", etab:""}]
-  },
-  restau: {
-    title: "Employé polyvalent de restauration",
-    profile: "Dynamique, souriant(e) et résistant(e) au stress. Habitué(e) au travail en équipe et aux horaires variables. Je souhaite mettre mon sens du service au profit d'un établissement de restauration.",
-    skills: ["Ponctualité","Travail en équipe","Sens du service","Polyvalence","Gestion du stress","Rigueur"],
-    exp: [{poste:"Serveur / Polyvalent", emp:"Restaurant", deb:"2022", fin:"Actuel", miss:"Prise de commandes, service en salle, encaissement, mise en place"}],
-    form: [{dipl:"CAP Cuisine ou CSR", an:"2021", etab:""}]
-  },
-  vente: {
-    title: "Vendeur / Vendeuse",
-    profile: "Motivé(e) par le contact client et la vente. Organisé(e), présentable et force de proposition. Je recherche un poste dans le commerce ou la grande distribution.",
-    skills: ["Sens du service","Travail en équipe","Ponctualité","Polyvalence","Autonomie"],
-    exp: [{poste:"Vendeur / Employé de libre-service", emp:"Commerce / Grande surface", deb:"2021", fin:"Actuel", miss:"Conseil client, mise en rayon, encaissement, gestion des stocks"}],
-    form: [{dipl:"Bac pro Commerce ou équivalent", an:"2020", etab:""}]
-  },
-  logistique: {
-    title: "Manutentionnaire / Magasinier",
-    profile: "Rigoureux, endurant et respectueux des consignes de sécurité. Habitué au travail en entrepôt et à la préparation de commandes. Permis B apprécié.",
-    skills: ["Rigueur","Ponctualité","Autonomie","Polyvalence","Permis B","Travail en équipe"],
-    exp: [{poste:"Manutentionnaire / Préparateur de commandes", emp:"Entrepôt / Logistique", deb:"2021", fin:"Actuel", miss:"Préparation de commandes, chargement/déchargement, inventaire"}],
-    form: [{dipl:"CAP ou formation logistique", an:"2020", etab:""}]
-  },
-  proprete: {
-    title: "Agent d'entretien / Propreté",
-    profile: "Sérieux, discret et efficace. Je maîtrise les techniques de nettoyage et le respect des protocoles d'hygiène. Disponible pour des horaires en journée ou en soirée.",
-    skills: ["Rigueur","Ponctualité","Autonomie","Polyvalence","Sens du service"],
-    exp: [{poste:"Agent d'entretien", emp:"Entreprise de propreté / Collectivité", deb:"2021", fin:"Actuel", miss:"Nettoyage des locaux, respect des protocoles, gestion des produits"}],
-    form: [{dipl:"CQP / Formation propreté ou équivalent", an:"", etab:""}]
-  },
-  admin: {
-    title: "Agent administratif",
-    profile: "Organisé(e), à l'aise avec l'informatique (Word, Excel) et le contact téléphonique. Rigoureux dans le traitement des dossiers et le respect des délais.",
-    skills: ["Rigueur","Ponctualité","Informatique (Word, Excel)","Autonomie","Travail en équipe","Sens du service"],
-    exp: [{poste:"Agent administratif / Accueil", emp:"Mairie / Association / Entreprise", deb:"2021", fin:"Actuel", miss:"Accueil physique et téléphonique, saisie, classement, suivi de dossiers"}],
-    form: [{dipl:"Bac pro / BTS Support à l'action managériale ou équivalent", an:"2020", etab:""}]
-  },
-  vide: { title:"", profile:"", skills:[], exp:[], form:[] }
-};
+/* Catalogue large de métiers pour le CV (recherche) */
+const CV_JOBS = [
+  {id:"aide", title:"Aide à domicile / Auxiliaire de vie", tags:"aide domicile aes auxiliaire vie personnes âgées handicap", profile:"Personne de confiance, à l'écoute et respectueuse. J'aime accompagner les personnes âgées ou en situation de handicap dans leur quotidien.", skills:["Ponctualité","Sens du service","Travail en équipe","Rigueur","Autonomie","Gestion du stress"], exp:[{poste:"Aide à domicile",emp:"Association / Particuliers",deb:"2021",fin:"Actuel",miss:"Aide à la toilette, courses, repas, compagnie, ménage léger"}], form:[{dipl:"DEAES ou équivalent",an:"2020",etab:""}]},
+  {id:"ash", title:"Agent des services hospitaliers (ASH)", tags:"ash hopital clinique nettoyage hygiène", profile:"Rigoureux(se) et discret(e). Je respecte les protocoles d'hygiène hospitalière.", skills:["Rigueur","Ponctualité","Autonomie","Travail en équipe"], exp:[{poste:"ASH",emp:"Hôpital / Clinique",deb:"2021",fin:"Actuel",miss:"Entretien des chambres et locaux, respect des protocoles"}], form:[{dipl:"Formation ASH / hygiène",an:"",etab:""}]},
+  {id:"aide_soignant", title:"Aide-soignant / Aide-soignante", tags:"aide soignant as hospitalier ehpad", profile:"À l'écoute, bienveillant(e) et professionnel(le) auprès des patients.", skills:["Sens du service","Rigueur","Travail en équipe","Gestion du stress"], exp:[{poste:"Aide-soignant(e)",emp:"EHPAD / Hôpital",deb:"2021",fin:"Actuel",miss:"Toilette, aide aux repas, surveillance, transmission"}], form:[{dipl:"DEAS",an:"2020",etab:""}]},
+  {id:"restau", title:"Employé polyvalent de restauration", tags:"restaurant serveur polyvalent restauration rapide", profile:"Dynamique, souriant(e) et résistant(e) au stress. Habitué(e) aux horaires variables.", skills:["Ponctualité","Travail en équipe","Sens du service","Polyvalence","Gestion du stress"], exp:[{poste:"Polyvalent restauration",emp:"Restaurant",deb:"2022",fin:"Actuel",miss:"Service, encaissement, mise en place"}], form:[{dipl:"CAP Cuisine / CSR",an:"2021",etab:""}]},
+  {id:"serveur", title:"Serveur / Serveuse", tags:"serveur serveuse salle restaurant café bar", profile:"Accueil chaleureux, sens du service et rapidité en salle.", skills:["Sens du service","Travail en équipe","Gestion du stress","Ponctualité"], exp:[{poste:"Serveur(se)",emp:"Restaurant / Café",deb:"2021",fin:"Actuel",miss:"Prise de commandes, service, encaissement"}], form:[{dipl:"CAP Commercialisation et services en hôtel-café-restaurant",an:"",etab:""}]},
+  {id:"commis", title:"Commis de cuisine / Cuisinier", tags:"cuisine cuisinier commis chef plonge", profile:"Passionné(e) par la cuisine, organisé(e) et capable de travailler sous pression.", skills:["Rigueur","Travail en équipe","Gestion du stress","Polyvalence"], exp:[{poste:"Commis de cuisine",emp:"Restaurant",deb:"2021",fin:"Actuel",miss:"Préparation, cuisson, respect des normes d'hygiène"}], form:[{dipl:"CAP Cuisine",an:"2020",etab:""}]},
+  {id:"plonge", title:"Plongeur / Agent de plonge", tags:"plonge vaisselle cuisine hygiène", profile:"Efficace, endurant et respectueux des règles d'hygiène en cuisine.", skills:["Rigueur","Ponctualité","Autonomie","Polyvalence"], exp:[{poste:"Agent de plonge",emp:"Restaurant",deb:"2022",fin:"Actuel",miss:"Lavage, rangement, nettoyage des zones"}], form:[]},
+  {id:"vente", title:"Vendeur / Vendeuse", tags:"vente commerce magasin client caisse", profile:"Motivé(e) par le contact client et la vente. Présentable et force de proposition.", skills:["Sens du service","Travail en équipe","Ponctualité","Polyvalence"], exp:[{poste:"Vendeur(se)",emp:"Commerce",deb:"2021",fin:"Actuel",miss:"Conseil, mise en rayon, encaissement"}], form:[{dipl:"Bac pro Commerce",an:"2020",etab:""}]},
+  {id:"caisse", title:"Hôte / Hôtesse de caisse", tags:"caisse grande distribution supermarché", profile:"Souriant(e), rapide et précis(e) à l'encaissement.", skills:["Sens du service","Ponctualité","Rigueur","Travail en équipe"], exp:[{poste:"Hôte(sse) de caisse",emp:"Grande surface",deb:"2021",fin:"Actuel",miss:"Encaissement, fidélisation, rangement caisse"}], form:[]},
+  {id:"rayon", title:"Employé libre-service / Mise en rayon", tags:"rayon stock grande surface alimentaire", profile:"Organisé(e) et dynamique pour la mise en rayon et le suivi des stocks.", skills:["Rigueur","Polyvalence","Ponctualité","Autonomie"], exp:[{poste:"Employé libre-service",emp:"Supermarché",deb:"2021",fin:"Actuel",miss:"Mise en rayon, dates de péremption, propreté"}], form:[]},
+  {id:"logistique", title:"Manutentionnaire / Magasinier", tags:"manutention magasinier entrepôt stock", profile:"Endurant, respectueux des consignes de sécurité et des procédures.", skills:["Rigueur","Ponctualité","Autonomie","Permis B","Travail en équipe"], exp:[{poste:"Manutentionnaire",emp:"Entrepôt",deb:"2021",fin:"Actuel",miss:"Préparation de commandes, chargement"}], form:[{dipl:"Formation logistique",an:"",etab:""}]},
+  {id:"preparateur", title:"Préparateur de commandes", tags:"préparateur commandes picking logistique e-commerce", profile:"Rapide, précis et habitué au travail en entrepôt / e-commerce.", skills:["Rigueur","Ponctualité","Autonomie","Polyvalence"], exp:[{poste:"Préparateur de commandes",emp:"Entrepôt / E-commerce",deb:"2022",fin:"Actuel",miss:"Picking, colisage, contrôle qualité"}], form:[]},
+  {id:"cariste", title:"Cariste / Conducteur de chariot", tags:"cariste chariot élévateur cacés logistique", profile:"Titulaire des autorisations de conduite, vigilant et productif.", skills:["Rigueur","Permis B","Autonomie","Travail en équipe"], exp:[{poste:"Cariste",emp:"Entrepôt",deb:"2021",fin:"Actuel",miss:"Manutention motorisée, stockage, sécurité"}], form:[{dipl:"CACES",an:"",etab:""}]},
+  {id:"proprete", title:"Agent d'entretien / Propreté", tags:"propreté nettoyage agent entretien ménage", profile:"Sérieux, discret et efficace. Respect des protocoles d'hygiène.", skills:["Rigueur","Ponctualité","Autonomie","Polyvalence"], exp:[{poste:"Agent d'entretien",emp:"Entreprise de propreté",deb:"2021",fin:"Actuel",miss:"Nettoyage des locaux, protocoles"}], form:[{dipl:"CQP Propreté",an:"",etab:""}]},
+  {id:"admin", title:"Agent administratif", tags:"administratif secrétariat bureau dossiers", profile:"Organisé(e), à l'aise avec Word/Excel et le téléphone. Rigoureux(se).", skills:["Rigueur","Ponctualité","Informatique","Autonomie","Sens du service"], exp:[{poste:"Agent administratif",emp:"Entreprise / Collectivité",deb:"2021",fin:"Actuel",miss:"Accueil, saisie, classement, suivi"}], form:[{dipl:"Bac pro / BTS SAM",an:"2020",etab:""}]},
+  {id:"accueil", title:"Agent d'accueil / Réceptionniste", tags:"accueil réception standard téléphonique", profile:"Présentable, souriant(e) et à l'aise au téléphone comme en face-à-face.", skills:["Sens du service","Ponctualité","Travail en équipe","Informatique"], exp:[{poste:"Agent d'accueil",emp:"Entreprise / Mairie",deb:"2021",fin:"Actuel",miss:"Accueil, orientation, standard"}], form:[]},
+  {id:"securite", title:"Agent de sécurité", tags:"sécurité gardien SSIAP surveillance", profile:"Vigilant, calme et respectueux des procédures de sécurité.", skills:["Rigueur","Gestion du stress","Autonomie","Ponctualité"], exp:[{poste:"Agent de sécurité",emp:"Société de sécurité",deb:"2021",fin:"Actuel",miss:"Surveillance, rondes, comptes-rendus"}], form:[{dipl:"CQP APS / SSIAP",an:"",etab:""}]},
+  {id:"gardien", title:"Gardien d'immeuble / Copropriété", tags:"gardien immeuble loge copropriété", profile:"Discret, disponible et attentif au bien-être des résidents.", skills:["Sens du service","Autonomie","Rigueur","Ponctualité"], exp:[{poste:"Gardien d'immeuble",emp:"Syndic / Bailleur",deb:"2020",fin:"Actuel",miss:"Entretien parties communes, petites interventions"}], form:[]},
+  {id:"jardinier", title:"Jardinier / Espaces verts", tags:"jardinier espaces verts paysage tonte", profile:"Passionné(e) par le travail en extérieur et l'entretien des espaces verts.", skills:["Autonomie","Rigueur","Polyvalence","Permis B"], exp:[{poste:"Jardinier",emp:"Collectivité / Entreprise",deb:"2021",fin:"Actuel",miss:"Tonte, taille, plantation, entretien"}], form:[{dipl:"CAPA Jardins espaces verts",an:"",etab:""}]},
+  {id:"chauffeur", title:"Chauffeur / Livreur", tags:"chauffeur livreur permis b vl transport", profile:"Permis B, ponctuel et soigneux avec le véhicule et les colis.", skills:["Permis B","Ponctualité","Autonomie","Sens du service"], exp:[{poste:"Livreur / Chauffeur",emp:"Transport / Commerce",deb:"2021",fin:"Actuel",miss:"Livraisons, tournées, relation client"}], form:[{dipl:"Permis B",an:"",etab:""}]},
+  {id:"coursier", title:"Coursier / Livreur à vélo", tags:"coursier vélo scooter livraison repas", profile:"Rapide, autonome et à l'aise en milieu urbain.", skills:["Autonomie","Ponctualité","Gestion du stress","Polyvalence"], exp:[{poste:"Coursier",emp:"Plateforme / Restaurant",deb:"2022",fin:"Actuel",miss:"Livraisons de repas / colis"}], form:[]},
+  {id:"electricien", title:"Électricien / Aide-électricien", tags:"électricité electricien batiment chantier", profile:"Rigoureux et respectueux des normes de sécurité électrique.", skills:["Rigueur","Autonomie","Travail en équipe","Permis B"], exp:[{poste:"Aide-électricien",emp:"Entreprise du bâtiment",deb:"2021",fin:"Actuel",miss:"Installation, câblage, dépannage"}], form:[{dipl:"CAP Électricien",an:"",etab:""}]},
+  {id:"peintre", title:"Peintre en bâtiment", tags:"peintre batiment renovation enduit", profile:"Soigneux, propre et habitué aux chantiers de rénovation.", skills:["Rigueur","Autonomie","Polyvalence","Travail en équipe"], exp:[{poste:"Peintre",emp:"Entreprise de peinture",deb:"2021",fin:"Actuel",miss:"Préparation des supports, application, finitions"}], form:[{dipl:"CAP Peintre applicateur de revêtements",an:"",etab:""}]},
+  {id:"macon", title:"Maçon / Aide-maçon", tags:"maçon batiment gros oeuvre chantier", profile:"Endurant et précis sur les chantiers de gros œuvre.", skills:["Rigueur","Travail en équipe","Polyvalence","Ponctualité"], exp:[{poste:"Aide-maçon",emp:"Entreprise de maçonnerie",deb:"2021",fin:"Actuel",miss:"Coulage, montage, préparation chantier"}], form:[{dipl:"CAP Maçon",an:"",etab:""}]},
+  {id:"plombier", title:"Plombier / Aide-plombier", tags:"plombier sanitaires chauffage zingueur", profile:"Méthodique et capable d'intervenir en dépannage comme en installation.", skills:["Rigueur","Autonomie","Polyvalence","Permis B"], exp:[{poste:"Aide-plombier",emp:"Entreprise de plomberie",deb:"2021",fin:"Actuel",miss:"Installations sanitaires, dépannages"}], form:[{dipl:"CAP Installateur sanitaire",an:"",etab:""}]},
+  {id:"menuisier", title:"Menuisier / Aide-menuisier", tags:"menuisier bois atelier pose", profile:"Précis, patient et soigneux dans le travail du bois.", skills:["Rigueur","Autonomie","Polyvalence"], exp:[{poste:"Aide-menuisier",emp:"Atelier / Entreprise",deb:"2021",fin:"Actuel",miss:"Découpe, assemblage, pose"}], form:[{dipl:"CAP Menuisier",an:"",etab:""}]},
+  {id:"soudeur", title:"Soudeur / Serrurier métallier", tags:"soudeur métallerie serrurerie atelier", profile:"Habile de ses mains et respectueux des règles de sécurité.", skills:["Rigueur","Autonomie","Travail en équipe"], exp:[{poste:"Soudeur / Métallier",emp:"Atelier",deb:"2021",fin:"Actuel",miss:"Soudure, assemblage, finitions"}], form:[{dipl:"CAP Réalisation en chaudronnerie / Serrurerie",an:"",etab:""}]},
+  {id:"agricole", title:"Ouvrier agricole / Maraîcher", tags:"agricole maraicher ferme saisonnier", profile:"Motivé par le travail en extérieur et les productions agricoles.", skills:["Autonomie","Polyvalence","Rigueur","Ponctualité"], exp:[{poste:"Ouvrier agricole",emp:"Exploitation",deb:"2022",fin:"Actuel",miss:"Cultures, récolte, entretien matériel"}], form:[]},
+  {id:"agent_prod", title:"Agent de production / Opérateur", tags:"production usine operateur industrie chaine", profile:"Ponctuel, attentif à la qualité et aux consignes de sécurité.", skills:["Rigueur","Ponctualité","Travail en équipe","Polyvalence"], exp:[{poste:"Agent de production",emp:"Industrie",deb:"2021",fin:"Actuel",miss:"Conduite de ligne, contrôle qualité"}], form:[]},
+  {id:"agent_cond", title:"Agent de conditionnement", tags:"conditionnement emballage chaine usine", profile:"Rapide, soigneux et capable de tenir le rythme d'une chaîne.", skills:["Rigueur","Ponctualité","Travail en équipe"], exp:[{poste:"Agent de conditionnement",emp:"Industrie agroalimentaire",deb:"2022",fin:"Actuel",miss:"Conditionnement, étiquetage, contrôle"}], form:[]},
+  {id:"babysitting", title:"Garde d'enfants / Baby-sitting", tags:"garde enfants baby sitting nounou", profile:"Patient(e), responsable et à l'aise avec les enfants.", skills:["Sens du service","Autonomie","Gestion du stress","Ponctualité"], exp:[{poste:"Garde d'enfants",emp:"Particuliers",deb:"2021",fin:"Actuel",miss:"Garde, devoirs, activités, repas"}], form:[{dipl:"BAFA (si obtenu)",an:"",etab:""}]},
+  {id:"animateur", title:"Animateur / Animatrice", tags:"animateur centre loisirs colonie jeunesse", profile:"Dynamique, créatif(ve) et à l'aise avec les groupes d'enfants ou d'ados.", skills:["Sens du service","Travail en équipe","Gestion du stress","Polyvalence"], exp:[{poste:"Animateur",emp:"Centre de loisirs",deb:"2022",fin:"Actuel",miss:"Activités, sorties, encadrement"}], form:[{dipl:"BAFA",an:"",etab:""}]},
+  {id:"educateur", title:"Éducateur / Moniteur", tags:"éducateur moniteur social jeunesse sport", profile:"À l'écoute, pédagogue et engagé auprès des publics accompagnés.", skills:["Sens du service","Travail en équipe","Rigueur","Gestion du stress"], exp:[{poste:"Moniteur / Éducateur",emp:"Association",deb:"2021",fin:"Actuel",miss:"Accompagnement, ateliers, sorties"}], form:[{dipl:"BPJEPS / DEES",an:"",etab:""}]},
+  {id:"coiffeur", title:"Coiffeur / Coiffeuse", tags:"coiffure salon coloration coupe", profile:"Créatif(ve), soigneux(se) et orienté(e) client.", skills:["Sens du service","Rigueur","Autonomie","Travail en équipe"], exp:[{poste:"Coiffeur(se)",emp:"Salon de coiffure",deb:"2021",fin:"Actuel",miss:"Coupes, colorations, conseil client"}], form:[{dipl:"CAP Coiffure",an:"",etab:""}]},
+  {id:"esthetique", title:"Esthéticien / Esthéticienne", tags:"esthétique beauté soins institut", profile:"Douceur, hygiène rigoureuse et sens du conseil beauté.", skills:["Sens du service","Rigueur","Autonomie"], exp:[{poste:"Esthéticien(ne)",emp:"Institut",deb:"2021",fin:"Actuel",miss:"Soins visage/corps, épilation, conseil"}], form:[{dipl:"CAP Esthétique",an:"",etab:""}]},
+  {id:"agent_immo", title:"Agent immobilier / Négociateur", tags:"immobilier agent negociateur location vente", profile:"Commercial, organisé et à l'aise dans la relation client.", skills:["Sens du service","Autonomie","Rigueur","Permis B"], exp:[{poste:"Négociateur immobilier",emp:"Agence",deb:"2021",fin:"Actuel",miss:"Visites, mandats, suivi dossiers"}], form:[{dipl:"BTS Professions immobilières",an:"",etab:""}]},
+  {id:"commercial", title:"Commercial / Technico-commercial", tags:"commercial vente b2b prospection", profile:"Force de proposition, orienté résultats et relation client.", skills:["Sens du service","Autonomie","Gestion du stress","Permis B"], exp:[{poste:"Commercial",emp:"Entreprise",deb:"2021",fin:"Actuel",miss:"Prospection, suivi client, objectifs"}], form:[]},
+  {id:"teleconseiller", title:"Téléconseiller / Conseiller clientèle", tags:"téléconseiller call center relation client", profile:"Aisance téléphonique, patience et sens du service.", skills:["Sens du service","Gestion du stress","Informatique","Ponctualité"], exp:[{poste:"Téléconseiller",emp:"Centre d'appels",deb:"2022",fin:"Actuel",miss:"Accueil appels, traitement demandes, CRM"}], form:[]},
+  {id:"informaticien", title:"Technicien informatique / Helpdesk", tags:"informatique helpdesk support reseau", profile:"Patient, méthodique et à l'aise pour expliquer des solutions techniques.", skills:["Informatique","Autonomie","Sens du service","Rigueur"], exp:[{poste:"Technicien support",emp:"Entreprise / ESN",deb:"2021",fin:"Actuel",miss:"Assistance utilisateurs, maintenance"}], form:[{dipl:"Bac pro / BTS SIO",an:"",etab:""}]},
+  {id:"comptable", title:"Aide-comptable / Assistant comptable", tags:"comptable facturation saisie gestion", profile:"Rigoureux(se) avec les chiffres et les échéances.", skills:["Rigueur","Informatique","Autonomie","Ponctualité"], exp:[{poste:"Aide-comptable",emp:"Cabinet / Entreprise",deb:"2021",fin:"Actuel",miss:"Saisie, facturation, classements"}], form:[{dipl:"BTS Comptabilité Gestion",an:"",etab:""}]},
+  {id:"rh", title:"Assistant RH / Gestion du personnel", tags:"rh ressources humaines paie recrutement", profile:"Discret, organisé et à l'aise avec les procédures RH.", skills:["Rigueur","Informatique","Sens du service","Autonomie"], exp:[{poste:"Assistant RH",emp:"Entreprise",deb:"2021",fin:"Actuel",miss:"Dossiers personnel, recrutement, admin"}], form:[{dipl:"BTS Support / Licence RH",an:"",etab:""}]},
+  {id:"agent_tour", title:"Agent d'exploitation / Travaux publics", tags:"travaux publics voirie chantier enrobe", profile:"Endurant et respectueux des consignes de sécurité sur chantier.", skills:["Rigueur","Travail en équipe","Polyvalence","Ponctualité"], exp:[{poste:"Agent d'exploitation",emp:"Travaux publics",deb:"2021",fin:"Actuel",miss:"Voirie, chantier, signalisation"}], form:[]},
+  {id:"agent_collect", title:"Agent de propreté urbaine / Éboueur", tags:"éboueur collecte déchets propreté urbaine", profile:"Endurant, ponctuel et engagé dans le service public de propreté.", skills:["Ponctualité","Travail en équipe","Rigueur","Polyvalence"], exp:[{poste:"Agent de collecte",emp:"Collectivité / Prestataire",deb:"2021",fin:"Actuel",miss:"Collecte, nettoiement, sécurité"}], form:[]},
+  {id:"saisonnier", title:"Employé saisonnier (tourisme / agriculture)", tags:"saisonnier été hiver tourisme agriculture", profile:"Disponible, adaptable et motivé pour les missions saisonnières.", skills:["Polyvalence","Ponctualité","Travail en équipe","Sens du service"], exp:[{poste:"Saisonnier",emp:"Tourisme / Agriculture",deb:"2022",fin:"2023",miss:"Accueil, service, récolte selon saison"}], form:[]},
+  {id:"agent_social", title:"Agent d'insertion / Médiateur social", tags:"insertion médiation social accompagnement", profile:"À l'écoute, non-jugeant et engagé dans l'accompagnement des publics fragiles.", skills:["Sens du service","Gestion du stress","Travail en équipe","Rigueur"], exp:[{poste:"Médiateur / Agent d'insertion",emp:"Association",deb:"2021",fin:"Actuel",miss:"Accueil, orientation, ateliers"}], form:[]},
+  {id:"vide", title:"— Formulaire vide —", tags:"vide reset", profile:"", skills:[], exp:[], form:[]}
+];
+const CV_PRESETS = Object.fromEntries(CV_JOBS.map(j => [j.id, j]));
+
+function renderCvJobChips(filter=""){
+  const box = document.getElementById("cvPresets");
+  if(!box) return;
+  const q = (filter||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  const list = CV_JOBS.filter(j => j.id !== "vide" && (!q || (j.title+" "+j.tags).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").includes(q)));
+  box.innerHTML = list.slice(0,40).map(j => `<button type="button" class="chip" data-preset="${j.id}">${esc(j.title)}</button>`).join("")
+    || `<span class="sub">Aucun métier trouvé pour « ${esc(filter)} »</span>`;
+}
+renderCvJobChips();
+document.getElementById("cvJobSearch")?.addEventListener("input", e => renderCvJobChips(e.target.value));
+document.getElementById("cvPresetVide")?.addEventListener("click", () => {
+  const p = CV_PRESETS.vide;
+  document.getElementById("cvTitle").value = "";
+  document.getElementById("cvTitleCustom").value = "";
+  document.getElementById("cvProfile").value = "";
+  document.querySelectorAll("#cvSkillChecks input").forEach(c => c.checked = false);
+  document.getElementById("cvExps").innerHTML = "";
+  document.getElementById("cvForms").innerHTML = "";
+  expCount = 0; formCount = 0;
+  cvAddExp(); cvAddForm();
+  cvBuild();
+});
 
 document.getElementById("cvPresets")?.addEventListener("click", e => {
   const b = e.target.closest("[data-preset]");
@@ -1805,6 +1881,15 @@ function applyCfg() {
     if (c.bg) document.body.style.setProperty("--bg", c.bg);
     if (c.card) document.body.style.setProperty("--card", c.card);
     if (c.text) document.body.style.setProperty("--text", c.text);
+  } else {
+    // Mode sombre : garder les tokens sombres, n'appliquer que navy/accent adaptés
+    document.body.style.setProperty("--navy", "#60a5fa");
+    document.body.style.setProperty("--blue", "#60a5fa");
+    document.body.style.setProperty("--bg", "#0b1020");
+    document.body.style.setProperty("--card", "#131b2e");
+    document.body.style.setProperty("--text", "#f1f5f9");
+    document.body.style.setProperty("--muted", "#9fb0c8");
+    document.body.style.setProperty("--bd", "#25314a");
   }
   const setTxt = (sel, val) => { const el = document.querySelector(sel); if (el && val != null && val !== "") el.textContent = val; };
   setTxt("#heroTag", c.heroTag);
@@ -2069,9 +2154,14 @@ function panel() {
       <p class="sub">Attention : active uniquement si vous devez couper l'accès public temporairement.</p>`;
   } else if (tab === "code") {
     h += `
-      <p class="sub">Configuration actuelle (JSON). Vous pouvez copier pour sauvegarde.</p>
-      <textarea id="cJson" class="field" rows="12" readonly style="font-family:monospace;font-size:.78rem">${e(JSON.stringify(cfg, null, 2))}</textarea>
-      <button class="btn l" id="cCopy" style="margin-top:.5rem">📋 Copier</button>`;
+      <p class="sub">Configuration actuelle (JSON). Copiez pour sauvegarder, ou collez une config puis Importer.</p>
+      <textarea id="cJson" class="field" rows="10" style="font-family:monospace;font-size:.78rem">${e(JSON.stringify(cfg, null, 2))}</textarea>
+      <div class="row" style="margin-top:.5rem">
+        <button class="btn l" id="cCopy">📋 Copier</button>
+        <button class="btn g" id="cImport">📥 Importer</button>
+        <button class="btn l" id="cDl">⬇️ Fichier .json</button>
+      </div>
+      <p class="sub" style="margin-top:.7rem">Astuce : après import, cliquez sur <b>Sauvegarder</b> pour appliquer durablement.</p>`;
   }
 
   h += `</div><div class="sf">
@@ -2139,6 +2229,28 @@ function panel() {
   if (cCopy) cCopy.onclick = () => {
     navigator.clipboard?.writeText(JSON.stringify(cfg, null, 2));
     $("#aMsg").textContent = "📋 Copié";
+  };
+  const cImport = $("#cImport");
+  if (cImport) cImport.onclick = () => {
+    try {
+      const raw = $("#cJson")?.value || "";
+      const parsed = JSON.parse(raw);
+      cfg = {...DEF, ...parsed};
+      localStorage.setItem("sf_cfg", JSON.stringify(cfg));
+      applyCfg();
+      panel();
+      $("#aMsg").textContent = "✅ Config importée";
+    } catch (err) {
+      $("#aMsg").textContent = "❌ JSON invalide";
+    }
+  };
+  const cDl = $("#cDl");
+  if (cDl) cDl.onclick = () => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(cfg, null, 2)], {type:"application/json"}));
+    a.download = "solidarite-france-config.json";
+    a.click();
+    $("#aMsg").textContent = "⬇️ Téléchargé";
   };
 
   $("#aSave").onclick = () => {
