@@ -104,6 +104,16 @@ body.padr{padding-right:var(--side-w,380px)}
 #side .tabs .chip{background:#fce7f3;color:#9d174d;border:2px solid #f9a8d4;border-radius:999px;padding:.4rem .85rem;font-weight:700;font-size:.82rem;box-shadow:0 2px 0 #f472b6;cursor:pointer}
 #side .tabs .chip.on{background:#c084fc;color:#4c1d95;border-color:#a78bfa;box-shadow:0 2px 0 #7c3aed}
 #side .tabs .chip:hover{filter:brightness(1.05)}
+/* Parcours besoins */
+.need-btn{background:var(--card);border:2px solid var(--bd);border-radius:14px;padding:1.05rem .6rem;cursor:pointer;text-align:center;font-family:inherit;box-shadow:var(--sh);color:var(--text);transition:transform .15s,border-color .15s,box-shadow .15s}
+.need-btn:hover,.need-btn:focus{border-color:var(--navy);transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,23,42,.12);outline:0}
+.need-btn b{display:block;font-size:.92rem;margin:.1rem 0}
+.need-btn small{display:block;font-size:.72rem;color:var(--muted);margin-top:.15rem}
+.need-btn.on{border-color:var(--navy);background:linear-gradient(135deg,#eff6ff,#dbeafe)}
+body.dark .need-btn.on{background:linear-gradient(135deg,#1e3a5f,#0f2744)}
+#needResult h3{margin:0 0 .6rem;color:var(--navy)}
+#needResult ul{margin:.4rem 0 .8rem 1.2rem;line-height:1.7}
+#needResult .row{margin-top:.8rem}
 
 </style>
 </head>
@@ -113,14 +123,15 @@ body.padr{padding-right:var(--side-w,380px)}
 
 <nav>
 <a class="logo" href="#top">🤝 Solidarité France</a>
-<div class="links"><a href="#carte">Carte</a><a href="#pres">Près de chez vous</a><a href="#ressources">Numéros & sites</a><a href="#assistant">Assistant</a><a href="#cv">Mon CV</a><a href="#simulateur">Simulateur</a><a href="#benevolat">Bénévolat</a></div>
+<div class="links"><a href="#besoins">Besoins</a><a href="#carte">Carte</a><a href="#ressources">Numéros</a><a href="#assistant">Assistant</a><a href="#cv">CV</a><a href="#simulateur">Démarches</a><a href="#benevolat">Bénévolat</a></div>
 <button class="btn l" data-a="theme" aria-label="Mode sombre / clair">🌓</button>
 <button class="btn g" data-a="add">+ Lieu</button>
 </nav>
 
 <header class="hero" id="top">
-<h1>Trouvez de l'aide dans n'importe quelle ville de France</h1>
-<p>Tapez votre ville ou votre code postal : banques alimentaires, magasins solidaires, hébergements, accueils de jour, centres sociaux… autour de vous.</p>
+<p class="hero-tag" id="heroTag" style="font-size:.95rem;opacity:.9;margin-bottom:.4rem;font-weight:600">Vous n'êtes pas seul</p>
+<h1 id="heroTitle">Trouvez de l'aide près de chez vous, gratuitement</h1>
+<p id="heroSub">Banques alimentaires, hébergements, soins, vêtements, démarches… Tapez votre ville ou utilisez votre position.</p>
 <div class="sbox">
 <form class="search" id="sform" autocomplete="off"><input id="city" type="search" placeholder="Ville ou code postal (ex : Bordeaux, 33000)" aria-label="Ville ou code postal"><button type="submit">Chercher</button></form>
 <div class="sug" id="sug" hidden></div>
@@ -132,6 +143,23 @@ body.padr{padding-right:var(--side-w,380px)}
 </header>
 
 <main class="wrap">
+<!-- Parcours guidés par besoin -->
+<section id="besoins" style="margin:1.6rem 0 2rem">
+  <h2 class="t" style="margin-top:0" id="besoinsTitle">🔴 De quoi avez-vous besoin ?</h2>
+  <p class="sub" id="besoinsSub">Choisissez votre situation. On vous oriente immédiatement vers les bonnes ressources.</p>
+  <div class="grid" id="needGrid" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.7rem">
+    <button class="need-btn" data-need="manger" type="button"><span style="font-size:1.75rem;display:block;margin-bottom:.3rem">🥫</span><b>J'ai faim</b><small>Repas & courses</small></button>
+    <button class="need-btn" data-need="dormir" type="button"><span style="font-size:1.75rem;display:block;margin-bottom:.3rem">🏠</span><b>Je dors dehors</b><small>Hébergement 115</small></button>
+    <button class="need-btn" data-need="sante" type="button"><span style="font-size:1.75rem;display:block;margin-bottom:.3rem">🩺</span><b>Je dois me soigner</b><small>Soins & mutuelle</small></button>
+    <button class="need-btn" data-need="violence" type="button" style="border-color:#fca5a5"><span style="font-size:1.75rem;display:block;margin-bottom:.3rem">🛡️</span><b>Violences / danger</b><small>3919 & aide</small></button>
+    <button class="need-btn" data-need="etudiant" type="button"><span style="font-size:1.75rem;display:block;margin-bottom:.3rem">🎓</span><b>Je suis étudiant</b><small>CROUS, aides…</small></button>
+    <button class="need-btn" data-need="emploi" type="button"><span style="font-size:1.75rem;display:block;margin-bottom:.3rem">💼</span><b>Je cherche un emploi</b><small>CV & insertion</small></button>
+    <button class="need-btn" data-need="admin" type="button"><span style="font-size:1.75rem;display:block;margin-bottom:.3rem">📄</span><b>Papiers & droits</b><small>RSA, domiciliation…</small></button>
+    <button class="need-btn" data-need="hygiene" type="button"><span style="font-size:1.75rem;display:block;margin-bottom:.3rem">🚿</span><b>Douche & hygiène</b><small>Accueils de jour</small></button>
+  </div>
+  <div id="needResult" class="panel" style="margin-top:1rem;display:none"></div>
+</section>
+
 <div class="kpis">
 <div class="kpi"><b id="k1">0</b><span>Lieux référencés</span></div>
 <div class="kpi"><b>35 000</b><span>Communes cherchables</span></div>
@@ -1669,6 +1697,7 @@ const $$ = s => [...document.querySelectorAll(s)];
 const e = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
 const SECS = {
+  besoins: "🔴 Parcours besoins",
   carte: "🗺️ Carte",
   pres: "🔎 Près de chez vous",
   ressources: "📞 Numéros & sites",
@@ -1679,7 +1708,30 @@ const SECS = {
 };
 const DEF = {
   primary: "#0f4c81", accent: "#2563eb", bg: "#f1f5f9", card: "#ffffff", text: "#0f172a",
-  font: "system-ui", size: 16, title: "", siteName: "Solidarité France", subtitle: "", footer: "",
+  font: "system-ui", size: 16,
+  siteName: "Solidarité France",
+  heroTag: "Vous n'êtes pas seul",
+  title: "Trouvez de l'aide près de chez vous, gratuitement",
+  subtitle: "Banques alimentaires, hébergements, soins, vêtements, démarches… Tapez votre ville ou utilisez votre position.",
+  besoinsTitle: "🔴 De quoi avez-vous besoin ?",
+  besoinsSub: "Choisissez votre situation. On vous oriente immédiatement vers les bonnes ressources.",
+  carteTitle: "🗺️ Carte des centres d'aide",
+  carteSub: "Zoomez sur votre ville ou tapez-la en haut : les centres réels (OpenStreetMap) et les repères nationaux se chargent automatiquement.",
+  presTitle: "🔎 Services publics & associations près de chez vous",
+  presSub: "Choisissez d'abord une ville en haut de la page. Les liens ouvrent Google Maps avec les résultats à jour.",
+  resTitle: "📞 Numéros utiles & sites officiels",
+  resSub: "Numéros d'urgence gratuits et sites officiels. Cliquez pour afficher.",
+  simTitle: "🧭 Simulateur & démarches",
+  simSub: "Indiquez votre besoin et votre situation pour obtenir des pistes concrètes.",
+  aiTitle: "🤖 Assistant Solidarité",
+  aiSub: "Posez une question sur vos droits, où trouver de l'aide, les démarches…",
+  cvTitle: "📄 Créer mon CV",
+  cvSub: "CV professionnels qui attirent l'œil des recruteurs. 100 % privé (stocké uniquement sur votre appareil).",
+  beneTitle: "🙋 Bénévolat, dons & partage",
+  beneSub: "Vous pouvez aussi aider à votre tour : dons matériels, temps ou simple partage de ce portail.",
+  footer: "",
+  warnMap: "⚠️ Les lieux « Repère » ont une position approximative (centre-ville). Appelez ou vérifiez avant de vous déplacer.",
+  urgLabel: "🚨 Gratuit, 24h/24 :",
   calm: true, maintenance: false,
   mmsg: "Le site est en maintenance. Retour très bientôt !", urgBar: true,
   order: Object.keys(SECS), hidden: []
@@ -1754,17 +1806,33 @@ function applyCfg() {
     if (c.card) document.body.style.setProperty("--card", c.card);
     if (c.text) document.body.style.setProperty("--text", c.text);
   }
-  const h1 = document.querySelector(".hero h1");
-  if (h1) {
-    if (!h1.dataset.o) h1.dataset.o = h1.textContent;
-    h1.textContent = c.title || h1.dataset.o;
-  }
-  const heroP = document.querySelector(".hero p");
-  if (heroP) {
-    if (!heroP.dataset.o) heroP.dataset.o = heroP.textContent;
-    if (c.subtitle) heroP.textContent = c.subtitle;
-    else heroP.textContent = heroP.dataset.o;
-  }
+  const setTxt = (sel, val) => { const el = document.querySelector(sel); if (el && val != null && val !== "") el.textContent = val; };
+  setTxt("#heroTag", c.heroTag);
+  setTxt("#heroTitle", c.title);
+  setTxt("#heroSub", c.subtitle);
+  setTxt("#besoinsTitle", c.besoinsTitle);
+  setTxt("#besoinsSub", c.besoinsSub);
+  setTxt("#carte", c.carteTitle);
+  setTxt("#status", c.carteSub);
+  setTxt("#pres", c.presTitle);
+  setTxt("#presub", c.presSub);
+  setTxt("#ressources", c.resTitle);
+  const resSub = document.querySelector("#ressources + .sub");
+  if (resSub && c.resSub) resSub.textContent = c.resSub;
+  setTxt("#simulateur", c.simTitle);
+  const simSub = document.querySelector("#simulateur + .sub");
+  if (simSub && c.simSub) simSub.textContent = c.simSub;
+  setTxt("#assistant", c.aiTitle);
+  const aiSub = document.querySelector("#assistant + .sub");
+  if (aiSub && c.aiSub) aiSub.textContent = c.aiSub;
+  setTxt("#cv", c.cvTitle);
+  const cvSub = document.querySelector("#cv + .sub");
+  if (cvSub && c.cvSub) cvSub.innerHTML = c.cvSub;
+  setTxt("#benevolat", c.beneTitle);
+  const beneSub = document.querySelector("#benevolat + .sub");
+  if (beneSub && c.beneSub) beneSub.textContent = c.beneSub;
+  const warn = document.querySelector(".warn");
+  if (warn && c.warnMap) warn.textContent = c.warnMap;
   const logo = document.querySelector(".logo");
   if (logo && c.siteName) logo.textContent = "🤝 " + c.siteName;
   const foot = document.querySelector("footer");
@@ -1775,7 +1843,11 @@ function applyCfg() {
     foot.innerHTML = foot.dataset.o;
   }
   const urg = document.querySelector(".urg");
-  if (urg) urg.style.display = c.urgBar ? "" : "none";
+  if (urg) {
+    urg.style.display = c.urgBar ? "" : "none";
+    const urgSpan = urg.querySelector("span");
+    if (urgSpan && c.urgLabel) urgSpan.textContent = c.urgLabel;
+  }
   const calm = document.getElementById("calm");
   if (calm) calm.hidden = !c.calm;
 
@@ -1944,11 +2016,33 @@ function panel() {
       <p class="sub" style="margin-top:.8rem">💡 Glissez le bord gauche du panneau (zone violette) pour l’élargir ou le réduire. La flèche ▶ réduit en mode compact.</p>`;
   } else if (tab === "txt") {
     h += `
-      <p class="sub">Textes modifiables du site (sauvegardés localement).</p>
-      <label>Nom du site<input id="cSiteName" class="field" value="${e(cfg.siteName || "Solidarité France")}" maxlength="60"></label>
-      <label>Grand titre (accueil)<input id="cT" class="field" value="${e(cfg.title)}" maxlength="120" placeholder="Laisser vide = titre d'origine"></label>
-      <label>Sous-titre / phrase d'accueil<textarea id="cSub" class="field" rows="3" maxlength="280">${e(cfg.subtitle || "")}</textarea></label>
-      <label>Texte pied de page (ligne courte)<input id="cFoot" class="field" value="${e(cfg.footer || "")}" maxlength="120" placeholder="Laissez vide pour le texte par défaut"></label>`;
+      <p class="sub">Tous les textes principaux du site. Modifiez puis cliquez sur <b>Sauvegarder</b>.</p>
+      <h4 style="margin:.8rem 0 .4rem;color:var(--navy)">Identité & accueil</h4>
+      <label>Nom du site<input id="cSiteName" class="field" value="${e(cfg.siteName || "")}" maxlength="60"></label>
+      <label>Phrase rassurante (au-dessus du titre)<input id="cHeroTag" class="field" value="${e(cfg.heroTag || "")}" maxlength="80"></label>
+      <label>Grand titre<input id="cT" class="field" value="${e(cfg.title || "")}" maxlength="140"></label>
+      <label>Sous-titre / description<textarea id="cSub" class="field" rows="3" maxlength="320">${e(cfg.subtitle || "")}</textarea></label>
+      <label>Label barre d'urgence<input id="cUrgLabel" class="field" value="${e(cfg.urgLabel || "")}" maxlength="40"></label>
+      <h4 style="margin:.9rem 0 .4rem;color:var(--navy)">Parcours « De quoi avez-vous besoin ? »</h4>
+      <label>Titre de la section<input id="cBesoinsTitle" class="field" value="${e(cfg.besoinsTitle || "")}" maxlength="80"></label>
+      <label>Sous-titre<textarea id="cBesoinsSub" class="field" rows="2" maxlength="200">${e(cfg.besoinsSub || "")}</textarea></label>
+      <h4 style="margin:.9rem 0 .4rem;color:var(--navy)">Titres des sections</h4>
+      <label>Carte<input id="cCarteTitle" class="field" value="${e(cfg.carteTitle || "")}" maxlength="80"></label>
+      <label>Texte sous la carte<textarea id="cCarteSub" class="field" rows="2" maxlength="280">${e(cfg.carteSub || "")}</textarea></label>
+      <label>Avertissement carte<textarea id="cWarnMap" class="field" rows="2" maxlength="300">${e(cfg.warnMap || "")}</textarea></label>
+      <label>Près de chez vous<input id="cPresTitle" class="field" value="${e(cfg.presTitle || "")}" maxlength="90"></label>
+      <label>Sous-titre près de chez vous<textarea id="cPresSub" class="field" rows="2" maxlength="220">${e(cfg.presSub || "")}</textarea></label>
+      <label>Numéros & sites<input id="cResTitle" class="field" value="${e(cfg.resTitle || "")}" maxlength="80"></label>
+      <label>Sous-titre numéros<textarea id="cResSub" class="field" rows="2" maxlength="180">${e(cfg.resSub || "")}</textarea></label>
+      <label>Simulateur<input id="cSimTitle" class="field" value="${e(cfg.simTitle || "")}" maxlength="80"></label>
+      <label>Sous-titre simulateur<textarea id="cSimSub" class="field" rows="2" maxlength="200">${e(cfg.simSub || "")}</textarea></label>
+      <label>Assistant<input id="cAiTitle" class="field" value="${e(cfg.aiTitle || "")}" maxlength="80"></label>
+      <label>Sous-titre assistant<textarea id="cAiSub" class="field" rows="2" maxlength="200">${e(cfg.aiSub || "")}</textarea></label>
+      <label>CV<input id="cCvTitle" class="field" value="${e(cfg.cvTitle || "")}" maxlength="80"></label>
+      <label>Sous-titre CV<textarea id="cCvSub" class="field" rows="2" maxlength="220">${e(cfg.cvSub || "")}</textarea></label>
+      <label>Bénévolat<input id="cBeneTitle" class="field" value="${e(cfg.beneTitle || "")}" maxlength="80"></label>
+      <label>Sous-titre bénévolat<textarea id="cBeneSub" class="field" rows="2" maxlength="200">${e(cfg.beneSub || "")}</textarea></label>
+      <label>Pied de page (ligne courte, vide = défaut)<input id="cFoot" class="field" value="${e(cfg.footer || "")}" maxlength="140"></label>`;
   } else if (tab === "col") {
     h += `
       <p class="sub">Couleurs exactes (perso sur cet appareil + sauvegarde créateur)</p>
@@ -2005,6 +2099,15 @@ function panel() {
   bind("cCard", "card"); bind("cTx", "text");
   bind("cM", "maintenance", "b"); bind("cMm", "mmsg");
   bind("cSiteName", "siteName"); bind("cSub", "subtitle"); bind("cFoot", "footer");
+  bind("cHeroTag", "heroTag"); bind("cUrgLabel", "urgLabel");
+  bind("cBesoinsTitle", "besoinsTitle"); bind("cBesoinsSub", "besoinsSub");
+  bind("cCarteTitle", "carteTitle"); bind("cCarteSub", "carteSub"); bind("cWarnMap", "warnMap");
+  bind("cPresTitle", "presTitle"); bind("cPresSub", "presSub");
+  bind("cResTitle", "resTitle"); bind("cResSub", "resSub");
+  bind("cSimTitle", "simTitle"); bind("cSimSub", "simSub");
+  bind("cAiTitle", "aiTitle"); bind("cAiSub", "aiSub");
+  bind("cCvTitle", "cvTitle"); bind("cCvSub", "cvSub");
+  bind("cBeneTitle", "beneTitle"); bind("cBeneSub", "beneSub");
 
   $$("[data-hide]").forEach(el => {
     el.onchange = () => {
@@ -2077,6 +2180,173 @@ $("#lockBtn")?.addEventListener("click", () => {
   document.body.classList.add("padr");
   if (user || sessionStorage.getItem("sf_creator_ok") === "1") panel();
   else panelLogin();
+});
+
+/* ========== Parcours guidés par besoin ========== */
+const NEED_GUIDES = {
+  manger: {
+    title: "🥫 Vous avez besoin de manger",
+    intro: "Voici les pistes prioritaires pour trouver des repas ou des courses à petit prix près de chez vous.",
+    steps: [
+      "Appelez le <b>115</b> si vous êtes sans solution immédiate (ils orientent aussi vers la nourriture).",
+      "Cherchez sur la carte : <b>banques alimentaires, Restos du Cœur, Secours Populaire, épiceries solidaires</b>.",
+      "Rendez-vous au <b>CCAS</b> de votre mairie : ils délivrent souvent des bons alimentaires.",
+      "Étudiant : demandez l’accès aux <b>AGORAé</b> et aux aides CROUS."
+    ],
+    actions: [
+      {label:"🥫 Chercher à manger près de moi", act:"kw", v:"repas"},
+      {label:"📍 Utiliser ma position", act:"locate"},
+      {label:"📞 115", href:"tel:115"}
+    ]
+  },
+  dormir: {
+    title: "🏠 Vous avez besoin d'un hébergement",
+    intro: "Priorité absolue : le 115 est gratuit et joignable 24h/24.",
+    steps: [
+      "<b>Appelez le 115 immédiatement</b> (hébergement d’urgence).",
+      "Le jour, allez dans un <b>accueil de jour</b> : douche, casiers, orientation, repas.",
+      "Demandez une <b>domiciliation</b> au CCAS (indispensable pour vos droits).",
+      "Si vous êtes en famille ou avec enfants, précisez-le au 115."
+    ],
+    actions: [
+      {label:"📞 Appeler le 115", href:"tel:115"},
+      {label:"🏠 Hébergements / accueils", act:"kw", v:"hébergement"},
+      {label:"🚿 Douches & accueils de jour", act:"kw", v:"douche"}
+    ]
+  },
+  sante: {
+    title: "🩺 Vous avez besoin de soins",
+    intro: "Même sans mutuelle ni papiers, des structures peuvent vous soigner.",
+    steps: [
+      "Urgence vitale : <b>15</b> (SAMU) ou <b>112</b>.",
+      "Demandez la <b>Complémentaire santé solidaire (CSS)</b> – gratuite sous conditions de ressources.",
+      "Rendez-vous dans un <b>Centre de santé / PASS / Médecins du Monde / Croix-Rouge</b>.",
+      "Pharmacies : certaines délivrent des médicaments via des dispositifs solidaires."
+    ],
+    actions: [
+      {label:"📞 15 SAMU", href:"tel:15"},
+      {label:"🩺 Centres de santé", act:"kw", v:"santé"},
+      {label:"🔗 CSS (ameli.fr)", href:"https://www.ameli.fr/assure/droits-demarches/difficultes-acces-droits-soins/complementaire-sante-solidaire"}
+    ]
+  },
+  violence: {
+    title: "🛡️ Vous subissez des violences ou êtes en danger",
+    intro: "Vous n’êtes pas seul·e. Des professionnels sont joignables 24h/24.",
+    steps: [
+      "<b>Danger immédiat : 17</b> (Police) ou <b>112</b>.",
+      "<b>3919</b> : Violences femmes info (écoute, orientation, anonyme).",
+      "Hébergement d’urgence : <b>115</b> en précisant la situation de violence.",
+      "Conservez les preuves (messages, photos) si vous le pouvez en sécurité."
+    ],
+    actions: [
+      {label:"📞 3919 Violences", href:"tel:3919"},
+      {label:"📞 17 Police", href:"tel:17"},
+      {label:"📞 115 Hébergement", href:"tel:115"}
+    ]
+  },
+  etudiant: {
+    title: "🎓 Vous êtes étudiant·e",
+    intro: "Des aides spécifiques existent (CROUS, épiceries solidaires, logement, santé).",
+    steps: [
+      "Contactez le <b>CROUS</b> de votre académie (aides financières, logement, resto U).",
+      "Épiceries solidaires étudiantes <b>AGORAé</b> et distributions alimentaires.",
+      "Demandez la <b>CSS</b> et le suivi social du service de médecine préventive.",
+      "Bourses, aides d’urgence, fonds de solidarité : renseignez-vous vite au CROUS."
+    ],
+    actions: [
+      {label:"🎓 CROUS", href:"https://www.etudiant.gouv.fr"},
+      {label:"🥫 Manger près de moi", act:"kw", v:"repas"},
+      {label:"💼 Créer mon CV", act:"scroll", v:"cv"}
+    ]
+  },
+  emploi: {
+    title: "💼 Vous cherchez un emploi ou une formation",
+    intro: "On peut commencer par un CV clair, puis les structures d’insertion.",
+    steps: [
+      "Créez ou mettez à jour votre <b>CV</b> (outil gratuit ci-dessous, privé).",
+      "Inscrivez-vous à <b>France Travail</b> et prenez rendez-vous.",
+      "Mission Locale (moins de 26 ans), PLIE, associations d’insertion.",
+      "Formations courtes, chantiers d’insertion, services civiques."
+    ],
+    actions: [
+      {label:"📄 Créer mon CV", act:"scroll", v:"cv"},
+      {label:"🔗 France Travail", href:"https://www.francetravail.fr"},
+      {label:"💼 Lieux emploi / insertion", act:"kw", v:"emploi"}
+    ]
+  },
+  admin: {
+    title: "📄 Papiers, droits et démarches",
+    intro: "Sans domicile stable, la domiciliation est souvent la première étape.",
+    steps: [
+      "Demandez une <b>domiciliation postale</b> au CCAS de votre commune.",
+      "Ouvrez vos droits : <b>RSA, CSS, allocations</b> (CAF, France Travail, CPAM).",
+      "Accompagnement gratuit : centres sociaux, associations, Points Conseil Budget.",
+      "Numérique : espaces France Services pour les démarches en ligne."
+    ],
+    actions: [
+      {label:"📄 France Services", href:"https://www.france-services.gouv.fr"},
+      {label:"🔗 CAF", href:"https://www.caf.fr"},
+      {label:"🧭 Simulateur de démarches", act:"scroll", v:"simulateur"}
+    ]
+  },
+  hygiene: {
+    title: "🚿 Douche, hygiène et accueils de jour",
+    intro: "Les accueils de jour permettent de se poser, se laver et être orienté.",
+    steps: [
+      "Cherchez les <b>accueils de jour</b> et bains-douches municipaux sur la carte.",
+      "Beaucoup proposent aussi casiers, linge, petit-déjeuner et écoute.",
+      "Croix-Rouge, Secours Catholique, Restos du Cœur ont souvent des permanences.",
+      "Le 115 peut aussi vous orienter vers ces structures."
+    ],
+    actions: [
+      {label:"🚿 Douches près de moi", act:"kw", v:"douche"},
+      {label:"📍 Ma position", act:"locate"},
+      {label:"📞 115", href:"tel:115"}
+    ]
+  }
+};
+
+function showNeed(need) {
+  const box = document.getElementById("needResult");
+  const g = NEED_GUIDES[need];
+  if (!box || !g) return;
+  document.querySelectorAll(".need-btn").forEach(b => b.classList.toggle("on", b.dataset.need === need));
+  box.style.display = "block";
+  box.innerHTML = `
+    <h3>${g.title}</h3>
+    <p class="sub" style="margin-bottom:.6rem">${g.intro}</p>
+    <ul>${g.steps.map(s => `<li>${s}</li>`).join("")}</ul>
+    <div class="row">${g.actions.map(a => {
+      if (a.href) return `<a class="btn g" href="${a.href}" ${a.href.startsWith("http") ? 'target="_blank" rel="noopener"' : ""}>${a.label}</a>`;
+      return `<button type="button" class="btn g" data-need-act="${a.act}" data-v="${a.v || ""}">${a.label}</button>`;
+    }).join("")}
+    <button type="button" class="btn l" id="needClose">Fermer</button></div>`;
+  box.scrollIntoView({behavior:"smooth", block:"nearest"});
+  box.querySelectorAll("[data-need-act]").forEach(btn => {
+    btn.onclick = () => {
+      const act = btn.dataset.needAct;
+      const v = btn.dataset.v;
+      if (act === "kw") {
+        const kw = document.getElementById("kw");
+        if (kw) { kw.value = v; kw.dispatchEvent(new Event("input")); }
+        document.getElementById("carte")?.scrollIntoView({behavior:"smooth"});
+        document.querySelector("[data-a='here']")?.click();
+      } else if (act === "locate") {
+        document.querySelector("[data-a='locate']")?.click();
+      } else if (act === "scroll") {
+        document.getElementById(v)?.scrollIntoView({behavior:"smooth"});
+        if (v === "cv") document.getElementById("cvToggle")?.click();
+      }
+    };
+  });
+  document.getElementById("needClose").onclick = () => {
+    box.style.display = "none";
+    document.querySelectorAll(".need-btn").forEach(b => b.classList.remove("on"));
+  };
+}
+document.getElementById("needGrid")?.addEventListener("click", e => {
+  const b = e.target.closest(".need-btn");
+  if (b) showNeed(b.dataset.need);
 });
 
 applyCfg();
