@@ -68,7 +68,7 @@ a{color:var(--blue)}
 .urg{background:var(--red);color:#fff;font-size:.85rem;padding:.5rem 1rem;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.6rem}
 .urg a{background:#fff;color:var(--red);padding:2px 10px;border-radius:20px;text-decoration:none;font-weight:800}
 nav{background:var(--card);border-bottom:1px solid var(--bd);padding:.7rem 1rem;display:flex;align-items:center;gap:.8rem;position:sticky;top:0;z-index:1000}
-.logo{font-weight:800;font-size:1.15rem;color:var(--navy);text-decoration:none;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}.logo img{flex-shrink:0}
+.logo{font-weight:800;font-size:1.15rem;color:var(--navy);text-decoration:none;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}.logo img{flex-shrink:0;width:32px!important;height:32px!important;object-fit:contain!important;object-position:center;border-radius:8px}
 .links{display:flex;gap:.2rem;overflow-x:auto;flex:1}
 .links a{color:var(--text);text-decoration:none;font-weight:600;font-size:.88rem;padding:5px 9px;border-radius:6px;white-space:nowrap}
 .links a:hover{background:var(--bg)}
@@ -190,7 +190,7 @@ body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(-
 <a href="tel:115">115 Hébergement</a><a href="tel:15">15 SAMU</a><a href="tel:17">17 Police</a><a href="tel:112">112 Europe</a><a href="tel:3919">3919 Violences</a><a href="tel:3114">3114 Détresse</a><a href="tel:119">119 Enfance</a></div>
 
 <nav>
-<a class="logo" href="#top" id="siteLogoLink"><img id="siteLogoImg" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMwZjRjODEiLz4KICA8cGF0aCBmaWxsPSIjZjVjNTQyIiBkPSJNMzIgMThjLTMuMiAwLTUuNSAyLjYtNS41IDUuOCAwIDQuMiA1LjUgNy40IDUuNSA3LjRzNS41LTMuMiA1LjUtNy40QzM3LjUgMjAuNiAzNS4yIDE4IDMyIDE4eiIvPgogIDxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y1YzU0MiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGQ9Ik0xNCA0MmM2IDEwIDEyIDE0IDE4IDE0czEyLTQgMTgtMTQiLz4KICA8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiNmNWM1NDIiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBkPSJNMTYgMzhjNSA0IDEwIDYgMTYgNnMxMS0yIDE2LTYiLz4KPC9zdmc+" alt="Solidarité France" width="28" height="28" style="height:28px;width:28px;border-radius:7px;object-fit:contain;flex-shrink:0;display:block;background:#0f4c81"><span id="siteLogoEmoji" hidden>🤝</span><span id="siteLogoText">Solidarité France</span></a>
+<a class="logo" href="#top" id="siteLogoLink"><img id="siteLogoImg" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMiIgZmlsbD0iIzBCM0Q2RSIvPgogIDxnIGZpbGw9IiNFOEI5MjMiPgogICAgPCEtLSBoZWFydCAtLT4KICAgIDxwYXRoIGQ9Ik0yNTYgMTUwYy0xOC0zNC02Mi0zNC03OCAyLTE4IDQwIDIyIDkwIDc4IDEzMiA1Ni00MiA5Ni05MiA3OC0xMzItMTYtMzYtNjAtMzYtNzgtMnoiLz4KICA8L2c+CiAgPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThCOTIzIiBzdHJva2Utd2lkdGg9IjI4IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPCEtLSBsZWZ0IGFybSBjdXJ2ZSAtLT4KICAgIDxwYXRoIGQ9Ik0xMTAgMzAwYzMwLTcwIDkwLTExMCAxNDYtMTE4Ii8+CiAgICA8cGF0aCBkPSJNMTAwIDM0MGM0MC0zMCA5MC00NSAxNDYtNDAiLz4KICAgIDwhLS0gcmlnaHQgYXJtIGN1cnZlIC0tPgogICAgPHBhdGggZD0iTTQwMiAzMDBjLTMwLTcwLTkwLTExMC0xNDYtMTE4Ii8+CiAgICA8cGF0aCBkPSJNNDEyIDM0MGMtNDAtMzAtOTAtNDUtMTQ2LTQwIi8+CiAgPC9nPgogIDxnIGZpbGw9IiNFOEI5MjMiPgogICAgPCEtLSBsZWZ0IHBhbG0gLS0+CiAgICA8cGF0aCBkPSJNOTYgMzIwYzQwIDggODAgMjAgMTEwIDUwLTUwIDEwLTkwIDUtMTIwLTIwLTE1LTEyLTgtMzUgMTAtMzB6Ii8+CiAgICA8IS0tIHJpZ2h0IHBhbG0gLS0+CiAgICA8cGF0aCBkPSJNNDE2IDMyMGMtNDAgOC04MCAyMC0xMTAgNTAgNTAgMTAgOTAgNSAxMjAtMjAgMTUtMTIgOC0zNS0xMC0zMHoiLz4KICA8L2c+Cjwvc3ZnPg==" alt="Logo Solidarité France" width="32" height="32" style="height:32px;width:32px;min-width:32px;min-height:32px;border-radius:8px;object-fit:contain;object-position:center;flex-shrink:0;display:block;background:transparent"><span id="siteLogoEmoji" hidden aria-hidden="true">🤝</span><span id="siteLogoText">Solidarité France</span></a>
 <div class="links"><a href="#besoins">Besoins</a><a href="#carte">Carte</a><a href="#ressources">Numéros</a><a href="#assistant">Assistant</a><a href="#cv">CV</a><a href="#simulateur">Démarches</a><a href="#benevolat">Bénévolat</a><a href="#mentions">Mentions</a></div>
 <div class="gt-wrap notranslate" title="Traduire tout le site dans n'importe quelle langue">
   <span class="gt-icon" aria-hidden="true">🌐</span>
@@ -2182,7 +2182,7 @@ const DEF = {
   order: Object.keys(SECS), hidden: [],
   customCSS: "",
   logoEmoji: "🤝",
-  logoUrl: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMwZjRjODEiLz4KICA8cGF0aCBmaWxsPSIjZjVjNTQyIiBkPSJNMzIgMThjLTMuMiAwLTUuNSAyLjYtNS41IDUuOCAwIDQuMiA1LjUgNy40IDUuNSA3LjRzNS41LTMuMiA1LjUtNy40QzM3LjUgMjAuNiAzNS4yIDE4IDMyIDE4eiIvPgogIDxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y1YzU0MiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGQ9Ik0xNCA0MmM2IDEwIDEyIDE0IDE4IDE0czEyLTQgMTgtMTQiLz4KICA8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiNmNWM1NDIiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBkPSJNMTYgMzhjNSA0IDEwIDYgMTYgNnMxMS0yIDE2LTYiLz4KPC9zdmc+",
+  logoUrl: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMiIgZmlsbD0iIzBCM0Q2RSIvPgogIDxnIGZpbGw9IiNFOEI5MjMiPgogICAgPCEtLSBoZWFydCAtLT4KICAgIDxwYXRoIGQ9Ik0yNTYgMTUwYy0xOC0zNC02Mi0zNC03OCAyLTE4IDQwIDIyIDkwIDc4IDEzMiA1Ni00MiA5Ni05MiA3OC0xMzItMTYtMzYtNjAtMzYtNzgtMnoiLz4KICA8L2c+CiAgPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThCOTIzIiBzdHJva2Utd2lkdGg9IjI4IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPCEtLSBsZWZ0IGFybSBjdXJ2ZSAtLT4KICAgIDxwYXRoIGQ9Ik0xMTAgMzAwYzMwLTcwIDkwLTExMCAxNDYtMTE4Ii8+CiAgICA8cGF0aCBkPSJNMTAwIDM0MGM0MC0zMCA5MC00NSAxNDYtNDAiLz4KICAgIDwhLS0gcmlnaHQgYXJtIGN1cnZlIC0tPgogICAgPHBhdGggZD0iTTQwMiAzMDBjLTMwLTcwLTkwLTExMC0xNDYtMTE4Ii8+CiAgICA8cGF0aCBkPSJNNDEyIDM0MGMtNDAtMzAtOTAtNDUtMTQ2LTQwIi8+CiAgPC9nPgogIDxnIGZpbGw9IiNFOEI5MjMiPgogICAgPCEtLSBsZWZ0IHBhbG0gLS0+CiAgICA8cGF0aCBkPSJNOTYgMzIwYzQwIDggODAgMjAgMTEwIDUwLTUwIDEwLTkwIDUtMTIwLTIwLTE1LTEyLTgtMzUgMTAtMzB6Ii8+CiAgICA8IS0tIHJpZ2h0IHBhbG0gLS0+CiAgICA8cGF0aCBkPSJNNDE2IDMyMGMtNDAgOC04MCAyMC0xMTAgNTAgNTAgMTAgOTAgNSAxMjAtMjAgMTUtMTIgOC0zNS0xMC0zMHoiLz4KICA8L2c+Cjwvc3ZnPg==",
   editorName: "",
   editorStatus: "Portail citoyen indépendant, non commercial",
   editorEmail: "",
@@ -2732,6 +2732,7 @@ function panel() {
   const TABS = [
     ["app", "🎨 Apparence"],
     ["txt", "📝 Textes"],
+    ["legal", "⚖️ Mentions"],
     ["nav", "🧭 Navigation"],
     ["need", "🔴 Besoins"],
     ["col", "🌈 Couleurs"],
@@ -2758,13 +2759,6 @@ function panel() {
       <p class="sub">Tous les textes principaux du site. Modifiez puis cliquez sur <b>Sauvegarder</b>.</p>
       <h4 style="margin:.8rem 0 .4rem;color:var(--navy)">Identité & accueil</h4>
       <label>Nom du site<input id="cSiteName" class="field" value="${e(cfg.siteName || "")}" maxlength="60"></label>
-      <h4 style="margin:.9rem 0 .4rem;color:var(--navy)">Mentions légales (vos infos)</h4>
-      <p class="sub">Affichées dans la section Mentions légales du site.</p>
-      <label>Nom de l'éditeur (vous ou votre structure)<input id="cEditorName" class="field" value="${e(cfg.editorName || "")}" placeholder="Prénom Nom / Association…" maxlength="120"></label>
-      <label>Statut / qualité<input id="cEditorStatus" class="field" value="${e(cfg.editorStatus || "")}" placeholder="Particulier, association loi 1901…" maxlength="120"></label>
-      <label>E-mail de contact<input id="cEditorEmail" class="field" value="${e(cfg.editorEmail || "")}" placeholder="contact@…" maxlength="120"></label>
-      <label>Hébergeur (nom + adresse)<textarea id="cEditorHost" class="field" rows="2" maxlength="300" placeholder="Ex : OVH, 2 rue Kellermann, 59100 Roubaix">${e(cfg.editorHost || "")}</textarea></label>
-      <label>Date de mise à jour des mentions<input id="cLegalUpdate" class="field" value="${e(cfg.legalUpdate || "")}" placeholder="novembre 2026" maxlength="40"></label>
       <label>Phrase rassurante (au-dessus du titre)<input id="cHeroTag" class="field" value="${e(cfg.heroTag || "")}" maxlength="80"></label>
       <label>Grand titre<input id="cT" class="field" value="${e(cfg.title || "")}" maxlength="140"></label>
       <label>Sous-titre / description<textarea id="cSub" class="field" rows="3" maxlength="320">${e(cfg.subtitle || "")}</textarea></label>
@@ -2826,6 +2820,15 @@ function panel() {
       <label class="ck"><input type="checkbox" id="cM"${cfg.maintenance?" checked":""}><span>Mode maintenance (bloque le site)</span></label>
       <label>Message de maintenance<textarea id="cMm" class="field" rows="3">${e(cfg.mmsg)}</textarea></label>
       <p class="sub">Attention : active uniquement si vous devez couper l'accès public temporairement.</p>`;
+  } else if (tab === "legal") {
+    h += `
+      <p class="sub">Ces infos s'affichent dans <b>Mentions légales</b> en bas du site. Remplissez puis <b>Sauvegarder</b>.</p>
+      <label>Nom de l'éditeur (vous ou votre structure)<input id="cEditorName" class="field" value="${e(cfg.editorName || "")}" placeholder="Prénom Nom / Association…" maxlength="120"></label>
+      <label>Statut / qualité<input id="cEditorStatus" class="field" value="${e(cfg.editorStatus || "")}" placeholder="Particulier, association loi 1901…" maxlength="120"></label>
+      <label>E-mail de contact<input id="cEditorEmail" class="field" value="${e(cfg.editorEmail || "")}" placeholder="contact@email.com" maxlength="120"></label>
+      <label>Hébergeur (nom + adresse complète)<textarea id="cEditorHost" class="field" rows="3" maxlength="300" placeholder="Ex : GitHub Pages / OVH, adresse…">${e(cfg.editorHost || "")}</textarea></label>
+      <label>Date de mise à jour des mentions<input id="cLegalUpdate" class="field" value="${e(cfg.legalUpdate || "")}" placeholder="novembre 2026" maxlength="40"></label>
+      <p class="sub" style="margin-top:.8rem">Le texte d'avertissement (erreurs possibles, sources OSM, etc.) reste standard pour votre protection.</p>`;
   } else if (tab === "nav") {
     h += `
       <p class="sub">Libellés du menu et boutons principaux.</p>
