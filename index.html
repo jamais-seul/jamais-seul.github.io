@@ -2765,6 +2765,7 @@ function panel() {
     ["col", "🌈 Couleurs"],
     ["sec", "📐 Sections"],
     ["css", "💅 CSS"],
+    ["stats", "📊 Visites"],
     ["mnt", "🔨 Maintenance"],
     ["code", "</> Code"]
   ];
@@ -2897,6 +2898,19 @@ function panel() {
       <p class="sub">CSS personnalisé injecté sur tout le site (avancé). Exemple : <code>body{font-size:18px}</code></p>
       <label>CSS custom<textarea id="cCustomCSS" class="field" rows="14" style="font-family:monospace;font-size:.78rem">${e(cfg.customCSS || "")}</textarea></label>
       <p class="sub">Les variables CSS disponibles : --navy, --blue, --green, --amber, --red, --bg, --card, --text, --muted, --bd</p>`;
+  } else if (tab === "stats") {
+    h += `
+      <p class="sub">Nombre de visites sur le site (compteur global, une visite = une session navigateur).</p>
+      <div class="panel" style="text-align:center;padding:1.2rem;margin:.6rem 0">
+        <div style="font-size:.85rem;color:var(--muted);font-weight:600;margin-bottom:.35rem">Visites totales</div>
+        <div id="statsTotal" style="font-size:2.4rem;font-weight:800;color:var(--navy);line-height:1.1">…</div>
+        <div id="statsMeta" class="sub" style="margin-top:.5rem">Chargement…</div>
+      </div>
+      <div class="row" style="margin-top:.6rem">
+        <button class="btn g" id="statsRefresh" type="button">🔄 Actualiser</button>
+      </div>
+      <p class="sub" style="margin-top:1rem">Le compteur s’incrémente une fois par session (nouvel onglet / nouvel appareil). Les robots et rechargements rapides sont limités. Service gratuit tiers (countapi) — les chiffres sont publics et approximatifs.</p>
+      <p class="sub">Astuce : ouvrez le site depuis un autre navigateur ou en navigation privée pour tester l’incrément.</p>`;
   } else if (tab === "code") {
 
     h += `
@@ -2916,6 +2930,30 @@ function panel() {
     <span class="sub" id="aMsg"></span>
   </div>`;
   B.innerHTML = h;
+
+  // Stats tab: load / refresh visit count
+  if (tab === "stats") {
+    const loadStats = async () => {
+      const el = $("#statsTotal");
+      const meta = $("#statsMeta");
+      if (!el) return;
+      el.textContent = "…";
+      if (meta) meta.textContent = "Chargement…";
+      try {
+        const n = await getVisitCount();
+        el.textContent = (n == null ? "—" : Number(n).toLocaleString("fr-FR"));
+        if (meta) {
+          const local = Number(localStorage.getItem("sf_visit_local") || 0);
+          meta.textContent = "Compteur global · sessions locales enregistrées : " + local.toLocaleString("fr-FR");
+        }
+      } catch (err) {
+        el.textContent = "—";
+        if (meta) meta.textContent = "Impossible de charger le compteur (réseau).";
+      }
+    };
+    $("#statsRefresh")?.addEventListener("click", loadStats);
+    loadStats();
+  }
 
   // Bindings
   const bind = (id, key, type) => {
@@ -3252,6 +3290,44 @@ document.getElementById("mentionsToggle")?.addEventListener("click", () => {
   if (btn) btn.textContent = open ? "⚖️ Masquer les mentions légales" : "⚖️ Mentions légales & avertissement";
   if (open) body.scrollIntoView({behavior:"smooth", block:"nearest"});
 });
+
+
+/* ========== Compteur de visites (créateur → 📊 Visites) ========== */
+const VISIT_KEY = "jamais-seul-site-visits-v1";
+const VISIT_API = "https://countapi.mileshilliard.com/api/v1";
+
+async function getVisitCount() {
+  try {
+    const r = await fetch(VISIT_API + "/get/" + encodeURIComponent(VISIT_KEY), { cache: "no-store" });
+    const j = await r.json().catch(() => ({}));
+    if (r.status === 404 || (j && j.error)) return 0;
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const v = parseInt(j.value, 10);
+    return Number.isFinite(v) ? v : 0;
+  } catch (err) {
+    console.warn("getVisitCount", err);
+    return null;
+  }
+}
+
+async function hitVisitOncePerSession() {
+  try {
+    if (sessionStorage.getItem("sf_visit_hit") === "1") return;
+    sessionStorage.setItem("sf_visit_hit", "1");
+    const local = Number(localStorage.getItem("sf_visit_local") || 0) + 1;
+    localStorage.setItem("sf_visit_local", String(local));
+    const r = await fetch(VISIT_API + "/hit/" + encodeURIComponent(VISIT_KEY), { cache: "no-store" });
+    if (r.ok) {
+      const j = await r.json();
+      if (j && j.value != null) localStorage.setItem("sf_visit_last_global", String(j.value));
+    }
+  } catch (err) {
+    console.warn("hitVisitOncePerSession", err);
+  }
+}
+
+// Enregistre une visite (session) au chargement de la page
+hitVisitOncePerSession();
 
 applyCfg();
 </script>
