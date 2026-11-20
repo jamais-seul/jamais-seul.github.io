@@ -1741,7 +1741,7 @@ function cvBuildSidebar(d, name, title, contactLines, bg, accent){
   const photo = d.photo
     ? `<img src="${d.photo}" alt="" style="width:100px;height:100px;border-radius:50%;object-fit:cover;margin:0 auto 1.1rem;display:block;border:3px solid rgba(255,255,255,.9);box-shadow:0 2px 12px rgba(0,0,0,.15)">`
     : `<div style="width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.18);margin:0 auto 1.1rem;display:flex;align-items:center;justify-content:center;font-size:2.2rem;border:3px solid rgba(255,255,255,.5)">👤</div>`;
-  return `<div style="font-family:'Segoe UI',system-ui,sans-serif;display:flex;max-width:800px;margin:0 auto;min-height:auto;background:#fff;color:#1a1a1a;align-items:stretch">
+  return `<div style="font-family:'Segoe UI',system-ui,sans-serif;display:flex;max-width:800px;margin:0 auto;min-height:auto;background:#fff;color:#1a1a1a;align-items:stretch;height:100%">
     <div style="width:34%;background:${bg};color:#f8fafc;padding:1.6rem 1.15rem;min-height:auto;box-sizing:border-box">
       ${photo}
       <h2 style="font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;opacity:.7;margin:0 0 .5rem">Contact</h2>
@@ -1990,6 +1990,7 @@ function cvBuild(){
 /** Remplit une feuille A4 : ajuste police + interligne pour éviter le vide en bas (et limiter le débordement). */
 
 
+
 function fitCvToA4() {
   const prev = document.getElementById("cvPreview");
   const stage = document.getElementById("cvStage");
@@ -2005,15 +2006,16 @@ function fitCvToA4() {
   const root = prev.firstElementChild;
   if (!root) { scaleCvStage(); return; }
 
-  // Reset
-  root.style.cssText = (root.getAttribute("style") || "").replace(/font-size:[^;]+;?/g, "").replace(/line-height:[^;]+;?/g, "").replace(/transform:[^;]+;?/g, "");
-  // Keep original inline styles from template; force box model
+  // Feuille A4 pleine : le fond (sidebar comprise) va jusqu'en bas comme à l'export
   root.style.boxSizing = "border-box";
   root.style.width = "100%";
-  root.style.height = "100%";
+  root.style.maxWidth = "none";
+  root.style.margin = "0";
+  root.style.height = A4H + "px";
   root.style.minHeight = A4H + "px";
   root.style.maxHeight = A4H + "px";
   root.style.overflow = "hidden";
+  root.style.transform = "none";
 
   const cols = Array.from(root.children).filter(el => el.tagName === "DIV");
   cols.forEach(col => {
@@ -2022,82 +2024,39 @@ function fitCvToA4() {
     col.style.height = "100%";
   });
 
-  const measureContent = () => {
-    const probe = root.cloneNode(true);
-    probe.style.position = "absolute";
-    probe.style.left = "-9999px";
-    probe.style.height = "auto";
-    probe.style.minHeight = "0";
-    probe.style.maxHeight = "none";
-    probe.style.transform = "none";
-    probe.querySelectorAll(":scope > div").forEach(c => {
-      c.style.height = "auto";
-      c.style.minHeight = "0";
+  // Légère densification / aération selon contenu
+  const probe = () => {
+    const c = root.cloneNode(true);
+    c.style.position = "absolute";
+    c.style.left = "-99999px";
+    c.style.height = "auto";
+    c.style.minHeight = "0";
+    c.style.maxHeight = "none";
+    c.querySelectorAll(":scope > div").forEach(d => {
+      d.style.height = "auto";
+      d.style.minHeight = "0";
     });
-    document.body.appendChild(probe);
-    const h = probe.scrollHeight;
-    probe.remove();
+    document.body.appendChild(c);
+    const h = c.scrollHeight;
+    c.remove();
     return h;
   };
 
-  // 1) Ajuster la taille de police pour viser ~plein A4
-  let fontScale = 1;
-  root.style.fontSize = "";
-  let h = measureContent();
-  while (fontScale < 1.5 && h < A4H * 0.90) {
-    fontScale += 0.06;
-    root.style.fontSize = fontScale + "em";
-    h = measureContent();
+  let fs = 1;
+  root.style.fontSize = "1em";
+  let h = probe();
+  while (fs < 1.35 && h < A4H * 0.88) {
+    fs += 0.05;
+    root.style.fontSize = fs + "em";
+    h = probe();
   }
-  while (fontScale > 0.7 && h > A4H * 0.99) {
-    fontScale -= 0.05;
-    root.style.fontSize = fontScale + "em";
-    h = measureContent();
-  }
-
-  // 2) Si encore de l'espace, augmenter les marges entre blocs (h2, expériences…)
-  h = measureContent();
-  let gapExtra = 0;
-  while (gapExtra < 28 && h < A4H * 0.94) {
-    gapExtra += 4;
-    root.querySelectorAll("h2").forEach(el => {
-      el.style.marginTop = (12 + gapExtra) + "px";
-      el.style.marginBottom = (6 + gapExtra / 2) + "px";
-    });
-    root.querySelectorAll("h1").forEach(el => {
-      el.style.marginBottom = (8 + gapExtra / 2) + "px";
-    });
-    // blocs d'expérience / formations : divs avec margin-bottom inline
-    cols.forEach(col => {
-      col.querySelectorAll(":scope > div, :scope > p").forEach(el => {
-        if (el.querySelector && (el.querySelector("b") || el.style.marginBottom)) {
-          el.style.marginBottom = (8 + gapExtra / 2) + "px";
-        }
-      });
-    });
-    h = measureContent();
+  while (fs > 0.75 && h > A4H * 0.98) {
+    fs -= 0.04;
+    root.style.fontSize = fs + "em";
+    h = probe();
   }
 
-  // 3) Interligne un peu plus généreux s'il reste de l'air
-  if (h < A4H * 0.95) {
-    root.style.lineHeight = "1.5";
-    h = measureContent();
-  }
-  if (h < A4H * 0.93) {
-    root.style.lineHeight = "1.62";
-    h = measureContent();
-  }
-
-  // 4) Sécurité débordement
-  h = measureContent();
-  if (h > A4H + 8) {
-    const sc = A4H / h;
-    root.style.transformOrigin = "top center";
-    root.style.transform = "scale(" + sc + ")";
-    root.style.width = (100 / sc) + "%";
-  }
-
-  // Colonnes pleine hauteur visuelle (fond coloré sidebar jusqu'en bas)
+  // Réappliquer hauteur pleine après mesures
   root.style.height = A4H + "px";
   root.style.minHeight = A4H + "px";
   cols.forEach(col => {
@@ -2121,6 +2080,7 @@ function scaleCvStage() {
 window.addEventListener("resize", () => {
   if (document.getElementById("cvPreview")?.firstElementChild) scaleCvStage();
 });
+
 
 
 
@@ -2169,61 +2129,62 @@ document.getElementById("cvLoad")?.addEventListener("click", () => {
   } catch(e){ document.getElementById("cvMsg").textContent = "Erreur de chargement."; }
 });
 
+
 document.getElementById("cvPrint")?.addEventListener("click", () => {
-  const html = document.getElementById("cvPreview").innerHTML;
+  const raw = document.getElementById("cvPreview")?.innerHTML || "";
   const w = window.open("", "_blank");
-  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>CV</title>
-<style>@page{size:A4;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff;height:100%}
-body{font-family:system-ui,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-body>div{min-height:auto}img{max-width:100%;height:auto}
-/* Espace créateur */
-#lockBtn{position:fixed;left:14px;bottom:18px;z-index:9999;width:48px;height:48px;border-radius:50%;border:0;background:var(--navy,#0f4c81);color:#fff;font-size:1.35rem;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center}
-#lockBtn:hover{transform:scale(1.06)}
-#side{position:fixed;top:0;right:0;width:var(--side-w,380px);max-width:96vw;height:100vh;background:var(--card,#fff);border-left:1px solid var(--bd,#e2e8f0);z-index:10000;display:flex;flex-direction:column;box-shadow:-8px 0 24px rgba(0,0,0,.12);overflow:hidden;transition:width .15s ease}
-#side[hidden]{display:none!important}
-#side.min{width:48px!important;--side-w:48px}
-#side .sh{display:flex;justify-content:space-between;align-items:center;padding:.85rem 1rem;border-bottom:1px solid var(--bd,#e2e8f0);font-weight:700;gap:.5rem;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff}
-#side .sh b{color:#fff}
-#side .sh .btn{background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.35)}
-#side .sh .btn.rd{background:#f43f5e;border-color:#f43f5e}
-#side .sb{padding:1rem;overflow-y:auto;flex:1}
-#side .sf{padding:.8rem 1rem;border-top:1px solid var(--bd,#e2e8f0);display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
-#sArrow{position:absolute;left:-14px;top:50%;transform:translateY(-50%);width:28px;height:48px;border:1px solid var(--bd,#e2e8f0);background:var(--card,#fff);border-radius:8px 0 0 8px;cursor:pointer;font-size:.85rem;z-index:2}
-#sResize{position:absolute;left:0;top:0;bottom:0;width:8px;cursor:ew-resize;z-index:3;background:transparent}
-#sResize:hover,#sResize.dragging{background:rgba(124,58,237,.25)}
-body.padr{padding-right:var(--side-w,380px)}
-@media(max-width:700px){body.padr{padding-right:0}#side{width:100vw!important;--side-w:100vw}#sResize{display:none}}
-/* Tabs créateur style capture */
-#side .tabs{display:flex;flex-wrap:wrap;gap:.4rem;padding:.7rem 1rem;border-bottom:1px solid var(--bd);background:#f5f3ff}
-#side .tabs .chip{background:#fce7f3;color:#9d174d;border:2px solid #f9a8d4;border-radius:999px;padding:.4rem .85rem;font-weight:700;font-size:.82rem;box-shadow:0 2px 0 #f472b6;cursor:pointer}
-#side .tabs .chip.on{background:#c084fc;color:#4c1d95;border-color:#a78bfa;box-shadow:0 2px 0 #7c3aed}
-#side .tabs .chip:hover{filter:brightness(1.05)}
-
-
-/* Traduction Google */
-.gt-wrap{display:flex;align-items:center;gap:6px;max-width:220px;min-width:120px;background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:2px 8px 2px 6px;cursor:pointer;position:relative;z-index:1100}
-.gt-wrap .gt-icon{font-size:1.15rem;line-height:1;flex-shrink:0}
-.gt-wrap .goog-te-gadget{font-size:0!important;line-height:1}
-.gt-wrap .goog-te-gadget .goog-te-combo{font-size:.82rem!important;padding:4px 6px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--text);max-width:150px;font-family:inherit;cursor:pointer}
-.goog-te-banner-frame{display:none!important}
-body{top:0!important}
-/* skiptranslate global hide disabled - see gt-wrap rules */
-body.dark .gt-wrap{background:#1a2438;border-color:var(--bd)}
-body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(--text);border-color:var(--bd)}
-@media(max-width:700px){.gt-wrap{max-width:150px}.gt-wrap .goog-te-gadget .goog-te-combo{max-width:110px;font-size:.75rem!important}}
-
-</style></head><body>${html}
-<script>window.onload=function(){setTimeout(function(){window.print()},200)}<\/script></body></html>`);
+  if (!w) { alert("Autorisez les pop-ups pour imprimer le CV."); return; }
+  w.document.write(`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Mon CV</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fff; }
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .sheet {
+    width: 210mm; height: 297mm; margin: 0 auto; overflow: hidden;
+    background: #fff; position: relative;
+  }
+  .sheet > div {
+    width: 100% !important; height: 100% !important; min-height: 297mm !important;
+    max-width: none !important; margin: 0 !important;
+    transform: none !important;
+  }
+  .sheet > div > div { min-height: 100% !important; height: 100% !important; }
+  img { max-width: 100%; height: auto; object-fit: cover; }
+</style></head><body>
+<div class="sheet">${raw}</div>
+<script>
+  window.onload = function(){ setTimeout(function(){ window.print(); }, 250); };
+<\/script>
+</body></html>`);
   w.document.close();
 });
 
 document.getElementById("cvDl")?.addEventListener("click", () => {
-  const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Mon CV</title></head><body style="margin:0">${document.getElementById("cvPreview").innerHTML}</body></html>`;
+  const raw = document.getElementById("cvPreview")?.innerHTML || "";
+  const doc = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Mon CV</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fff; }
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .sheet {
+    width: 210mm; min-height: 297mm; margin: 0 auto; overflow: hidden; background: #fff;
+  }
+  .sheet > div {
+    width: 100% !important; min-height: 297mm !important; height: auto !important;
+    max-width: none !important; margin: 0 !important; transform: none !important;
+  }
+  .sheet > div > div { min-height: 297mm !important; }
+  img { max-width: 100%; height: auto; object-fit: cover; }
+</style></head><body><div class="sheet">${raw}</div></body></html>`;
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([html], {type:"text/html"}));
+  a.href = URL.createObjectURL(new Blob([doc], { type: "text/html;charset=utf-8" }));
   a.download = "mon-cv.html";
   a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
 });
+
 
 if(ld("sf_dark",window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches))document.body.classList.add("dark");
 /* Sur ordinateur : éviter les pages vides sur tel: */
