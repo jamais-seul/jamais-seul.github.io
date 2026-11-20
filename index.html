@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -192,6 +193,15 @@ body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(-
 @media print {
   #cvPreviewWrap { max-height: none !important; background: #fff !important; padding: 0 !important; }
   #cvPreview { max-width: none !important; box-shadow: none !important; }
+}
+
+
+#cvStage { background: #fff; }
+#cvPreview > div { box-sizing: border-box !important; }
+@media print {
+  #cvPreviewWrap { max-height: none !important; background: #fff !important; padding: 0 !important; }
+  #cvStage { max-width: none !important; width: 210mm !important; height: 297mm !important; aspect-ratio: auto !important; box-shadow: none !important; }
+  #cvPreview { position: static !important; transform: none !important; width: 210mm !important; height: 297mm !important; }
 }
 
 </style>
@@ -441,10 +451,13 @@ body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(-
   </div>
   <div class="panel">
     <h3>Aperçu</h3>
-    <div id="cvPreviewWrap" style="background:#e8eef5;border:1px solid #ddd;border-radius:8px;padding:.65rem;overflow:auto;max-height:min(80vh,860px)">
-      <div id="cvPreview" style="background:#fff;color:#111;border-radius:4px;overflow:hidden;font-size:.82rem;width:100%;max-width:700px;margin:0 auto;box-shadow:0 2px 16px rgba(0,0,0,.07)">
-        <p style="color:#888;text-align:center;margin:2rem 1rem">Ouvrez un modèle et remplissez → le CV apparaît ici.</p>
+    <div id="cvPreviewWrap" style="background:#e8eef5;border:1px solid #ddd;border-radius:8px;padding:.65rem;overflow:auto;max-height:min(85vh,920px)">
+      <div id="cvStage" style="width:100%;max-width:520px;margin:0 auto;aspect-ratio:210/297;background:#fff;border-radius:4px;box-shadow:0 2px 16px rgba(0,0,0,.08);overflow:hidden;position:relative">
+        <div id="cvPreview" style="position:absolute;left:0;top:0;width:794px;height:1123px;transform-origin:top left;background:#fff;color:#111;overflow:hidden;font-size:14px">
+          <p style="color:#888;text-align:center;margin:3rem 1rem">Ouvrez un modèle et remplissez → le CV apparaît ici.</p>
+        </div>
       </div>
+      <p class="sub" style="text-align:center;margin:.4rem 0 0;font-size:.75rem">Format A4 — l’écriture s’ajuste pour remplir la feuille</p>
     </div>
     <div class="row" style="margin-top:.7rem">
       <button class="btn" id="cvPrint" style="flex:1">🖨️ Imprimer / PDF</button>
@@ -1938,16 +1951,117 @@ function cvBuild(){
   const prev = document.getElementById("cvPreview");
   if(prev) {
     prev.innerHTML = html;
-    // hauteur au contenu, sans forcer une page vide
-    prev.style.minHeight = "0";
-    const root = prev.firstElementChild;
-    if (root && root.style) {
-      root.style.minHeight = "0";
-      root.style.height = "auto";
-    }
+    requestAnimationFrame(() => fitCvToA4());
   }
   return html;
 }
+
+/** Remplit une feuille A4 : ajuste police + interligne pour éviter le vide en bas (et limiter le débordement). */
+function fitCvToA4() {
+  const prev = document.getElementById("cvPreview");
+  const stage = document.getElementById("cvStage");
+  if (!prev || !stage) return;
+
+  // Dimensions A4 en px (référence écran ~96dpi)
+  const A4W = 794;
+  const A4H = 1123;
+  prev.style.width = A4W + "px";
+  prev.style.height = A4H + "px";
+  prev.style.overflow = "hidden";
+  prev.style.transformOrigin = "top left";
+
+  const root = prev.firstElementChild;
+  if (!root) {
+    scaleCvStage();
+    return;
+  }
+
+  // Base : le contenu occupe toute la hauteur A4
+  root.style.boxSizing = "border-box";
+  root.style.width = "100%";
+  root.style.height = "100%";
+  root.style.minHeight = "100%";
+  root.style.maxHeight = "100%";
+  root.style.overflow = "hidden";
+
+  // Colonnes éventuelles
+  root.querySelectorAll(":scope > div").forEach(col => {
+    col.style.minHeight = "100%";
+    col.style.boxSizing = "border-box";
+  });
+
+  // Mesure et scale typographique pour remplir sans gros trou
+  let scale = 1;
+  const minS = 0.82;
+  const maxS = 1.28;
+  // reset
+  prev.style.fontSize = "14px";
+  root.style.fontSize = "";
+  root.style.lineHeight = "";
+
+  const measure = () => root.scrollHeight;
+  let h = measure();
+
+  // Si trop court → grossir un peu texte / interligne
+  if (h < A4H * 0.92) {
+    let s = 1;
+    while (s < maxS && measure() < A4H * 0.96) {
+      s += 0.04;
+      root.style.fontSize = s + "em";
+      root.style.lineHeight = String(1.35 + (s - 1) * 0.35);
+      // padding vertical léger sur colonnes
+      root.querySelectorAll(":scope > div").forEach(col => {
+        const p = col.style.padding || "";
+        // ne force pas si déjà inline complexe
+      });
+    }
+  }
+  // Si trop long → réduire
+  h = measure();
+  if (h > A4H) {
+    let s = 1;
+    while (s > minS && measure() > A4H) {
+      s -= 0.035;
+      root.style.fontSize = s + "em";
+      root.style.lineHeight = String(1.25 + Math.max(0, (s - 0.9) * 0.2));
+    }
+  }
+
+  // Dernier recours : scale CSS du bloc entier pour tenir dans A4
+  h = measure();
+  if (h > A4H + 2) {
+    const s = A4H / h;
+    root.style.transformOrigin = "top center";
+    root.style.transform = "scale(" + s + ")";
+    root.style.width = (100 / s) + "%";
+    root.style.marginLeft = ((100 - 100 / s) / 2) + "%";
+  } else {
+    root.style.transform = "";
+    root.style.width = "100%";
+    root.style.marginLeft = "";
+  }
+
+  scaleCvStage();
+}
+
+function scaleCvStage() {
+  const prev = document.getElementById("cvPreview");
+  const stage = document.getElementById("cvStage");
+  if (!prev || !stage) return;
+  const A4W = 794;
+  const sw = stage.clientWidth;
+  if (sw < 10) return;
+  const s = sw / A4W;
+  prev.style.transform = "scale(" + s + ")";
+  // stage height already from aspect-ratio
+}
+
+window.addEventListener("resize", () => {
+  if (document.getElementById("cvPreview")?.firstElementChild) {
+    scaleCvStage();
+  }
+});
+
 
 document.getElementById("cvGen")?.addEventListener("click", () => {
   cvBuild();
