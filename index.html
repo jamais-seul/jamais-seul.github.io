@@ -133,6 +133,52 @@ label.ck.done span{text-decoration:line-through;opacity:.6}
 footer{background:var(--card);border-top:1px solid var(--bd);text-align:center;padding:2rem 1rem;font-size:.85rem;color:var(--muted);margin-top:2rem}
 @media(max-width:600px){#map{height:380px}.logo{font-size:1rem}}
 
+/* ===== FIX MOBILE NAV ===== */
+@media(max-width:700px){
+  nav{
+    padding:.45rem .5rem;
+    gap:.3rem;
+    flex-wrap:wrap;
+  }
+  .logo{flex-shrink:0;font-size:.95rem}
+  .links{
+    order:10;
+    flex:1 1 100%;
+    max-width:100%;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:2px;
+  }
+  .gt-wrap{
+    max-width:115px;
+    min-width:80px;
+    flex:0 1 auto;
+    padding:1px 3px;
+    gap:2px;
+  }
+  .gt-wrap .gt-icon{font-size:1rem}
+  .gt-wrap .goog-te-gadget .goog-te-combo{
+    max-width:90px!important;
+    font-size:.68rem!important;
+    padding:2px 3px;
+  }
+  nav .btn{
+    padding:.35rem .5rem;
+    font-size:.76rem;
+    flex-shrink:0;
+    white-space:nowrap;
+  }
+  /* Bouton + Lieu : plus compact */
+  nav .btn.g{
+    padding:.35rem .45rem;
+  }
+}
+@media(max-width:400px){
+  .gt-wrap{max-width:100px;min-width:70px}
+  .gt-wrap .goog-te-gadget .goog-te-combo{max-width:75px!important;font-size:.64rem!important}
+  nav .btn{padding:.32rem .4rem;font-size:.72rem}
+}
+
 /* Espace créateur */
 #lockBtn{position:fixed;left:14px;bottom:18px;z-index:9999;width:48px;height:48px;border-radius:50%;border:0;background:var(--navy,#0f4c81);color:#fff;font-size:1.35rem;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center}
 #lockBtn:hover{transform:scale(1.06)}
@@ -176,7 +222,7 @@ body{top:0!important}
 /* skiptranslate global hide disabled - see gt-wrap rules */
 body.dark .gt-wrap{background:#1a2438;border-color:var(--bd)}
 body.dark .gt-wrap .goog-te-gadget .goog-te-combo{background:#0f172a;color:var(--text);border-color:var(--bd)}
-@media(max-width:700px){.gt-wrap{max-width:150px}.gt-wrap .goog-te-gadget .goog-te-combo{max-width:110px;font-size:.75rem!important}}
+/* media gt-wrap mobile géré dans FIX MOBILE NAV ci-dessus */
 
 
 .gt-wrap .goog-te-gadget .goog-te-combo{
